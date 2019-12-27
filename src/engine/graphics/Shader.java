@@ -5,13 +5,26 @@ import org.lwjgl.opengl.GL20;
 
 import engine.utils.FileUtils;
 
+import java.io.*;
+import java.util.Scanner;
+
 public class Shader {
 	private String vertexFile, fragmentFile;
 	private int vertexID, fragmentID, programID;
 	
-	public Shader(String vertexPath, String fragmentPath) {
-		vertexFile = FileUtils.loadAsString(vertexPath);
-		fragmentFile = FileUtils.loadAsString(fragmentPath);
+	public Shader(String vertexPath, String fragmentPath) throws IOException {
+
+		Scanner vr = new Scanner(new FileReader(new File(vertexPath)));
+		Scanner fr = new Scanner(new FileReader(new File(fragmentPath)));
+
+		while (vr.hasNextLine()){
+			vertexFile += vr.nextLine() + "\n";
+		}
+		while (fr.hasNextLine()){
+			vertexFile += fr.nextLine() + "\n";
+		}
+		//vertexFile = FileUtils.loadAsString(vertexPath);
+		//fragmentFile = FileUtils.loadAsString(fragmentPath);
 	}
 	
 	public void create() {

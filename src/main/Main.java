@@ -9,6 +9,8 @@ import engine.io.Window;
 import engine.maths.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.IOException;
+
 public class Main implements Runnable {
     public final int WIDTH = 1280, HEIGHT = 760;
     public Thread game;
@@ -34,9 +36,9 @@ public class Main implements Runnable {
         game.start();
     }
 
-    public void init() {
+    public void init() throws IOException {
         window = new Window(WIDTH, HEIGHT, "Game");
-        shader = new Shader("bin/shader/mainVertex.glsl", "bin/shader/mainFragment.glsl");
+        shader = new Shader("bin\\shaders\\mainVertex.glsl", "bin\\shaders\\mainFragment.glsl");
         renderer = new Renderer(shader);
         window.setBackgroundColor(1.0f, 0, 0);
         window.create();
@@ -45,7 +47,11 @@ public class Main implements Runnable {
     }
 
     public void run() {
-        init();
+        try {
+            init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
             update();
             render();
