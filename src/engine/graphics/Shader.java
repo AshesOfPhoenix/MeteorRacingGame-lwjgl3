@@ -13,15 +13,28 @@ public class Shader {
 	private int vertexID, fragmentID, programID;
 	
 	public Shader(String vertexPath, String fragmentPath) throws IOException {
-
 		Scanner vr = new Scanner(new FileReader(new File(vertexPath)));
 		Scanner fr = new Scanner(new FileReader(new File(fragmentPath)));
-
+		vertexFile = "#";
+		String line = vr.nextLine();
+		String result = line.substring(0, 0) + line.substring(0+1);
+		vertexFile += result + "\n";
 		while (vr.hasNextLine()){
-			vertexFile += vr.nextLine() + "\n";
+			line = vr.nextLine();
+			if (line.length() != 0){
+				vertexFile += line + "\n";
+			}
 		}
+
+		fragmentFile = "#";
+		String line2 = fr.nextLine();
+		String result2 = line2.substring(0, 0) + line2.substring(0+1);
+		fragmentFile += result2 + "\n";
 		while (fr.hasNextLine()){
-			vertexFile += fr.nextLine() + "\n";
+			line2 = fr.nextLine();
+			if (line2.length() != 0){
+				fragmentFile += line2 + "\n";
+			}
 		}
 		//vertexFile = FileUtils.loadAsString(vertexPath);
 		//fragmentFile = FileUtils.loadAsString(fragmentPath);
