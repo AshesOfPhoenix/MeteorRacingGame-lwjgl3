@@ -99,7 +99,7 @@ public class Window {
 	}
 	
 	public void destroy() {
-		input.destroy();
+		//input.destroy();
 		sizeCallback.free();
 		GLFW.glfwWindowShouldClose(window);
 		GLFW.glfwDestroyWindow(window);
@@ -140,4 +140,5 @@ public class Window {
 	public long getWindow() {
 		return window;
 	}
+
 }

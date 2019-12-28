@@ -12,12 +12,14 @@ import org.lwjgl.system.MemoryUtil;
 public class Mesh {
 	private Vertex[] vertices;
 	private int[] indices;
-	private int vao, pbo, ibo;
+	private Material material;
+	private int vao, pbo, ibo,tbo;
 
 	//!Send vertex and index data and store it
-	public Mesh(Vertex[] vertices, int[] indices) {
+	public Mesh(Vertex[] vertices, int[] indices,Material material) {
 		this.vertices = vertices;
 		this.indices = indices;
+		this.material=material;
 	}
 
 	//!Generate mesh
@@ -25,6 +27,8 @@ public class Mesh {
 	//!Create VBO, bind it and define vertex attributes
 	//!Create IBO and bind it
 	public void create() {
+
+	    material.create();
 		vao = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vao);
 		
@@ -36,7 +40,22 @@ public class Mesh {
 			positionData[i * 3 + 2] = vertices[i].getPosition().getZ();
 		}
 		positionBuffer.put(positionData).flip();
-		
+
+		FloatBuffer textureBuffer = MemoryUtil.memAllocFloat(vertices.length * 2);
+		float[] textureData = new float[vertices.length * 2];
+		for (int i = 0; i < vertices.length; i++) {
+			textureData[i * 2] = vertices[i].getPosition().getX();
+			textureData[i * 2 + 1] = vertices[i].getPosition().getY(); }
+		textureBuffer.put(textureData).flip();
+
+		tbo=GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, tbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+
+
 		pbo = GL15.glGenBuffers();
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, pbo);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, positionBuffer, GL15.GL_STATIC_DRAW);
@@ -70,5 +89,17 @@ public class Mesh {
 
 	public int getIBO() {
 		return ibo;
+	}
+
+	public int getTBO(){return tbo;}
+
+	public Material getMaterial(){return material; }
+	public void destroy(){
+		GL15.glDeleteBuffers(pbo);
+		GL15.glDeleteBuffers(ibo);
+		GL15.glDeleteBuffers(tbo);
+
+		GL30.glDeleteVertexArrays(vao);
+		material.destroy();
 	}
 }
