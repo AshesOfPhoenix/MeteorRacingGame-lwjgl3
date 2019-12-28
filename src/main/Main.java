@@ -9,8 +9,6 @@ import engine.io.Window;
 import engine.maths.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.IOException;
-
 public class Main implements Runnable {
     public final int WIDTH = 1280, HEIGHT = 760;
     public Thread game;
@@ -36,9 +34,9 @@ public class Main implements Runnable {
         game.start();
     }
 
-    public void init() throws IOException {
+    public void init() {
         window = new Window(WIDTH, HEIGHT, "Game");
-        shader = new Shader("bin\\shaders\\mainVertex.glsl", "bin\\shaders\\mainFragment.glsl");
+        shader = new Shader("D:/java/MeteorRacingGame-lwjgl3/resources/mainVertex.glsl", "D:/java/MeteorRacingGame-lwjgl3/resources/mainFragment.glsl");
         renderer = new Renderer(shader);
         window.setBackgroundColor(1.0f, 0, 0);
         window.create();
@@ -47,11 +45,7 @@ public class Main implements Runnable {
     }
 
     public void run() {
-        try {
-            init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        init();
         while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
             update();
             render();
