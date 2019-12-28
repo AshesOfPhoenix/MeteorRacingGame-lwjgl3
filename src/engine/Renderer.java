@@ -8,10 +8,12 @@ import org.lwjglx.debug.opengl.GL20;
 
 public class Renderer {
 
+    //!CleanUp the frame
     public void prepare(){
         GL11.glClearColor(1,0,0,1);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
     }
+    //!Bind VAO and draw on the screen
     public void renderer(RawModel model){
         GL30.glBindVertexArray(model.getVaoID());
         //GL30.glEnableVertexAttribArray(0);

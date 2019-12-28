@@ -2,35 +2,47 @@ package engine.graphics;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-
-import engine.utils.FileUtils;
-
 import java.io.*;
 import java.util.Scanner;
 
 public class Shader {
 	private String vertexFile, fragmentFile;
 	private int vertexID, fragmentID, programID;
-	
-	public Shader(String vertexPath, String fragmentPath) throws IOException {
 
+	//!Read Shader
+	public Shader(String vertexPath, String fragmentPath) throws IOException {
 		Scanner vr = new Scanner(new FileReader(new File(vertexPath)));
 		Scanner fr = new Scanner(new FileReader(new File(fragmentPath)));
-
+		vertexFile = "#";
+		String line = vr.nextLine();
+		String result = line.substring(0, 0) + line.substring(1);
+		vertexFile += result + "\n";
 		while (vr.hasNextLine()){
-			vertexFile += vr.nextLine() + "\n";
+			line = vr.nextLine();
+			if (line.length() != 0){
+				vertexFile += line + "\n";
+			}
 		}
+
+		fragmentFile = "#";
+		String line2 = fr.nextLine();
+		String result2 = line2.substring(0, 0) + line2.substring(1);
+		fragmentFile += result2 + "\n";
 		while (fr.hasNextLine()){
-			vertexFile += fr.nextLine() + "\n";
+			line2 = fr.nextLine();
+			if (line2.length() != 0){
+				fragmentFile += line2 + "\n";
+			}
 		}
 		//vertexFile = FileUtils.loadAsString(vertexPath);
 		//fragmentFile = FileUtils.loadAsString(fragmentPath);
 	}
-	
+
+	//!Attach shaders to the program
 	public void create() {
 		programID = GL20.glCreateProgram();
 		vertexID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
-		
+
 		GL20.glShaderSource(vertexID, vertexFile);
 		GL20.glCompileShader(vertexID);
 		
@@ -40,7 +52,8 @@ public class Shader {
 		}
 		
 		fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
-		
+
+
 		GL20.glShaderSource(fragmentID, fragmentFile);
 		GL20.glCompileShader(fragmentID);
 		
@@ -48,7 +61,7 @@ public class Shader {
 			System.err.println("Fragment Shader: " + GL20.glGetShaderInfoLog(fragmentID));
 			return;
 		}
-		
+		//*Attach shaders to the program
 		GL20.glAttachShader(programID, vertexID);
 		GL20.glAttachShader(programID, fragmentID);
 		
@@ -67,15 +80,18 @@ public class Shader {
 		GL20.glDeleteShader(vertexID);
 		GL20.glDeleteShader(fragmentID);
 	}
-	
+
+	//!Bind Shader
 	public void bind() {
 		GL20.glUseProgram(programID);
 	}
-	
+
+	//!UnBind Shader
 	public void unbind() {
 		GL20.glUseProgram(0);
 	}
-	
+
+	//!Destroy program
 	public void destroy() {
 		GL20.glDeleteProgram(programID);
 	}
