@@ -33,7 +33,6 @@ public class Material {
 
     public int getTextureID() {
         return textureID;
-
     }
 
     public void create(){

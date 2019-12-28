@@ -1,10 +1,14 @@
 package main;
 
+import engine.Loader3Dmodel;
+import engine.Models.TextureModel;
+import engine.RawModel;
 import engine.graphics.*;
 import engine.io.Input;
 import engine.io.Window;
 import engine.maths.Vector2f;
 import engine.maths.Vector3f;
+import entitete.Entity;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
@@ -15,7 +19,7 @@ public class Main implements Runnable {
     public Window window;
     public Renderer renderer;
     public Shader shader;
-    public Mesh mesh = new Mesh(new Vertex[]{
+    /*public Mesh mesh = new Mesh(new Vertex[]{
             new Vertex(new Vector3f(-0.5f, 0.5f, 0.0f),new Vector3f(1.0f,0.0f,0.0f),new Vector2f(0.0f,0.0f)),
             new Vertex(new Vector3f(-0.5f, -0.5f, 0.0f),new Vector3f(0.0f,1.0f,0.0f),new Vector2f(0.0f,0.0f)),
             new Vertex(new Vector3f(0.5f, -0.5f, 0.0f),new Vector3f(0.0f,0.0f,1.0f),new Vector2f(0.0f,0.0f)),
@@ -23,7 +27,7 @@ public class Main implements Runnable {
     }, new int[]{
             0, 1, 2,
             0, 3, 2
-    },new Material("pot do teksture"));
+    },new Material("pot do teksture"));*/
 
     public static void main(String[] args) {
         new Main().start();
@@ -33,14 +37,13 @@ public class Main implements Runnable {
         game = new Thread(this, "game");
         game.start();
     }
-
     public void init() throws IOException {
         window = new Window(WIDTH, HEIGHT, "Game");
         shader = new Shader("bin\\shaders\\mainVertex.glsl", "bin\\shaders\\mainFragment.glsl");
         renderer = new Renderer(shader);
         window.setBackgroundColor(1.0f, 0, 0);
         window.create();
-        mesh.create();
+      //  mesh.create();
         shader.create();
     }
 
@@ -66,7 +69,7 @@ public class Main implements Runnable {
     }
 
     private void render() {
-        renderer.renderMesh(mesh);
+       // renderer.renderMesh(mesh);
         window.swapBuffers();
     }
 }
