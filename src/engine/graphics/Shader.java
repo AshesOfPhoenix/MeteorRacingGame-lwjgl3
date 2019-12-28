@@ -15,7 +15,7 @@ public class Shader {
 		Scanner fr = new Scanner(new FileReader(new File(fragmentPath)));
 		vertexFile = "#";
 		String line = vr.nextLine();
-		String result = line.substring(0, 0) + line.substring(0+1);
+		String result = line.substring(0, 0) + line.substring(1);
 		vertexFile += result + "\n";
 		while (vr.hasNextLine()){
 			line = vr.nextLine();
@@ -26,7 +26,7 @@ public class Shader {
 
 		fragmentFile = "#";
 		String line2 = fr.nextLine();
-		String result2 = line2.substring(0, 0) + line2.substring(0+1);
+		String result2 = line2.substring(0, 0) + line2.substring(1);
 		fragmentFile += result2 + "\n";
 		while (fr.hasNextLine()){
 			line2 = fr.nextLine();
@@ -90,7 +90,8 @@ public class Shader {
 	public void unbind() {
 		GL20.glUseProgram(0);
 	}
-	
+
+	//!Destroy program
 	public void destroy() {
 		GL20.glDeleteProgram(programID);
 	}

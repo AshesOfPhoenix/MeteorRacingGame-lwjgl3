@@ -13,12 +13,17 @@ public class Mesh {
 	private Vertex[] vertices;
 	private int[] indices;
 	private int vao, pbo, ibo;
-	
+
+	//!Send vertex and index data and store it
 	public Mesh(Vertex[] vertices, int[] indices) {
 		this.vertices = vertices;
 		this.indices = indices;
 	}
-	
+
+	//!Generate mesh
+	//!Create VAO and bind it
+	//!Create VBO, bind it and define vertex attributes
+	//!Create IBO and bind it
 	public void create() {
 		vao = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vao);

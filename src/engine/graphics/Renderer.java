@@ -4,13 +4,15 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
+//!Contains a specific shader program
 public class Renderer {
 	private Shader shader;
 	
 	public Renderer(Shader shader) {
 		this.shader = shader;
 	}
-	
+
+	//!Render mesh by binding vao, enabling vertex attributes and drawing the mesh
 	public void renderMesh(Mesh mesh) {
 		GL30.glBindVertexArray(mesh.getVAO());
 		GL30.glEnableVertexAttribArray(0);

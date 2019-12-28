@@ -19,6 +19,8 @@ public class Window {
         this.height=height;
         this.title=title;
     }
+
+
     public void ustvari(){
         if(!GLFW.glfwInit()){
             System.err.println("Error");
