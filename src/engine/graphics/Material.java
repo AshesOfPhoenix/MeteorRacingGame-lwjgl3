@@ -1,22 +1,21 @@
 package engine.graphics;
 
 
-import engine.utils.FileUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
+;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Material {
-    private String path;
+    private String filename;
     private Texture texture;
     private float width,height;
     private int textureID;
 
-    public Material(String path){
-        this.path=path;
+    public Material(String filename){
+        this.filename=filename;
     }
 
     public Texture getTexture() {
@@ -36,20 +35,15 @@ public class Material {
     }
 
     public void create(){
-        try {
-            texture=TextureLoader.getTexture(path.split(".")[1],FileUtils.class.getResourceAsStream(path),GL11.GL_LINEAR);
-
+            texture=new Texture("objects/textures/"+filename);
             width= texture.getWidth();
 
             height=texture.getHeight();
             textureID=texture.getTextureID();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+            texture.bind();
     }
 
     public void destroy(){
-        GL13.glDeleteTextures(textureID);
+        texture.unbind();
     }
 }

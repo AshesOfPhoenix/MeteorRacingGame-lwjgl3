@@ -123,4 +123,5 @@ public class Shader {
 	public void destroy() {
 		GL20.glDeleteProgram(programID);
 	}
+
 }

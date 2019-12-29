@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="slick-util">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/slick-util/slick-util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/slick-util/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/slick-util/jorbis-0.0.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/slick-util/jogg-0.0.7.jar!/" />
+      <root url="file://$PROJECT_DIR$/slick-util" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/slick-util" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/slick-util" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/slick-util" recursive="false" type="SOURCES" />
+  </library>
+</component>

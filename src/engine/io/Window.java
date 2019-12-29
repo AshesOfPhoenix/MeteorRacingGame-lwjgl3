@@ -9,7 +9,8 @@ import org.lwjgl.opengl.GL11;
 import engine.maths.Vector3f;
 
 public class Window {
-	private int width, height;
+	public static int width;
+	public static int height;
 	private String title;
 	private long window;
 	private int frames;
@@ -26,7 +27,8 @@ public class Window {
 		this.height = height;
 		this.title = title;
 	}
-	
+
+
 	public void create() {
 		if (!GLFW.glfwInit()) {
 			System.err.println("ERROR: GLFW wasn't initializied");
@@ -125,11 +127,11 @@ public class Window {
 		}
 	}
 
-	public int getWidth() {
+	public static int getWidth() {
 		return width;
 	}
 
-	public int getHeight() {
+	public static int getHeight() {
 		return height;
 	}
 

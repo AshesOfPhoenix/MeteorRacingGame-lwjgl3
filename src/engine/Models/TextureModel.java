@@ -11,10 +11,8 @@ public class TextureModel {
         this.rawModel=model;
         this.mat=mat;
     }
+
     public RawModel getRawModel(){
         return rawModel;
-    }
-    public Material getMat(){
-        return (Material) mat.getTexture();
     }
 }

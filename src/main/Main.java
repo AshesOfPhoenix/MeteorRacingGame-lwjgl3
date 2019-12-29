@@ -7,9 +7,12 @@ import engine.graphics.*;
 import engine.io.Input;
 import engine.io.Window;
 import engine.maths.Vector2f;
-import engine.maths.Vector3f;
+import entitete.Camera;
 import entitete.Entity;
 import org.lwjgl.glfw.GLFW;
+import org.newdawn.slick.opengl.Texture;
+import org.w3c.dom.Text;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
 
@@ -19,6 +22,7 @@ public class Main implements Runnable {
     public Window window;
     public Renderer renderer;
     public Shader shader;
+    public static StaticShader shreder;
     /*public Mesh mesh = new Mesh(new Vertex[]{
             new Vertex(new Vector3f(-0.5f, 0.5f, 0.0f),new Vector3f(1.0f,0.0f,0.0f),new Vector2f(0.0f,0.0f)),
             new Vertex(new Vector3f(-0.5f, -0.5f, 0.0f),new Vector3f(0.0f,1.0f,0.0f),new Vector2f(0.0f,0.0f)),
@@ -40,9 +44,11 @@ public class Main implements Runnable {
     public void init() throws IOException {
         window = new Window(WIDTH, HEIGHT, "Game");
         shader = new Shader("bin\\shaders\\mainVertex.glsl", "bin\\shaders\\mainFragment.glsl");
-        renderer = new Renderer(shader);
+
         window.setBackgroundColor(1.0f, 0, 0);
         window.create();
+        renderer = new Renderer(shader);
+
       //  mesh.create();
         shader.create();
     }
@@ -50,16 +56,38 @@ public class Main implements Runnable {
     public void run() {
         try {
             init();
+
+            Loader3Dmodel loader=new Loader3Dmodel();
+            RawModel mode= ObjectLoader.loadObject("10603_slot_car_blue_SG_v1_iterations-2",loader);
+
+
+            Material mat=new Material("avtomobilcek.png");
+            mat.create();
+            TextureModel mod=new TextureModel(mode,mat);
+
+            Entity entity =new Entity(mod, new Vector3f(0,0,-1),0,0,0,1);
+
+            Camera camera=new Camera();
+
+            while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
+
+                entity.increasePosition(0,0,-0.1f);
+
+                // entity.increaseRotation();
+
+                update();
+                camera.move();
+                render();
+                shreder.loadViewMatrix(camera);
+
+                //primer ko pritisnemo gumb f11 se nam poveca screen na fullscreen
+                if (Input.isKeyDown(GLFW.GLFW_KEY_F11)) window.setFullscreen(!window.isFullscreen());
+            }
+            window.destroy();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
-            update();
-            render();
-            //primer ko pritisnemo gumb f11 se nam poveca screen na fullscreen
-            if (Input.isKeyDown(GLFW.GLFW_KEY_F11)) window.setFullscreen(!window.isFullscreen());
-        }
-        window.destroy();
+
     }
 
     private void update() {

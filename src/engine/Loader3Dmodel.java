@@ -15,10 +15,11 @@ public class Loader3Dmodel {
     private List<Integer> vaos = new ArrayList<Integer>();
     private List<Integer> vbos = new ArrayList<Integer>();
     private int vaoID;
-    public RawModel loadToVAO(float[] positions, int[] indices){
+    public RawModel loadToVAO(float[] positions, float[] textCords ,int[] indices){
         int vaoID=createVAO();
         bindIndicesBuffer(indices);
-        storeData(0,positions);
+        storeData(0,3,positions);
+        storeData(1,2,textCords);
         unbindVAO();
         return new RawModel(vaoID,positions.length/3);
     }
@@ -40,13 +41,13 @@ public class Loader3Dmodel {
         return vaoID;
     }
 
-    private void storeData(int attributeNumber, float[] data){
+    private void storeData(int attributeNumber,int coordSize, float[] data){
         int vboID = GL15.glGenBuffers();
         vbos.add(vboID);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,vboID);
         FloatBuffer buffer = storeDataFB(data);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER,buffer,GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(attributeNumber,3, GL11.GL_FLAT,false,0,0);
+        GL20.glVertexAttribPointer(attributeNumber,coordSize, GL11.GL_FLAT,false,0,0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,0);
     }
     private void unbindVAO(){
