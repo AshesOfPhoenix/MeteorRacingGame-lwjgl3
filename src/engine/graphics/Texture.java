@@ -14,11 +14,12 @@ public class Texture {
 
     private static int width;
     private static int height;
-    private static int texture;
+    private static int textureID;
 
     public Texture(String path) {
-        texture = load(path);
+        textureID = load(path);
     }
+
     public static int load(String path) {
         int[] pixels = null;
         try {
@@ -73,7 +74,7 @@ public class Texture {
     }
 
     public void bind() {
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(GL_TEXTURE_2D, textureID);
     }
 
     public void unbind() {
@@ -81,7 +82,7 @@ public class Texture {
     }
 
     public int getTextureID() {
-        return texture;
+        return textureID;
     }
 
 }

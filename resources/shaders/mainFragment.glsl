@@ -1,6 +1,6 @@
-#version 460 core
+#version 330 core
 
-in vec3 color;
+in vec3 fs_color;
 in vec2 pass_textureCoordinates;
 
 out vec4 outColor;

@@ -1,4 +1,4 @@
-package entitete;
+package engine.entitete;
 
 import engine.io.Input;
 import org.lwjgl.util.vector.Vector3f;
@@ -15,13 +15,13 @@ public class Camera {
 
     public void move(){
         if(Input.isKeyDown(Keyboard.KEY_W)){
-            position.z-=0.02f;
+            this.position.z -= 0.02f;
         }
         if(Input.isKeyDown(Keyboard.KEY_D)){
-            position.x+=0.02f;
+            this.position.x += 0.02f;
         }
         if(Input.isKeyDown(Keyboard.KEY_A)){
-            position.x-=0.02f;
+            this.position.x -= 0.02f;
         }
 
     }

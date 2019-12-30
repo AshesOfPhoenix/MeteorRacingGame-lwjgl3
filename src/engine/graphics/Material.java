@@ -1,25 +1,32 @@
 package engine.graphics;
 
 
-import org.lwjgl.opengl.GL13;
-;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 public class Material {
     private String filename;
     private Texture texture;
-    private float width,height;
+    private float width, height;
     private int textureID;
 
-    public Material(String filename){
-        this.filename=filename;
+    public Material(Texture texture) {
+        this.texture = texture;
+        this.textureID = texture.getTextureID();
+    }
+
+    /*
+    public Material(int ID) {
+        this.textureID = ID;
+    }
+    */
+    public void Bind() {
+        this.texture.bind();
+    }
+
+    public void unBind() {
+        this.texture.unbind();
     }
 
     public Texture getTexture() {
-        return texture;
+        return this.texture;
     }
 
     public float getWidth() {
@@ -31,19 +38,15 @@ public class Material {
     }
 
     public int getTextureID() {
-        return textureID;
+        return this.textureID;
     }
 
-    public void create(){
-            texture=new Texture("objects/textures/"+filename);
-            width= texture.getWidth();
+    public void create() {
+        this.texture = new Texture("objects/textures/" + filename);
+        width = this.texture.getWidth();
 
-            height=texture.getHeight();
-            textureID=texture.getTextureID();
-            texture.bind();
-    }
-
-    public void destroy(){
-        texture.unbind();
+        height = this.texture.getHeight();
+        this.textureID = this.texture.getTextureID();
+        this.texture.bind();
     }
 }
