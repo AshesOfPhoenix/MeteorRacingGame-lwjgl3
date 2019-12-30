@@ -19,15 +19,22 @@ public class StaticShader extends Shader {
         location_viewMatrix=super.getUniformLocation("location_viewMatrix");
     }
 
-    public void loadTransMatrix(Matrix4f matrix){
-     super.loadMatrix(location_transfMatrix,matrix);
+    public void UniformViewMatrix(Camera camera) {
+        Matrix4f vieMatrix= Maths.createViewMatrix(camera);
+        super.Uniform1m(location_viewMatrix, vieMatrix);
     }
 
-    public void loadViewMatrix(Camera camera){
-        Matrix4f vieMatrix= Maths.createViewMatrix(camera);
-        super.loadMatrix(location_viewMatrix,vieMatrix);
+    public void bindAttributes() {
+        super.bindAttributes(0, "position");
+        super.bindAttributes(1, "textureCoordinates");
     }
-    public void loadProjectionMatrix(Matrix4f projection){
-        super.loadMatrix(location_projfMatrix,projection);
+
+    public void UniformProjcMatrix(Matrix4f projection) {
+        super.Uniform1m(location_projfMatrix, projection);
+    }
+
+    //?Also model matrix
+    public void UniformTransMatrix(Matrix4f matrix) {
+        super.Uniform1m(location_transfMatrix, matrix);
     }
 }

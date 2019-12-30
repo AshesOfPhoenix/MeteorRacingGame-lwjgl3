@@ -6,13 +6,10 @@ import engine.RawModel;
 import engine.graphics.*;
 import engine.io.Input;
 import engine.io.Window;
-import engine.maths.Vector2f;
+import engine.maths.Vector3f;
 import entitete.Camera;
 import entitete.Entity;
 import org.lwjgl.glfw.GLFW;
-import org.newdawn.slick.opengl.Texture;
-import org.w3c.dom.Text;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
 
@@ -43,14 +40,18 @@ public class Main implements Runnable {
     }
     public void init() throws IOException {
         window = new Window(WIDTH, HEIGHT, "Game");
+        //!Read the shaders from file
         shader = new Shader("bin\\shaders\\mainVertex.glsl", "bin\\shaders\\mainFragment.glsl");
-
         window.setBackgroundColor(1.0f, 0, 0);
+        //!Create and initialize window
         window.create();
+        //!Create shader program
+        shader.create();
+        //!Send shader to renderer for further use and create projection matrix
         renderer = new Renderer(shader);
 
       //  mesh.create();
-        shader.create();
+
     }
 
     public void run() {
@@ -70,6 +71,7 @@ public class Main implements Runnable {
             Camera camera=new Camera();
 
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
+                renderer.prepare();
 
                 entity.increasePosition(0,0,-0.1f);
 
@@ -78,12 +80,14 @@ public class Main implements Runnable {
                 update();
                 camera.move();
                 render();
-                shreder.loadViewMatrix(camera);
+                shreder.UniformViewMatrix(camera);
 
                 //primer ko pritisnemo gumb f11 se nam poveca screen na fullscreen
                 if (Input.isKeyDown(GLFW.GLFW_KEY_F11)) window.setFullscreen(!window.isFullscreen());
             }
             window.destroy();
+            loader.pocisti();
+            shader.destroy();
         } catch (IOException e) {
             e.printStackTrace();
         }

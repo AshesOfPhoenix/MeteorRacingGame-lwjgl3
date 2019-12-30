@@ -1,8 +1,12 @@
 package entitete;
 
 import engine.Models.TextureModel;
-import org.lwjgl.util.vector.Vector3f;
+import engine.maths.Vector3f;
 
+//!Instance of a textured model
+//*Useful when we want to render (same) multiple objects with the same VAO
+//*all with a different Transformation/Model matrix
+//?Imagine everyone of them as an entity
 public class Entity {
     private TextureModel model;
     private Vector3f position;
@@ -17,16 +21,19 @@ public class Entity {
         this.rotZ = rotZ;
         this.scale = scale;
     }
-    public void increasePosition(float dx,float dy, float dz){
+
+    public void increasePosition(float dx, float dy, float dz) {
         this.position.x+=dx;
         this.position.y+=dy;
         this.position.z+=dz;
     }
-    public void increaseRotation(float dx,float dy, float dz){
+
+    public void increaseRotation(float dx, float dy, float dz){
         this.rotX+=dx;
         this.rotY+=dy;
         this.rotZ+=dz;
     }
+
     public TextureModel getModel() {
         return model;
     }

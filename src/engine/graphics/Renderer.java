@@ -12,11 +12,12 @@ public class Renderer {
 	private static final float FAR_PlANE=1000;
 	private Matrix4f projectionMatrix;
     private int location_projfMatrix;
+
 	public Renderer(Shader shader) {
 		createProjectionMatrix();
 		this.shader = shader;
 		shader.bind();
-		shader.loadMatrix(location_projfMatrix,projectionMatrix);
+        shader.Uniform1m(location_projfMatrix, projectionMatrix);
 		shader.unbind();
 	}
 
@@ -55,4 +56,10 @@ public class Renderer {
 		projectionMatrix.m33=0;
 
 	}
+
+    //!Clean the frame
+    public void prepare() {
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glClearColor(1, 0, 0, 1);
+    }
 }

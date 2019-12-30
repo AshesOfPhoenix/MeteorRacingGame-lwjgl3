@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Loader3Dmodel {
-    private List<Integer> vaos = new ArrayList<Integer>();
-    private List<Integer> vbos = new ArrayList<Integer>();
+    private List<Integer> vaos = new ArrayList<>();
+    private List<Integer> vbos = new ArrayList<>();
+    private List<Integer> textures = new ArrayList<>();
     private int vaoID;
     public RawModel loadToVAO(float[] positions, float[] textCords ,int[] indices){
         int vaoID=createVAO();

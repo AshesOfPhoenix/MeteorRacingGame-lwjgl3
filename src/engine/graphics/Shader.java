@@ -4,6 +4,7 @@ import engine.maths.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 import java.io.*;
@@ -44,21 +45,38 @@ public class Shader {
 		//fragmentFile = FileUtils.loadAsString(fragmentPath);
 	}
 	//protected void getAllUniformLocations();
-	protected int getUniformLocation(String uniformName){
-		return GL20.glGetUniformLocation(programID,uniformName);
-	}
-	protected void loadBoolean(int location,boolean value){
+
+    //!Get the uniform location of the variable in the shader program
+    protected int getUniformLocation(String uniformName) {
+        return GL20.glGetUniformLocation(programID, uniformName);
+    }
+
+    //!Send boolean uniform to the shader program
+    protected void Uniform1b(int location, boolean value) {
 		float load=0;
 		if(value){
 			load=1;
 		}
 		GL20.glUniform1f(location,load);
 	}
-	protected void loadMatrix(int location, Matrix4f matrix){
+
+    //!Send matrix uniform to the shader program
+    protected void Uniform1m(int location, Matrix4f matrix) {
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
-		GL20.glUniformMatrix4fv(location,false,matrixBuffer);
-	}
+        GL20.glUniformMatrix4fv(location, false, matrixBuffer);
+    }
+
+    //!Send float uniform to the shader program
+    protected void Uniform1f(int location, float value) {
+        GL20.glUniform1f(location, value);
+    }
+
+    //!Send vector uniform to the shader program
+    protected void Uniform1v(int location, Vector3f vector) {
+        GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+    }
+
 	//!Attach shaders to the program
 	public void create() {
 		programID = GL20.glCreateProgram();
@@ -102,12 +120,6 @@ public class Shader {
 		GL20.glDeleteShader(vertexID);
 		GL20.glDeleteShader(fragmentID);
 	}
-	protected void loadFLoat(int location,float value){
-		GL20.glUniform1f(location,value);
-	}
-	protected void loadVector(int location, Vector3f vector){
-		GL20.glUniform3f(location,vector.x,vector.y,vector.z);
-	}
 
 	//!Bind Shader
 	public void bind() {
@@ -123,5 +135,10 @@ public class Shader {
 	public void destroy() {
 		GL20.glDeleteProgram(programID);
 	}
+
+    //!Bind vertex attributes
+    public void bindAttributes(int attribute, String variableName) {
+        GL30.glBindAttribLocation(programID, attribute, variableName);
+    }
 
 }
