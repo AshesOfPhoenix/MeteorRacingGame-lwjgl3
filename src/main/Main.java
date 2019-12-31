@@ -44,7 +44,7 @@ public class Main implements Runnable {
         //?Add different shader files for different types of objects
         CubeShader = new StaticShader("resources\\shaders\\mainVertexCube.glsl",
                 "resources\\shaders\\mainFragmentCube.glsl");
-        
+
         //!Send shader to renderCube for further use and create projection matrix
         //?Create different renderer for every shader
         renderCube = new Renderer(CubeShader);    //<- Projection matrix creation inside
@@ -83,9 +83,8 @@ public class Main implements Runnable {
 
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawcall
-                render();
+                clearFrameBuffer();
                 update();
-
                 //!Read keyboard input
                 camera.move();
 
@@ -94,7 +93,7 @@ public class Main implements Runnable {
 
                 //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
                 Car.increaseRotation(0.0f, 0.0f, 0.5f);
-                Cube.increaseRotation(5.0f, 0.0f, 5.0f);
+                Cube.increaseRotation(1.0f, 0.0f, 1.0f);
 
                 //!RENDER OBJECTS
                 CubeShader.bind();
@@ -119,8 +118,7 @@ public class Main implements Runnable {
         if (Input.isKeyDown(GLFW.GLFW_KEY_F11)) window.setFullscreen(!window.isFullscreen());
     }
 
-    private void render() {
-        // renderCube.renderMesh(mesh);
+    private void clearFrameBuffer() {
         window.swapBuffers();
         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
         GL30.glClearColor(0, 0.0f, 0.0f, 1);
