@@ -59,12 +59,12 @@ public class Main implements Runnable {
             Loader3Dmodel loader = new Loader3Dmodel();
 
             //*Initialize raw models
-            RawModel modelCar = ObjectLoader.loadObject("OBJ\\mustang_GT", loader);
+            RawModel modelCar = ObjectLoader.loadObject("objects\\10608_Tonka_Fire_Truck_SG_v1_L3", loader);
             //RawModel modelCube = loader.loadToVAO(vertices, textureCoords, indices, normalsArray);
 
             //*Initialize materials and textures
             //?Different for every object
-            Texture textureCube = new Texture("OBJ\\brembo_spt2.png");
+            Texture textureCube = new Texture("objects\\Futuristic_Car_C4.png");
             Material materialCube = new Material(textureCube);
 
             //*Initialize textured models

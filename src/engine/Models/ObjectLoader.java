@@ -36,8 +36,8 @@ public class ObjectLoader {
                 line = reader.readLine();
                 String[] currnetLine = line.split(" ");
                 if (line.startsWith("v ")) {
-                    Vector3f vertex = new Vector3f(Float.parseFloat(currnetLine[1]),
-                            Float.parseFloat(currnetLine[2]), Float.parseFloat(currnetLine[3]));
+                    Vector3f vertex = new Vector3f(Float.parseFloat(currnetLine[2]),
+                            Float.parseFloat(currnetLine[3]), Float.parseFloat(currnetLine[4]));
                     vertices.add(vertex);
                 } else if (line.startsWith("vt ")) {
                     Vector2f texture = new Vector2f(Float.parseFloat(currnetLine[1]),
