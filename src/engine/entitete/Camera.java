@@ -1,4 +1,4 @@
-package entitete;
+package engine.entitete;
 
 import engine.io.Input;
 import org.lwjgl.util.vector.Vector3f;
@@ -6,27 +6,30 @@ import org.lwjgl.input.Keyboard;
 
 public class Camera {
 
-    private Vector3f position = new Vector3f(0,0,0);
+    private Vector3f position;
     private static float pitch;
     private static float yaw;
     private float roll;
 
-    public Camera(){}
+    public Camera() {
+        this.position = new Vector3f(0, 0, 0);
+    }
 
+    //!INPUT KEYS FOR CAMERA
     public void move(){
         if(Input.isKeyDown(Keyboard.KEY_W)){
-            position.z-=0.02f;
+            this.position.z -= 0.02f;
         }
         if(Input.isKeyDown(Keyboard.KEY_D)){
-            position.x+=0.02f;
+            this.position.x += 0.02f;
         }
         if(Input.isKeyDown(Keyboard.KEY_A)){
-            position.x-=0.02f;
+            this.position.x -= 0.02f;
         }
 
     }
     public Vector3f getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(Vector3f position) {
