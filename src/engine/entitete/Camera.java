@@ -1,8 +1,8 @@
 package engine.entitete;
 
 import engine.io.Input;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.input.Keyboard;
 
 public class Camera {
 
@@ -10,26 +10,21 @@ public class Camera {
     private static float pitch;
     private static float yaw;
     private float roll;
-    private Input input;
 
-    public Camera(Input keys) {
+    public Camera() {
         this.position = new Vector3f(0, 0, 0);
-        this.input = keys;
     }
 
     //!INPUT KEYS FOR CAMERA
     public void move(){
-        if (Input.isKeyDown(GLFW.GLFW_KEY_W)) {
+        if(Input.isKeyDown(Keyboard.KEY_W)){
             this.position.z -= 0.02f;
         }
-        if (Input.isKeyDown(GLFW.GLFW_KEY_D)) {
+        if(Input.isKeyDown(Keyboard.KEY_D)){
             this.position.x += 0.02f;
         }
-        if (Input.isKeyDown(GLFW.GLFW_KEY_A)) {
+        if(Input.isKeyDown(Keyboard.KEY_A)){
             this.position.x -= 0.02f;
-        }
-        if (Input.isKeyDown(GLFW.GLFW_KEY_S)) {
-            this.position.z += 0.02f;
         }
 
     }

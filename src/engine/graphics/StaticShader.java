@@ -7,14 +7,16 @@ import org.lwjgl.util.vector.Matrix4f;
 import java.io.IOException;
 
 public class StaticShader extends Shader {
-    private static final String VERTEX_FILE = "resources\\shaders\\mainVertex.glsl";
-    private static final String FRAGMENT_FILE = "resources\\shaders\\mainFragment.glsl";
+    private String VERTEX_FILE;
+    private String FRAGMENT_FILE;
     private int location_transfMatrix;
     private int location_projfMatrix;
     private int location_viewMatrix;
 
-    public StaticShader() throws IOException {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+    public StaticShader(String VertexShaderPath, String FragmentShaderPath) throws IOException {
+        super(VertexShaderPath, FragmentShaderPath);
+        VERTEX_FILE = VertexShaderPath;
+        FRAGMENT_FILE = FragmentShaderPath;
     }
 
     public void getAllUniformLocations() {
