@@ -60,29 +60,29 @@ public class Main implements Runnable {
 
             //*Initialize raw models
             RawModel modelCar = ObjectLoader.loadObject("10603_slot_car_blue_SG_v1_iterations-2", loader);
-            RawModel modelCube = loader.loadToVAO(vertices, textureCoords, indices);
+            //RawModel modelCube = loader.loadToVAO(vertices, textureCoords, indices, normalsArray);
 
             //*Initialize materials and textures
             //?Different for every object
-            Texture textureCube = new Texture("tnt.png");
+            Texture textureCube = new Texture("objects\\textures\\avtomobilcek.png");
             Material materialCube = new Material(textureCube);
 
             //*Initialize textured models
             //?Different for every object
             TextureModel texturedCar = new TextureModel(modelCar, materialCube);
-            TextureModel texturedCube = new TextureModel(modelCube, materialCube);
+            //TextureModel texturedCube = new TextureModel(modelCube, materialCube);
 
             //*Initialize entities, their positions and rotations
             //?For every entity you want rendered
             Entity Car = new Entity(texturedCar, new Vector3f(2, 0, -8), -60, -10, 200, 1);
-            Entity Cube = new Entity(texturedCube, new Vector3f(-3, 0, -8), 7, 0, 0, 1.5f);
+            //Entity Cube = new Entity(texturedCube, new Vector3f(-3, 0, -8), 7, 0, 0, 1.5f);
             //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
             //!Initialize camera class for input readings
             Camera camera = new Camera();
 
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
-                //!Swap buffer and Clear frame buffer from previous drawcall
+                //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
                 update();
                 //!Read keyboard input
@@ -92,14 +92,14 @@ public class Main implements Runnable {
                 renderCube.prepare();
 
                 //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
-                Car.increaseRotation(0.0f, 0.0f, 0.5f);
-                Cube.increaseRotation(1.0f, 0.0f, 1.0f);
+                //Car.increaseRotation(0.0f, 0.0f, 0.5f);
+                //Cube.increaseRotation(1.0f, 0.0f, 1.0f);
 
                 //!RENDER OBJECTS
                 CubeShader.bind();
                 CubeShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
                 renderCube.renderEntity(Car, CubeShader);  //<- Transformation matrix creation inside
-                renderCube.renderEntity(Cube, CubeShader);
+                //renderCube.renderEntity(Cube, CubeShader);
                 CubeShader.UnBind();
             }
             window.destroy();
