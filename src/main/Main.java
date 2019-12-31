@@ -175,15 +175,14 @@ public class Main implements Runnable {
                 camera.move();
 
                 //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
-                //entity.increasePosition(0, 0, -0.1f);
                 Car.increaseRotation(0.0f, 0.0f, 0.5f);
                 Cube.increaseRotation(5.0f, 0.0f, 5.0f);
 
                 //!RENDER OBJECTS
                 CubeShader.bind();
-                CubeShader.UniformViewMatrix(camera);
+                CubeShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
                 renderCube.renderEntity(Car, CubeShader);  //<- Transformation matrix creation inside
-                renderCube.renderEntity(Cube, CubeShader);  //<- Transformation matrix creation inside
+                renderCube.renderEntity(Cube, CubeShader);
                 CubeShader.UnBind();
             }
             window.destroy();

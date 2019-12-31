@@ -6,13 +6,16 @@ import org.lwjgl.input.Keyboard;
 
 public class Camera {
 
-    private Vector3f position = new Vector3f(0,0,0);
+    private Vector3f position;
     private static float pitch;
     private static float yaw;
     private float roll;
 
-    public Camera(){}
+    public Camera() {
+        this.position = new Vector3f(0, 0, 0);
+    }
 
+    //!INPUT KEYS FOR CAMERA
     public void move(){
         if(Input.isKeyDown(Keyboard.KEY_W)){
             this.position.z -= 0.02f;
@@ -26,7 +29,7 @@ public class Camera {
 
     }
     public Vector3f getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(Vector3f position) {
