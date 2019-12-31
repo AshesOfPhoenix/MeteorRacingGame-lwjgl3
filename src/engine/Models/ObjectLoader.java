@@ -15,7 +15,7 @@ public class ObjectLoader {
     public static RawModel loadObject(String filename, Loader3Dmodel loader) {
         FileReader fr = null;
         try {
-            fr = new FileReader(new File(("objects/" + filename + ".obj")));
+            fr = new FileReader(new File((filename + ".obj")));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -36,8 +36,8 @@ public class ObjectLoader {
                 line = reader.readLine();
                 String[] currnetLine = line.split(" ");
                 if (line.startsWith("v ")) {
-                    Vector3f vertex = new Vector3f(Float.parseFloat(currnetLine[2]),
-                            Float.parseFloat(currnetLine[3]), Float.parseFloat(currnetLine[4]));
+                    Vector3f vertex = new Vector3f(Float.parseFloat(currnetLine[1]),
+                            Float.parseFloat(currnetLine[2]), Float.parseFloat(currnetLine[3]));
                     vertices.add(vertex);
                 } else if (line.startsWith("vt ")) {
                     Vector2f texture = new Vector2f(Float.parseFloat(currnetLine[1]),
@@ -66,9 +66,9 @@ public class ObjectLoader {
                     int a = 0;
                 }
                 String[] currentLine = line.split(" ");
-                String[] vertex1 = currentLine[1].split("/");
-                String[] vertex2 = currentLine[2].split("/");
-                String[] vertex3 = currentLine[3].split("/");
+                String[] vertex1 = currentLine[2].split("/");
+                String[] vertex2 = currentLine[3].split("/");
+                String[] vertex3 = currentLine[4].split("/");
 
                 processVertex(vertex1, indices, textures, normals, texturesArray, normalsArray);
                 processVertex(vertex2, indices, textures, normals, texturesArray, normalsArray);
