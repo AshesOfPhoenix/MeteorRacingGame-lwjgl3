@@ -157,13 +157,13 @@ public class Main implements Runnable {
             TextureModel texturedCube = new TextureModel(modelCube, materialCube);
 
             //*Initialize entities
-            Entity Car = new Entity(texturedCar, new Vector3f(2, 0, -8), -60, -10, 200, 1);
-            Entity Cube = new Entity(texturedCube, new Vector3f(-3, 0, -8), 7, 0, 0, 1.5f);
+            Entity Car = new Entity(texturedCar, new Vector3f(-3, 0, -8), 7, 0, 0, 1.5f);
+            //Entity Cube = new Entity(texturedCube, new Vector3f(-3, 0, -8), 7, 0, 0, 1.5f);
             //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            Input vhodi = new Input();
+            Camera camera = new Camera(vhodi);
 
-            Camera camera = new Camera();
-
-            while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
+            while (!window.shouldClose() && !vhodi.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawcall
                 render();
                 update();
@@ -172,17 +172,21 @@ public class Main implements Runnable {
                 renderCube.prepare();
 
                 //!Read mouse input
+                vhodi = new Input();
+                if (vhodi.isKeyDown(GLFW.GLFW_KEY_W)) {
+                    System.out.println("Matr");
+                }
                 camera.move();
 
                 //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
                 Car.increaseRotation(0.0f, 0.0f, 0.5f);
-                Cube.increaseRotation(5.0f, 0.0f, 5.0f);
+                // Cube.increaseRotation(5.0f, 0.0f, 5.0f);
 
                 //!RENDER OBJECTS
                 CubeShader.bind();
                 CubeShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
                 renderCube.renderEntity(Car, CubeShader);  //<- Transformation matrix creation inside
-                renderCube.renderEntity(Cube, CubeShader);
+                //   renderCube.renderEntity(Cube, CubeShader);
                 CubeShader.UnBind();
             }
             window.destroy();
