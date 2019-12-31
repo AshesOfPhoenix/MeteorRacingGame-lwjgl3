@@ -1,15 +1,15 @@
 package engine.entitete;
 
 import engine.io.Input;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.input.Keyboard;
 
 public class Camera {
 
     private Vector3f position;
-    private static float pitch;
-    private static float yaw;
-    private float roll;
+    private float pitch; //!Camera rotation up and down
+    private float yaw; //!Camera rotation right and left
+    private float roll; //*We dont need this, yet at least
 
     public Camera() {
         this.position = new Vector3f(0, 0, 0);
@@ -17,16 +17,30 @@ public class Camera {
 
     //!INPUT KEYS FOR CAMERA
     public void move(){
-        if(Input.isKeyDown(Keyboard.KEY_W)){
+        if (Input.isKeyDown(GLFW.GLFW_KEY_W)) {
             this.position.z -= 0.02f;
         }
-        if(Input.isKeyDown(Keyboard.KEY_D)){
+        if (Input.isKeyDown(GLFW.GLFW_KEY_D)) {
             this.position.x += 0.02f;
         }
-        if(Input.isKeyDown(Keyboard.KEY_A)){
+        if (Input.isKeyDown(GLFW.GLFW_KEY_A)) {
             this.position.x -= 0.02f;
         }
-
+        if (Input.isKeyDown(GLFW.GLFW_KEY_S)) {
+            this.position.z += 0.02f;
+        }
+        if (Input.isKeyDown(GLFW.GLFW_KEY_UP)) {
+            this.pitch -= 0.2f;
+        }
+        if (Input.isKeyDown(GLFW.GLFW_KEY_DOWN)) {
+            this.pitch += 0.2f;
+        }
+        if (Input.isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
+            this.yaw += 0.2f;
+        }
+        if (Input.isKeyDown(GLFW.GLFW_KEY_LEFT)) {
+            this.yaw -= 0.2f;
+        }
     }
     public Vector3f getPosition() {
         return this.position;
@@ -36,16 +50,16 @@ public class Camera {
         this.position = position;
     }
 
-    public static float getPitch() {
-        return pitch;
+    public float getPitch() {
+        return this.pitch;
     }
 
     public void setPitch(float pitch) {
         this.pitch = pitch;
     }
 
-    public static float getYaw() {
-        return yaw;
+    public float getYaw() {
+        return this.yaw;
     }
 
     public void setYaw(float yaw) {
@@ -53,7 +67,7 @@ public class Camera {
     }
 
     public float getRoll() {
-        return roll;
+        return this.roll;
     }
 
     public void setRoll(float roll) {
