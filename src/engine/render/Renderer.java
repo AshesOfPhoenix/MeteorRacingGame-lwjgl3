@@ -87,5 +87,6 @@ public class Renderer {
     //!Clean the frame
     public void prepare() {
         GL30.glEnable(GL30.GL_DEPTH_TEST);
+        GL30.glEnable(GL30.GL_BLEND);
     }
 }

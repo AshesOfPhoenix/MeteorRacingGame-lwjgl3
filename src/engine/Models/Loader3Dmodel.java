@@ -16,7 +16,7 @@ public class Loader3Dmodel {
     private List<Integer> textures = new ArrayList<>();
     private int vaoID;
 
-    public RawModel loadToVAO(float[] vertices, float[] textCords, int[] indices) {
+    public RawModel loadToVAO(float[] vertices, float[] textCords, int[] indices, float[] normalsArray) {
         //*Create and bind vertex object
         this.vaoID = createVAO();
         //!Bind indices and create buffers
