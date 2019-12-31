@@ -1,12 +1,11 @@
 #version 330 core
 
-
 in vec3 position;
 in vec2 textureCoordinates;
 
-uniform mat4 transMatrix;
 uniform mat4 projeMat;
 uniform mat4 viewMat;
+uniform mat4 transMatrix;
 
 out vec3 fs_color;
 out vec2 pass_textureCoordinates;

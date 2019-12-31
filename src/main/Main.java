@@ -1,6 +1,7 @@
 package main;
 
 import engine.Models.Loader3Dmodel;
+import engine.Models.ObjectLoader;
 import engine.Models.RawModel;
 import engine.Models.TextureModel;
 import engine.entitete.Camera;
@@ -12,6 +13,7 @@ import engine.io.Input;
 import engine.io.Window;
 import engine.render.Renderer;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
@@ -20,8 +22,8 @@ public class Main implements Runnable {
     public final int WIDTH = 1280, HEIGHT = 760;
     public Thread game;
     public Window window;
-    public Renderer renderer;
-    public static StaticShader shreder;
+    public Renderer renderCube;
+    public static StaticShader CubeShader;
     /*public Mesh mesh = new Mesh(new Vertex[]{
             new Vertex(new Vector3f(-0.5f, 0.5f, 0.0f),new Vector3f(1.0f,0.0f,0.0f),new Vector2f(0.0f,0.0f)),
             new Vertex(new Vector3f(-0.5f, -0.5f, 0.0f),new Vector3f(0.0f,1.0f,0.0f),new Vector2f(0.0f,0.0f)),
@@ -45,13 +47,13 @@ public class Main implements Runnable {
         window = new Window(WIDTH, HEIGHT, "Game");
         //!Create and initialize window
         window.create();
-        window.setBackgroundColor(1.0f, 0, 1.0f);
+        window.setBackgroundColor(1.0f, 1.0f, 1.0f);
 
         //!Read the shaders from file and Create shader program
-        shreder = new StaticShader();
+        CubeShader = new StaticShader();
 
-        //!Send shader to renderer for further use and create projection matrix
-        renderer = new Renderer(shreder);    //<- Projection matrix creation inside
+        //!Send shader to renderCube for further use and create projection matrix
+        renderCube = new Renderer(CubeShader);    //<- Projection matrix creation inside
 
         //  mesh.create();
 
@@ -139,44 +141,54 @@ public class Main implements Runnable {
 
             //!ONE OBJECT
             //ˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇ
+            //*Declare loader class for loading 3D objects
             Loader3Dmodel loader = new Loader3Dmodel();
-            //RawModel mode= ObjectLoader.loadObject("10603_slot_car_blue_SG_v1_iterations-2",loader);
-            RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
 
-            Texture texture = new Texture("tnt.png");
-            Material mat = new Material(texture);
+            //*Initialize raw models
+            RawModel modelCar = ObjectLoader.loadObject("10603_slot_car_blue_SG_v1_iterations-2", loader);
+            RawModel modelCube = loader.loadToVAO(vertices, textureCoords, indices);
 
+            //*Initialize materials and textures
+            Texture textureCube = new Texture("tnt.png");
+            Material materialCube = new Material(textureCube);
 
-            TextureModel mod = new TextureModel(model, mat);
-            Entity entity = new Entity(mod, new Vector3f(0, 0, -5), 0, 0, 0, 1);
+            //*Initialize textured models
+            TextureModel texturedCar = new TextureModel(modelCar, materialCube);
+            TextureModel texturedCube = new TextureModel(modelCube, materialCube);
+
+            //*Initialize entities
+            Entity Car = new Entity(texturedCar, new Vector3f(2, 0, -8), -60, -10, 200, 1);
+            Entity Cube = new Entity(texturedCube, new Vector3f(-3, 0, -8), 7, 0, 0, 1.5f);
             //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
             Camera camera = new Camera();
 
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
-                //!Swap buffer
+                //!Swap buffer and Clear frame buffer from previous drawcall
                 render();
                 update();
-                //!Clear frame buffer
-                renderer.prepare();
+
+                //!Init OpenGL specifications
+                renderCube.prepare();
 
                 //!Read mouse input
                 camera.move();
 
-                //!MOVE CUBE
-                entity.increasePosition(0, 0, -0.1f);
-                entity.increaseRotation(0.0f, 3.0f, 3.0f);
+                //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
+                //entity.increasePosition(0, 0, -0.1f);
+                Car.increaseRotation(0.0f, 0.0f, 0.5f);
+                Cube.increaseRotation(5.0f, 0.0f, 5.0f);
 
-                //!RENDER OBJECT
-                shreder.bind();
-                shreder.UniformViewMatrix(camera);
-                renderer.renderEntity(entity, shreder);  //<- Transformation matrix creation inside
-                shreder.unbind();
-                // entity.increaseRotation();
+                //!RENDER OBJECTS
+                CubeShader.bind();
+                CubeShader.UniformViewMatrix(camera);
+                renderCube.renderEntity(Car, CubeShader);  //<- Transformation matrix creation inside
+                renderCube.renderEntity(Cube, CubeShader);  //<- Transformation matrix creation inside
+                CubeShader.UnBind();
             }
             window.destroy();
             loader.pocisti();
-            shreder.destroy();
+            CubeShader.destroy();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -191,7 +203,9 @@ public class Main implements Runnable {
     }
 
     private void render() {
-        // renderer.renderMesh(mesh);
+        // renderCube.renderMesh(mesh);
         window.swapBuffers();
+        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+        GL30.glClearColor(0, 0.0f, 0.0f, 1);
     }
 }

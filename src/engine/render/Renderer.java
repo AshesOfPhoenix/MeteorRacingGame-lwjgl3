@@ -25,7 +25,7 @@ public class Renderer {
         createProjectionMatrix();
         shader.bind();
         shader.UniformProjcMatrix(this.projectionMatrix);
-        shader.unbind();
+        shader.UnBind();
     }
 
     //!Render mesh by binding vao, enabling vertex attributes and drawing the mesh
@@ -39,7 +39,7 @@ public class Renderer {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, mesh.getMaterial().getTextureID());
         this.shader.bind();
         GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.getIndices().length, GL30.GL_UNSIGNED_INT, 0);
-        this.shader.unbind();
+        this.shader.UnBind();
         GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, 0);
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
@@ -87,7 +87,5 @@ public class Renderer {
     //!Clean the frame
     public void prepare() {
         GL30.glEnable(GL30.GL_DEPTH_TEST);
-        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-        GL30.glClearColor(0, 0.0f, 0.0f, 1);
     }
 }

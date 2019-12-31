@@ -1,9 +1,6 @@
 package engine.graphics;
 
-
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -26,8 +23,6 @@ public abstract class Shader {
         ParseShader(fragmentPath, 1); //*1 = Fragment shader
         create();
         getAllUniformLocations();
-        //vertexFile = FileUtils.loadAsString(vertexPath);
-        //fragmentFile = FileUtils.loadAsString(fragmentPath);
     }
 
     protected abstract void getAllUniformLocations();
@@ -36,90 +31,86 @@ public abstract class Shader {
 
     //!Get the uniform location of the variable in the shader program
     protected int getUniformLocation(String uniformName) {
-        return GL20.glGetUniformLocation(programID, uniformName);
+        return GL30.glGetUniformLocation(programID, uniformName);
     }
 
     //!Send boolean uniform to the shader program
     protected void Uniform1b(int location, boolean value) {
-        float load = 0;
-        if (value) {
-            load = 1;
-        }
-        GL20.glUniform1f(location, load);
+        GL30.glUniform1f(location, (value) ? 1 : 0);
     }
 
     //!Send matrix uniform to the shader program
-    public void Uniform1m(int location, Matrix4f matrix) {
+    protected void Uniform1m(int location, Matrix4f matrix) {
         matrix.store(matrixBuffer);
         matrixBuffer.flip();
-        GL20.glUniformMatrix4fv(location, false, matrixBuffer);
+        GL30.glUniformMatrix4fv(location, false, matrixBuffer);
     }
 
     //!Send float uniform to the shader program
     protected void Uniform1f(int location, float value) {
-        GL20.glUniform1f(location, value);
+        GL30.glUniform1f(location, value);
     }
 
     //!Send vector uniform to the shader program
     protected void Uniform1v(int location, Vector3f vector) {
-        GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+        GL30.glUniform3f(location, vector.x, vector.y, vector.z);
     }
 
     //!Attach shaders to the program
-    public void create() {
-        programID = GL20.glCreateProgram();
+    private void create() {
+        programID = GL30.glCreateProgram();
 
-        vertexID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
-        GL20.glShaderSource(vertexID, vertexFile);
-        GL20.glCompileShader(vertexID);
-        if (GL20.glGetShaderi(vertexID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-            System.err.println("Vertex Shader: " + GL20.glGetShaderInfoLog(vertexID));
+        vertexID = GL30.glCreateShader(GL30.GL_VERTEX_SHADER);
+        GL30.glShaderSource(vertexID, vertexFile);
+        GL30.glCompileShader(vertexID);
+        if (GL30.glGetShaderi(vertexID, GL30.GL_COMPILE_STATUS) == GL30.GL_FALSE) {
+            System.err.println("Vertex Shader: " + GL30.glGetShaderInfoLog(vertexID));
             return;
         }
 
-        fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
-        GL20.glShaderSource(fragmentID, fragmentFile);
-        GL20.glCompileShader(fragmentID);
-        if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-            System.err.println("Fragment Shader: " + GL20.glGetShaderInfoLog(fragmentID));
+        fragmentID = GL30.glCreateShader(GL30.GL_FRAGMENT_SHADER);
+        GL30.glShaderSource(fragmentID, fragmentFile);
+        GL30.glCompileShader(fragmentID);
+        if (GL30.glGetShaderi(fragmentID, GL30.GL_COMPILE_STATUS) == GL30.GL_FALSE) {
+            System.err.println("Fragment Shader: " + GL30.glGetShaderInfoLog(fragmentID));
             return;
         }
 
         //*Attach shaders to the program
-        GL20.glAttachShader(programID, vertexID);
-        GL20.glAttachShader(programID, fragmentID);
+        GL30.glAttachShader(programID, vertexID);
+        GL30.glAttachShader(programID, fragmentID);
 
         bindAttributes();
 
-        GL20.glLinkProgram(programID);
-        if (GL20.glGetProgrami(programID, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
-            System.err.println("Program Linking: " + GL20.glGetProgramInfoLog(programID));
+        GL30.glLinkProgram(programID);
+        if (GL30.glGetProgrami(programID, GL30.GL_LINK_STATUS) == GL30.GL_FALSE) {
+            System.err.println("Program Linking: " + GL30.glGetProgramInfoLog(programID));
             return;
         }
 
-        GL20.glValidateProgram(programID);
-        if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
-            System.err.println("Program Validation: " + GL20.glGetProgramInfoLog(programID));
+        GL30.glValidateProgram(programID);
+        if (GL30.glGetProgrami(programID, GL30.GL_VALIDATE_STATUS) == GL30.GL_FALSE) {
+            System.err.println("Program Validation: " + GL30.glGetProgramInfoLog(programID));
             return;
         }
 
-        GL20.glDeleteShader(vertexID);
-        GL20.glDeleteShader(fragmentID);
+        GL30.glDeleteShader(vertexID);
+        GL30.glDeleteShader(fragmentID);
     }
 
     //!Bind Shader
     public void bind() {
-        GL20.glUseProgram(this.programID);
+        GL30.glUseProgram(this.programID);
     }
 
     //!UnBind Shader
-    public void unbind() {
-        GL20.glUseProgram(0);
+    public void UnBind() {
+        GL30.glUseProgram(0);
     }
 
     //!Destroy program
     public void destroy() {
-        GL20.glDeleteProgram(programID);
+        GL30.glDeleteProgram(programID);
     }
 
     //!Bind vertex attributes
