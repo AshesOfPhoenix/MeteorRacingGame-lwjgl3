@@ -12,19 +12,19 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 //!Contains a specific shader program
-public class Renderer {
+public class EntityRenderer {
     private StaticShader shader;
     private static final float FOV = 90;
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PlANE = 1000;
     private Matrix4f projectionMatrix;
 
-    public Renderer(StaticShader shader) {
+    public EntityRenderer(StaticShader shader) {
         this.shader = shader;
-        //!Projection Matrix creates only one and it never changes
+        //!Projection Matrix creates only once and it never changes <- GO TO MASTER RENDERER
         createProjectionMatrix();
         shader.bind();
-        shader.UniformProjcMatrix(this.projectionMatrix);
+        shader.UniformProjcMatrix(projectionMatrix);
         shader.UnBind();
     }
 
@@ -60,6 +60,25 @@ public class Renderer {
         shader.UniformTransMatrix(transformationMatrix);
 
         //shader.UniformProjcMatrix(this.projectionMatrix);
+        GL30.glActiveTexture(GL30.GL_TEXTURE0);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, material.getTextureID());
+        GL30.glDrawElements(GL30.GL_TRIANGLES, rawModel.getIndexCount(), GL30.GL_UNSIGNED_INT, 0);
+        GL30.glDisableVertexAttribArray(0);
+        GL30.glDisableVertexAttribArray(1);
+        GL30.glBindVertexArray(0);
+    }
+
+    private void renderTerrain(Entity entity, StaticShader shader) {
+        TextureModel model = entity.getModel();
+        RawModel rawModel = model.getRawModel();
+        Material material = model.getMaterial();
+
+        GL30.glBindVertexArray(rawModel.getVaoID());
+        GL30.glEnableVertexAttribArray(0);
+        GL30.glEnableVertexAttribArray(1);
+        Matrix4f transformationMatrix = Maths.createTransfMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+        shader.UniformTransMatrix(transformationMatrix);
+
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, material.getTextureID());
         GL30.glDrawElements(GL30.GL_TRIANGLES, rawModel.getIndexCount(), GL30.GL_UNSIGNED_INT, 0);

@@ -6,12 +6,13 @@ import engine.Models.RawModel;
 import engine.Models.TextureModel;
 import engine.entitete.Camera;
 import engine.entitete.Entity;
+import engine.entitete.Terrain;
 import engine.graphics.Material;
 import engine.graphics.StaticShader;
 import engine.graphics.Texture;
 import engine.io.Input;
 import engine.io.Window;
-import engine.render.Renderer;
+import engine.render.EntityRenderer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
@@ -25,17 +26,18 @@ public class Main implements Runnable {
 
     //!TEST CUBE
     //*=======================
-    //public Renderer renderCube;
+    //public EntityRenderer renderCube;
     //public static StaticShader CubeShader;
     //*=======================
     //!CAR
     //*=======================
-    public Renderer renderCar;
+    public EntityRenderer carEntityRenderer;
     public static StaticShader CarShader;
     //*=======================
     //!TERRAIN
     //*=================================================================
-    //!TODO
+    public EntityRenderer terrainEntityRenderer;
+    public static StaticShader TerrainShader;
     //*=================================================================
 
     public static void main(String[] args) {
@@ -59,16 +61,17 @@ public class Main implements Runnable {
         //!TEST CUBE
         //*=================================================================
         //CubeShader = new StaticShader("resources\\shaders\\mainVertexCube.glsl", "resources\\shaders\\mainFragmentCube.glsl");
-        //renderCube = new Renderer(CubeShader);    //<- Projection matrix creation inside
+        //renderCube = new EntityRenderer(CubeShader);    //<- Projection matrix creation inside
         //*=================================================================
         //!CAR
         //*=================================================================
         CarShader = new StaticShader("resources\\shaders\\mainVertexCar.glsl", "resources\\shaders\\mainFragmentCar.glsl");
-        renderCar = new Renderer(CarShader);    //<- Projection matrix creation inside
+        carEntityRenderer = new EntityRenderer(CarShader);    //<- Projection matrix creation inside
         //*=================================================================
         //!TERRAIN
         //*=================================================================
-        //!TODO
+        TerrainShader = new StaticShader("resources\\shaders\\mainVertexTerrain.glsl", "resources\\shaders\\mainFragmentTerrain.glsl");
+        terrainEntityRenderer = new EntityRenderer(TerrainShader);    //<- Projection matrix creation inside
         //*=================================================================
     }
 
@@ -98,19 +101,22 @@ public class Main implements Runnable {
             Texture textureCar = new Texture("objects\\textures\\avtomobilcek.png");
             Material materialCar = new Material(textureCar);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Entity Car = new Entity(texturedCar, new Vector3f(0, 0, -8), -60, -10, 200, 1);
+            Entity Car = new Entity(texturedCar, new Vector3f(0, -1, -8), -90, 0, 180, 1);
             //*=================================================================
             //*=================================================================
             //!TERRAIN
             //*=================================================================
-            //!TODO
+            Texture textureTerrain = new Texture("grass2.png");
+            Material materialTerrain = new Material(textureTerrain);
+            Terrain terrain = new Terrain(5, 5, loader, materialTerrain);
+            RawModel modelTerrain = terrain.getModel();
+            TextureModel texturedTerrain = new TextureModel(modelTerrain, materialTerrain);
+            Entity Terrain = new Entity(texturedTerrain, new Vector3f(-300, -1, -300), 0, 0, 0, 1);
             //*=================================================================
             //?^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
             //!Initialize camera class for input readings
             Camera camera = new Camera();
-
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
@@ -119,31 +125,43 @@ public class Main implements Runnable {
                 camera.move();
 
                 //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
-                //Car.increaseRotation(0.0f, 0.0f, 0.5f);
+                Car.increaseRotation(0.0f, 0.0f, 0.1f);
                 //Cube.increaseRotation(1.0f, 0.0f, 1.0f);
 
+                //*=================================================================
                 //!RENDERING CAR ENTITY
                 //*=================================================================
                 //?Init OpenGL specifications for rendering CAR
-                //renderCube.prepare();
-                renderCar.prepare();
+                carEntityRenderer.prepare();
                 //?RENDER CAR
                 CarShader.bind();
                 CarShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
-                renderCar.renderEntity(Car, CarShader);  //<- Transformation matrix creation inside
+                carEntityRenderer.renderEntity(Car, CarShader);  //<- Transformation matrix creation inside
                 CarShader.UnBind();
                 //?Disable OpenGL specifications for CAR
-                renderCar.disable();
+                carEntityRenderer.disable();
                 //*=================================================================
-                //!TERRAIN
+
                 //*=================================================================
-                //!TODO
+                //!RENDERING TERRAIN
+                //*=================================================================
+
+                terrainEntityRenderer.prepare();
+                //?RENDER CAR
+                TerrainShader.bind();
+                TerrainShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
+                terrainEntityRenderer.renderEntity(Terrain, TerrainShader);  //<- Transformation matrix creation inside
+                TerrainShader.UnBind();
+                //?Disable OpenGL specifications for CAR
+                terrainEntityRenderer.disable();
+
                 //*=================================================================
             }
             //DESTROY
             window.destroy();
             loader.destroy();
             CarShader.destroy();
+            TerrainShader.destroy();
         } catch (IOException e) {
             e.printStackTrace();
         }
