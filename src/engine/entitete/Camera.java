@@ -18,28 +18,28 @@ public class Camera {
     //!INPUT KEYS FOR CAMERA
     public void move(){
         if (Input.isKeyDown(GLFW.GLFW_KEY_W)) {
-            this.position.z -= 0.02f;
+            this.position.z -= 0.1f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_D)) {
-            this.position.x += 0.02f;
+            this.position.x += 0.1f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_A)) {
-            this.position.x -= 0.02f;
+            this.position.x -= 0.1f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_S)) {
-            this.position.z += 0.02f;
+            this.position.z += 0.1f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_UP)) {
-            this.pitch -= 0.2f;
+            this.pitch -= 1.0f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_DOWN)) {
-            this.pitch += 0.2f;
+            this.pitch += 1.0f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
-            this.yaw += 0.2f;
+            this.yaw += 1.0f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_LEFT)) {
-            this.yaw -= 0.2f;
+            this.yaw -= 1.0f;
         }
     }
     public Vector3f getPosition() {
