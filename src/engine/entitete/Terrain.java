@@ -13,6 +13,13 @@ public class Terrain {
     private RawModel model;
     private Material textureModel;
 
+    public Terrain(int gridX, int gridZ, Loader3Dmodel loader, Material texture) {
+        this.textureModel = texture;
+        this.x = gridX * SIZE;
+        this.z = gridZ * SIZE;
+        this.model = generateTerrain(loader);
+    }
+
     public RawModel getModel() {
         return model;
     }
@@ -27,13 +34,6 @@ public class Terrain {
 
     public float getZ() {
         return z;
-    }
-
-    public Terrain(int gridX, int gridZ, Loader3Dmodel loader, Material texture) {
-        this.textureModel = texture;
-        this.x = gridX * SIZE;
-        this.z = gridZ * SIZE;
-        this.model = generateTerrain(loader);
     }
 
     private RawModel generateTerrain(Loader3Dmodel loader) {

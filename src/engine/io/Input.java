@@ -11,7 +11,7 @@ public class Input {
     private GLFWKeyCallback keyboard;
     private GLFWCursorPosCallback mouseMove;
     private GLFWMouseButtonCallback mouseButtons;
-    private GLFWScrollCallback mouseScroll;
+    private static GLFWScrollCallback mouseScroll;
 
     public Input() {
         keyboard = new GLFWKeyCallback() {
@@ -84,7 +84,8 @@ public class Input {
         return mouseButtons;
     }
 
-    public GLFWScrollCallback getMouseScrollCallback() {
+    public static GLFWScrollCallback getMouseScrollCallback() {
         return mouseScroll;
     }
+
 }

@@ -6,28 +6,33 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
 
-    private Vector3f position;
-    private float pitch; //!Camera rotation up and down
-    private float yaw; //!Camera rotation right and left
+    private float dolzina_cam_obj = 10;
+    private float kot_med_cam_in_obj = 0;
+    private float oldMouseX = 0, oldMouseY = 0, newMousex = 0, newMouseY = 0;
+    private Vector3f position = new Vector3f(0, 0, 0);
+    ;
+    private float pitch = 20; //!Camera rotation up and down
+    private float yaw = 100; //!Camera rotation right and left
     private float roll; //*We dont need this, yet at least
+    private Avtomobil avto;
 
-    public Camera() {
-        this.position = new Vector3f(0, 0, 0);
+    public Camera(Avtomobil avto) {
+        this.avto = avto;
     }
 
     //!INPUT KEYS FOR CAMERA
     public void move(){
         if (Input.isKeyDown(GLFW.GLFW_KEY_W)) {
-            this.position.z -= 0.1f;
+            this.position.z -= 0.001f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_D)) {
-            this.position.x += 0.1f;
+            this.position.x += 0.001f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_A)) {
-            this.position.x -= 0.1f;
+            this.position.x -= 0.001f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_S)) {
-            this.position.z += 0.1f;
+            this.position.z += 0.001f;
         }
         if (Input.isKeyDown(GLFW.GLFW_KEY_UP)) {
             this.pitch -= 1.0f;
@@ -41,11 +46,27 @@ public class Camera {
         if (Input.isKeyDown(GLFW.GLFW_KEY_LEFT)) {
             this.yaw -= 1.0f;
         }
+        update();
+        float hori = calcHorizontal();
+        float verti = calcVertical();
+        calcCameraPos(hori, verti);
+        this.yaw = 180 - (avto.getRotY() + kot_med_cam_in_obj);
+
     }
     public Vector3f getPosition() {
         return this.position;
     }
 
+    private void calcCameraPos(float horizD, float verticD) {
+        float theta = avto.getRotY() + kot_med_cam_in_obj;
+        float offsetX = (float) (dolzina_cam_obj * Math.sin(Math.toRadians(theta)));
+        float offsetZ = (float) (dolzina_cam_obj * Math.cos(Math.toRadians(theta)));
+
+        position.x = avto.getPosition().x - offsetX;
+        position.z = avto.getPosition().z - offsetZ;
+        position.y = avto.getPosition().y + verticD;
+
+    }
     public void setPosition(Vector3f position) {
         this.position = position;
     }
@@ -72,6 +93,32 @@ public class Camera {
 
     public void setRoll(float roll) {
         this.roll = roll;
+    }
+
+    public float calcHorizontal() {
+        return (float) (dolzina_cam_obj * Math.cos(Math.toRadians(pitch)));
+    }
+
+    public float calcVertical() {
+        return (float) (dolzina_cam_obj * Math.sin(Math.toRadians(pitch)));
+    }
+
+    public void update() {
+        newMousex = (float) Input.getMouseX();
+        newMouseY = (float) Input.getMouseY();
+
+        float dx = newMousex - oldMouseX;
+        float dy = newMouseY - oldMouseY;
+        if (Input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {
+            float pitchch = dy * 0.1f;
+            pitch -= pitchch;
+        } else if ((Input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT))) {
+            float kot = dx * 0.3f;
+            kot_med_cam_in_obj -= kot;
+        }
+        ;
+        oldMouseX = newMousex;
+        oldMouseY = newMouseY;
     }
 }
 

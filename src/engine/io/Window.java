@@ -13,7 +13,7 @@ public class Window {
     public static int height;
     private String title;
     private long window;
-    private int frames;
+    public static int frames;
     private static long time;
     private Input input;
     private Vector3f background = new Vector3f(0, 0, 0);
@@ -147,5 +147,6 @@ public class Window {
     public long getWindow() {
         return window;
     }
+
 
 }

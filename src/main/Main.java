@@ -4,6 +4,7 @@ import engine.Models.Loader3Dmodel;
 import engine.Models.ObjectLoader;
 import engine.Models.RawModel;
 import engine.Models.TextureModel;
+import engine.entitete.Avtomobil;
 import engine.entitete.Camera;
 import engine.entitete.Entity;
 import engine.entitete.Terrain;
@@ -24,6 +25,10 @@ public class Main implements Runnable {
     public Thread game;
     public Window window;
 
+    public static StaticShader TerrainShader;
+    public static StaticShader CarShader;
+    private static float lastFrameTime;
+    private static float delta;
     //!TEST CUBE
     //*=======================
     //public EntityRenderer renderCube;
@@ -32,21 +37,28 @@ public class Main implements Runnable {
     //!CAR
     //*=======================
     public EntityRenderer carEntityRenderer;
-    public static StaticShader CarShader;
     //*=======================
     //!TERRAIN
     //*=================================================================
     public EntityRenderer terrainEntityRenderer;
-    public static StaticShader TerrainShader;
     //*=================================================================
 
     public static void main(String[] args) {
         new Main().start();
     }
 
+
     public void start() {
         game = new Thread(this, "game");
         game.start();
+    }
+
+    public static long getcurrent_time() {
+        return Window.frames;
+    }
+
+    public static float getFT() {
+        return delta;
     }
 
     public void init() throws IOException {
@@ -55,6 +67,7 @@ public class Main implements Runnable {
         window.create();
         window.setBackgroundColor(1.0f, 1.0f, 1.0f);
 
+        lastFrameTime = getcurrent_time();
         //?Read the shaders from file and Create shader program for cube
         //?Send shader to renderer for further use and create projection matrix
         //?Add different shader files for different types of objects
@@ -97,11 +110,11 @@ public class Main implements Runnable {
             //*=================================================================
             //!CAR
             //*=================================================================
-            RawModel modelCar = ObjectLoader.loadObject("10603_slot_car_blue_SG_v1_iterations-2", loader);
-            Texture textureCar = new Texture("objects\\textures\\avtomobilcek.png");
+            RawModel modelCar = ObjectLoader.loadObject("objects\\10603_slot_car_blue_SG_v1_iterations-2", loader);
+            Texture textureCar = new Texture("objects\\demo4.png");
             Material materialCar = new Material(textureCar);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Entity Car = new Entity(texturedCar, new Vector3f(0, -1, -8), -90, 0, 180, 1);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, -1, -8), -90, 0, 180, 1);
             //*=================================================================
             //*=================================================================
             //!TERRAIN
@@ -116,16 +129,16 @@ public class Main implements Runnable {
             //?^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
             //!Initialize camera class for input readings
-            Camera camera = new Camera();
+            Camera camera = new Camera(Car);
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
                 update();
                 //!Read keyboard input
                 camera.move();
-
+                Car.move();
                 //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
-                Car.increaseRotation(0.0f, 0.0f, 0.1f);
+                // Car.increaseRotation(0.0f, 0.0f, 0.1f);
                 //Cube.increaseRotation(1.0f, 0.0f, 1.0f);
 
                 //*=================================================================
@@ -162,9 +175,16 @@ public class Main implements Runnable {
             loader.destroy();
             CarShader.destroy();
             TerrainShader.destroy();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void clearFrameBuffer() {
+        window.swapBuffers();
+        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+        GL30.glClearColor(0, 0.0f, 0.0f, 1);
     }
 
     private void update() {
@@ -173,12 +193,8 @@ public class Main implements Runnable {
             System.out.println("X: " + Input.getMouseX() + ", Y: " + Input.getMouseY());
         //primer ko pritisnemo gumb f11 se nam poveca screen na fullscreen
         if (Input.isKeyDown(GLFW.GLFW_KEY_F11)) window.setFullscreen(!window.isFullscreen());
-    }
-
-    private void clearFrameBuffer() {
-        window.swapBuffers();
-        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-        GL30.glClearColor(0, 0.0f, 0.0f, 1);
+        long currnetFT = getcurrent_time();
+        delta = (currnetFT - lastFrameTime) / 100f;
     }
 
     float[] vertices = {

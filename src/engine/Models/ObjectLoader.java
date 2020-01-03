@@ -66,9 +66,9 @@ public class ObjectLoader {
                     int a = 0;
                 }
                 String[] currentLine = line.split(" ");
-                String[] vertex1 = currentLine[2].split("/");
-                String[] vertex2 = currentLine[3].split("/");
-                String[] vertex3 = currentLine[4].split("/");
+                String[] vertex1 = currentLine[1].split("/");
+                String[] vertex2 = currentLine[2].split("/");
+                String[] vertex3 = currentLine[3].split("/");
 
                 processVertex(vertex1, indices, textures, normals, texturesArray, normalsArray);
                 processVertex(vertex2, indices, textures, normals, texturesArray, normalsArray);
