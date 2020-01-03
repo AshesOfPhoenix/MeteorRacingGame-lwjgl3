@@ -84,9 +84,13 @@ public class Renderer {
         this.projectionMatrix.m33 = 0;
     }
 
-    //!Clean the frame
+
     public void prepare() {
         GL30.glEnable(GL30.GL_DEPTH_TEST);
         GL30.glEnable(GL30.GL_BLEND);
+    }
+
+    public void disable() {
+        GL30.glEnable(0);
     }
 }

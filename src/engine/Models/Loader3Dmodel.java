@@ -36,7 +36,7 @@ public class Loader3Dmodel {
         return texture.getTextureID();
     }
 
-    public void pocisti() {
+    public void destroy() {
         for (int vao : this.vaos) {
             GL30.glDeleteVertexArrays(vao);
         }
