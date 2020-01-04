@@ -33,6 +33,7 @@ public class ObjectLoader {
         int stevec = 0;
         try {
             while (true) {
+
                 line = reader.readLine();
                 String[] currnetLine = line.split(" ");
                 if (line.startsWith("v ")) {
@@ -62,17 +63,30 @@ public class ObjectLoader {
                     line = reader.readLine();
                     continue;
                 }
-                if (stevec == 16192) {
-                    int a = 0;
-                }
                 String[] currentLine = line.split(" ");
-                String[] vertex1 = currentLine[1].split("/");
-                String[] vertex2 = currentLine[2].split("/");
-                String[] vertex3 = currentLine[3].split("/");
+                if (currentLine.length == 4) {
+                    String[] vertex1 = currentLine[1].split("/");
+                    String[] vertex2 = currentLine[2].split("/");
+                    String[] vertex3 = currentLine[3].split("/");
+                    processVertex(vertex1, indices, textures, normals, texturesArray, normalsArray);
+                    processVertex(vertex2, indices, textures, normals, texturesArray, normalsArray);
+                    processVertex(vertex3, indices, textures, normals, texturesArray, normalsArray);
+                } else if (currentLine.length == 5) {
+                    String[] vertex1 = currentLine[1].split("/");
+                    String[] vertex2 = currentLine[2].split("/");
+                    String[] vertex3 = currentLine[3].split("/");
+                    processVertex(vertex1, indices, textures, normals, texturesArray, normalsArray);
+                    processVertex(vertex2, indices, textures, normals, texturesArray, normalsArray);
+                    processVertex(vertex3, indices, textures, normals, texturesArray, normalsArray);
 
-                processVertex(vertex1, indices, textures, normals, texturesArray, normalsArray);
-                processVertex(vertex2, indices, textures, normals, texturesArray, normalsArray);
-                processVertex(vertex3, indices, textures, normals, texturesArray, normalsArray);
+                    String[] vertex11 = currentLine[1].split("/");
+                    String[] vertex23 = currentLine[3].split("/");
+                    String[] vertex4 = currentLine[4].split("/");
+                    processVertex(vertex11, indices, textures, normals, texturesArray, normalsArray);
+                    processVertex(vertex23, indices, textures, normals, texturesArray, normalsArray);
+                    processVertex(vertex4, indices, textures, normals, texturesArray, normalsArray);
+                }
+
                 //postavimo normalo in texture na normalno pozicijo
                 line = reader.readLine();
             }

@@ -4,10 +4,7 @@ import engine.Models.Loader3Dmodel;
 import engine.Models.ObjectLoader;
 import engine.Models.RawModel;
 import engine.Models.TextureModel;
-import engine.entitete.Avtomobil;
-import engine.entitete.Camera;
-import engine.entitete.Entity;
-import engine.entitete.Terrain;
+import engine.entitete.*;
 import engine.graphics.Material;
 import engine.graphics.StaticShader;
 import engine.graphics.Texture;
@@ -27,6 +24,8 @@ public class Main implements Runnable {
 
     public static StaticShader TerrainShader;
     public static StaticShader CarShader;
+    public static StaticShader MeteorShader;
+
     private static float lastFrameTime;
     private static float delta;
     //!TEST CUBE
@@ -41,6 +40,10 @@ public class Main implements Runnable {
     //!TERRAIN
     //*=================================================================
     public EntityRenderer terrainEntityRenderer;
+    //*=================================================================
+    //!Meteor
+    //*=================================================================
+    public EntityRenderer meteorEntityRenderer;
     //*=================================================================
 
     public static void main(String[] args) {
@@ -86,6 +89,13 @@ public class Main implements Runnable {
         TerrainShader = new StaticShader("resources\\shaders\\mainVertexTerrain.glsl", "resources\\shaders\\mainFragmentTerrain.glsl");
         terrainEntityRenderer = new EntityRenderer(TerrainShader);    //<- Projection matrix creation inside
         //*=================================================================
+
+        //*=================================================================
+        //!Meteor
+        //*=================================================================
+        MeteorShader = new StaticShader("resources\\shaders\\mainVertexMeteor.glsl", "resources\\shaders\\mainFragmentMeteor.glsl");
+        meteorEntityRenderer = new EntityRenderer(MeteorShader);
+
     }
 
     public void run() {
@@ -127,6 +137,15 @@ public class Main implements Runnable {
             Entity Terrain = new Entity(texturedTerrain, new Vector3f(-300, -1, -300), 0, 0, 0, 1);
             //*=================================================================
             //?^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            //*=================================================================
+            //*=================================================================
+            //!METEOR
+            //*=================================================================
+            RawModel modelMeteor = ObjectLoader.loadObject("objects\\10464_Asteroid_v1_Iterations-2", loader);
+            Texture textureMeteor = new Texture("objects\\demo5.png");
+            Material materialMeteor = new Material(textureMeteor);
+            TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
+            Meteor meteor = new Meteor(texturedMeteor, new Vector3f(0, -1, -8), -90, 0, 180, (float) 0.01);
 
             //!Initialize camera class for input readings
             Camera camera = new Camera(Car);
@@ -169,12 +188,28 @@ public class Main implements Runnable {
                 terrainEntityRenderer.disable();
 
                 //*=================================================================
+
+                //*=================================================================
+
+                //*=================================================================
+                //!RENDERING METEOR
+                //*=================================================================
+                meteorEntityRenderer.prepare();
+                //?RENDER CAR
+                MeteorShader.bind();
+                MeteorShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
+                meteorEntityRenderer.renderEntity(meteor, MeteorShader);  //<- Transformation matrix creation inside
+                MeteorShader.UnBind();
+                //?Disable OpenGL specifications for CAR
+                meteorEntityRenderer.disable();
+
             }
             //DESTROY
             window.destroy();
             loader.destroy();
             CarShader.destroy();
             TerrainShader.destroy();
+            MeteorShader.destroy();
 
         } catch (IOException e) {
             e.printStackTrace();
