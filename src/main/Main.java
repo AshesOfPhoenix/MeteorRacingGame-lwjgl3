@@ -120,7 +120,7 @@ public class Main implements Runnable {
             //*=================================================================
             //!CAR
             //*=================================================================
-            RawModel modelCar = ObjectLoader.loadObject("objects\\10603_slot_car_blue_SG_v1_iterations-2", loader);
+            RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
             Texture textureCar = new Texture("objects\\demo4.png");
             Material materialCar = new Material(textureCar);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
@@ -141,7 +141,7 @@ public class Main implements Runnable {
             //*=================================================================
             //!METEOR
             //*=================================================================
-            RawModel modelMeteor = ObjectLoader.loadObject("objects\\10464_Asteroid_v1_Iterations-2", loader);
+            RawModel modelMeteor = ObjectLoader.loadObject("objects\\KrizmanAsteroid", loader);
             Texture textureMeteor = new Texture("objects\\demo5.png");
             Material materialMeteor = new Material(textureMeteor);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
