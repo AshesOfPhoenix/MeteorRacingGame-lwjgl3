@@ -117,15 +117,24 @@ public class Main implements Runnable {
                 camera.move();
                 Car.move();
 
+                //?METEOR SPAWNER AND MOVEMENT
+                for (int i = 0; i < gibanje.size(); i++) {
+                    meteor = gibanje.get(i);
+                    meteor.move();
 
-                for (Meteor metercek : meteorcki) {
-                    masterRenderer.processEntity(metercek);
+                    //*Render meteor
+                    masterRenderer.processEntity(meteor);
+
+                    if (gibanje.get(indeks).getPosition().y <= 0 && meteorcki.size() - 1 > indeks) {
+                        indeks++;
+                        gibanje.add(meteorcki.get(indeks));
+                    }
+                    Car.colisiondetection(gibanje.get(indeks));
                 }
 
                 masterRenderer.processEntity(Car);
                 masterRenderer.processTerrain(terrain);
                 masterRenderer.render(light, camera);
-
             }
             //DESTROY
             window.destroy();
