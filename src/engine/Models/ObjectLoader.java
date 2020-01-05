@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectLoader {
-    public static RawModel loadObject(String filename, Loader3Dmodel loader) {
+    public static RawModel loadObject(String pathToObject, Loader3Dmodel loader) {
         FileReader fr = null;
         try {
-            fr = new FileReader(new File((filename + ".obj")));
+            fr = new FileReader(new File((pathToObject + ".obj")));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

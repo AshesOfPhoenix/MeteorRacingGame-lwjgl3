@@ -3,12 +3,15 @@ package engine.render;
 import engine.Models.TextureModel;
 import engine.entitete.Camera;
 import engine.entitete.Entity;
+import engine.entitete.Light;
 import engine.entitete.Terrain;
 import engine.graphics.StaticShader;
+import engine.graphics.TerrainShader;
 import engine.io.Window;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,35 +23,36 @@ public class MasterRenderer {
     private static final float FAR_PlANE = 1000;
     private Matrix4f projectionMatrix;
 
-    private StaticShader shader;
-    private EntityRenderer renderer;
+    private StaticShader shader = new StaticShader("resources\\shaders\\MainEntityVertex.glsl", "resources\\shaders\\MainEntityFragment.glsl");
+    private EntityRenderer entityRenderer;
 
-    //private TerrainRenderer terrainRenderer;
-    //private TerrainShader terrainShader = new TerrainShader();
+    private TerrainShader terrainShader = new TerrainShader("resources\\shaders\\TerrainVertexShader.glsl", "resources\\shaders\\TerrainFragmentShader.glsl");
+    private TerrainRenderer terrainRenderer;
 
     private Map<TextureModel, List<Entity>> entities = new HashMap<TextureModel, List<Entity>>();
-    private List<Terrain> terrains = new ArrayList<Terrain>();
+    private List<Terrain> terrains = new ArrayList<>();
 
-    public MasterRenderer() {
-        GL30.glEnable(GL30.GL_CULL_FACE);
-        GL30.glCullFace(GL30.GL_BACK);
+    public MasterRenderer() throws IOException {
+        prepare();
         createProjectionMatrix();
-        renderer = new EntityRenderer(shader);
-        //terrainRenderer = new TerrainRenderer(shader,projectionMatrix);
+        entityRenderer = new EntityRenderer(shader, projectionMatrix);
+        terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
     }
 
-    public void render(Camera camera) {
-        prepare();
+    public void render(Light sun, Camera camera) {
+        //!Render entities
         shader.bind();
-        //shader.loadLight(sun);
+        shader.UniformLight(sun);
         shader.UniformViewMatrix(camera);
-        //renderer.renderEntity(entities);
+        entityRenderer.render(entities);
         shader.UnBind();
-        //terrainShader.start();
-        //terrainShader.loadLight(sun);
-        //terrainShader.loadViewMatrix(camera);
-        //terrainRenderer.render(terrains);
-        //terrainShader.stop();
+        //!Render terrains
+        terrainShader.bind();
+        terrainShader.UniformLight(sun);
+        terrainShader.UniformViewMatrix(camera);
+        terrainRenderer.render(terrains);
+        terrainShader.UnBind();
+        //!Clear arraylists
         terrains.clear();
         entities.clear();
     }
@@ -76,23 +80,25 @@ public class MasterRenderer {
     public void processEntity(Entity entity) {
         TextureModel entityModel = entity.getModel();
         List<Entity> batch = entities.get(entityModel);
-        if (batch != null) {
+        if (batch != null) { //!Check if batch already exists
             batch.add(entity);
-        } else {
+        } else {             //!Else create new one
             List<Entity> newBatch = new ArrayList<Entity>();
             newBatch.add(entity);
             entities.put(entityModel, newBatch);
         }
     }
 
-    public void prepare() {
-        GL30.glEnable(GL30.GL_DEPTH_TEST);
-        GL30.glEnable(GL30.GL_BLEND);
-    }
-
     public void cleanUp() {
         shader.destroy();
-        //terrainShader.destroy();
+        terrainShader.destroy();
+    }
+
+    private void prepare() {
+        GL30.glEnable(GL30.GL_DEPTH_TEST);
+        GL30.glEnable(GL30.GL_BLEND);
+        GL30.glEnable(GL30.GL_CULL_FACE);
+        GL30.glCullFace(GL30.GL_BACK);
     }
 
     public void disable() {

@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
 
-    private float dolzina_cam_obj = 10;
+    private float dolzina_cam_obj = 50;
     private float kot_med_cam_in_obj = 0;
     private float oldMouseX = 0, oldMouseY = 0, newMousex = 0, newMouseY = 0;
     private Vector3f position = new Vector3f(0, 0, 0);
@@ -116,9 +116,7 @@ public class Camera {
             float kot = dx * 0.3f;
             kot_med_cam_in_obj -= kot;
         }
-        ;
         oldMouseX = newMousex;
         oldMouseY = newMouseY;
     }
 }
-

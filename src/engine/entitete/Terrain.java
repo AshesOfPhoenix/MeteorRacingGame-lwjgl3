@@ -11,10 +11,10 @@ public class Terrain {
     private float x;
     private float z;
     private RawModel model;
-    private Material textureModel;
+    private Material material;
 
-    public Terrain(int gridX, int gridZ, Loader3Dmodel loader, Material texture) {
-        this.textureModel = texture;
+    public Terrain(int gridX, int gridZ, Loader3Dmodel loader, Material material) {
+        this.material = material;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
         this.model = generateTerrain(loader);
@@ -24,8 +24,8 @@ public class Terrain {
         return model;
     }
 
-    public Material getTextureModel() {
-        return textureModel;
+    public Material getMaterial() {
+        return material;
     }
 
     public float getX() {
@@ -46,7 +46,7 @@ public class Terrain {
         for (int i = 0; i < VERTEX_COUNT; i++) {
             for (int j = 0; j < VERTEX_COUNT; j++) {
                 vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
-                vertices[vertexPointer * 3 + 1] = 0;
+                vertices[vertexPointer * 3 + 1] = -1;
                 vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
                 normals[vertexPointer * 3] = 0;
                 normals[vertexPointer * 3 + 1] = 1;

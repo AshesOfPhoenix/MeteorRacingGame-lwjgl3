@@ -4,49 +4,63 @@ import engine.Models.RawModel;
 import engine.Models.TextureModel;
 import engine.entitete.Entity;
 import engine.graphics.Material;
-import engine.graphics.Mesh;
 import engine.graphics.StaticShader;
-import engine.io.Window;
 import engine.maths.Maths;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
+import java.util.List;
+import java.util.Map;
+
 //!Contains a specific shader program
 public class EntityRenderer {
     private StaticShader shader;
-    private static final float FOV = 90;
-    private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PlANE = 1000;
-    private Matrix4f projectionMatrix;
 
-    public EntityRenderer(StaticShader shader) {
-        this.shader = shader;
+    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
         //!Projection Matrix creates only once and it never changes <- GO TO MASTER RENDERER
-        createProjectionMatrix();
+        this.shader = shader;
         shader.bind();
         shader.UniformProjcMatrix(projectionMatrix);
         shader.UnBind();
     }
 
-    //!Render mesh by binding vao, enabling vertex attributes and drawing the mesh
-    public void renderMesh(Mesh mesh) {
-        GL30.glBindVertexArray(mesh.getVAO());
+    public void render(Map<TextureModel, List<Entity>> entities) {
+        for (TextureModel model : entities.keySet()) {
+            prepareTextureModel(model);
+            List<Entity> batch = entities.get(model);
+            for (Entity entity : batch) {
+                prepareInstance(entity);
+                GL30.glDrawElements(GL30.GL_TRIANGLES, model.getRawModel().getIndexCount(), GL30.GL_UNSIGNED_INT, 0);
+            }
+            unBindTextureModel();
+        }
+    }
+
+    public void prepareTextureModel(TextureModel model) {
+        RawModel rawModel = model.getRawModel();
+        Material material = model.getMaterial();
+        GL30.glBindVertexArray(rawModel.getVaoID());
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
-        //GL30.glEnableVertexAttribArray(2);
-        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, mesh.getIBO());
+        GL30.glEnableVertexAttribArray(2);
+        shader.UniformShineDamperAndReflectivity(material.getShineDamper(), material.getReflectivity());
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, mesh.getMaterial().getTextureID());
-        this.shader.bind();
-        GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.getIndices().length, GL30.GL_UNSIGNED_INT, 0);
-        this.shader.UnBind();
-        GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, 0);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, material.getTextureID());
+    }
+
+    public void unBindTextureModel() {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
-        //GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
     }
 
+    public void prepareInstance(Entity entity) {
+        Matrix4f transformationMatrix = Maths.createTransfMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
+        shader.UniformTransMatrix(transformationMatrix);
+    }
+
+    //!Render entity by binding vao, enabling vertex attributes and drawing the mesh
     public void renderEntity(Entity entity, StaticShader shader) {
         TextureModel model = entity.getModel();
         RawModel rawModel = model.getRawModel();
@@ -55,58 +69,20 @@ public class EntityRenderer {
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
-        //GL30.glEnableVertexAttribArray(2);
+        GL30.glEnableVertexAttribArray(2);
         Matrix4f transformationMatrix = Maths.createTransfMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
         shader.UniformTransMatrix(transformationMatrix);
-
-        //shader.UniformProjcMatrix(this.projectionMatrix);
-        GL30.glActiveTexture(GL30.GL_TEXTURE0);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, material.getTextureID());
-        GL30.glDrawElements(GL30.GL_TRIANGLES, rawModel.getIndexCount(), GL30.GL_UNSIGNED_INT, 0);
-        GL30.glDisableVertexAttribArray(0);
-        GL30.glDisableVertexAttribArray(1);
-        GL30.glBindVertexArray(0);
-    }
-
-    private void renderTerrain(Entity entity, StaticShader shader) {
-        TextureModel model = entity.getModel();
-        RawModel rawModel = model.getRawModel();
-        Material material = model.getMaterial();
-
-        GL30.glBindVertexArray(rawModel.getVaoID());
-        GL30.glEnableVertexAttribArray(0);
-        GL30.glEnableVertexAttribArray(1);
-        Matrix4f transformationMatrix = Maths.createTransfMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
-        shader.UniformTransMatrix(transformationMatrix);
+        shader.UniformShineDamperAndReflectivity(material.getShineDamper(), material.getReflectivity());
 
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, material.getTextureID());
+
+        //*DRAW CALL
         GL30.glDrawElements(GL30.GL_TRIANGLES, rawModel.getIndexCount(), GL30.GL_UNSIGNED_INT, 0);
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
+        GL30.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
-    }
-
-    private void createProjectionMatrix() {
-        float aspectRatio = (float) Window.getWidth() / (float) Window.getHeight();
-        float yscale = (float) ((1f / Math.tan(Math.toRadians((FOV / 2f)))) * aspectRatio);
-        float xscale = yscale / aspectRatio;
-        float lenght = FAR_PlANE - NEAR_PLANE;
-
-        this.projectionMatrix = new Matrix4f();
-        this.projectionMatrix.m00 = xscale;
-        this.projectionMatrix.m11 = yscale;
-
-        this.projectionMatrix.m22 = -((FAR_PlANE + NEAR_PLANE) / lenght);
-        this.projectionMatrix.m23 = -1;
-        this.projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PlANE) / lenght);
-        this.projectionMatrix.m33 = 0;
-    }
-
-
-    public void prepare() {
-        GL30.glEnable(GL30.GL_DEPTH_TEST);
-        GL30.glEnable(GL30.GL_BLEND);
     }
 
     public void disable() {

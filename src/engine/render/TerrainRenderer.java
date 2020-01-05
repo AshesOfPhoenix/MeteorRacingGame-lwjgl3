@@ -2,7 +2,8 @@ package engine.render;
 
 import engine.Models.RawModel;
 import engine.entitete.Terrain;
-import engine.graphics.StaticShader;
+import engine.graphics.Material;
+import engine.graphics.TerrainShader;
 import engine.maths.Maths;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
@@ -11,9 +12,9 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.List;
 
 public class TerrainRenderer {
-    private StaticShader shader;
+    private TerrainShader shader;
 
-    public TerrainRenderer(StaticShader shader, Matrix4f projectionMatrix) {
+    public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
         shader.bind();
         shader.UniformProjcMatrix(projectionMatrix);
@@ -35,23 +36,23 @@ public class TerrainRenderer {
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
-        //GL30.glEnableVertexAttribArray(2);
-        //TextureModel texture = terrain.getTextureModel();
-        //shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+        GL30.glEnableVertexAttribArray(2);
+        Material material = terrain.getMaterial();
+        shader.UniformShineDamperAndReflectivity(material.getShineDamper(), material.getReflectivity());
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
-        //GL30.glBindTexture(GL30.GL_TEXTURE_2D, texture.getMaterial().getTextureID());
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, material.getTextureID());
     }
 
     private void unbindTexturedModel() {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
-        //GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
     }
 
     private void loadModelMatrix(Terrain terrain) {
         Matrix4f transformationMatrix = Maths.createTransfMatrix(
                 new Vector3f(terrain.getX(), 0, terrain.getZ()), 0, 0, 0, 1);
-        shader.UniformTransMatrix(transformationMatrix);
+        this.shader.UniformTransMatrix(transformationMatrix);
     }
 }

@@ -1,6 +1,7 @@
 package engine.graphics;
 
 import engine.entitete.Camera;
+import engine.entitete.Light;
 import engine.maths.Maths;
 import org.lwjgl.util.vector.Matrix4f;
 
@@ -12,6 +13,10 @@ public class StaticShader extends Shader {
     private int location_transfMatrix;
     private int location_projfMatrix;
     private int location_viewMatrix;
+    private int location_lightPosition;
+    private int location_lightColor;
+    private int location_shineDamper;
+    private int location_reflectivity;
 
     public StaticShader(String VertexShaderPath, String FragmentShaderPath) throws IOException {
         super(VertexShaderPath, FragmentShaderPath);
@@ -21,31 +26,33 @@ public class StaticShader extends Shader {
 
     public void getAllUniformLocations() {
         this.location_transfMatrix = super.getUniformLocation("transMatrix");
-        if (this.location_transfMatrix == -1) {
-            System.err.println("Error in Shader.addUniform(): uniform [" + "transMatrix" + "] does not exist");
-            System.exit(1);
-        }
         this.location_projfMatrix = super.getUniformLocation("projeMat");
-        if (this.location_projfMatrix == -1) {
-            System.err.println("Error in Shader.addUniform(): uniform [" + "projeMat" + "] does not exist");
-            System.exit(1);
-        }
         this.location_viewMatrix = super.getUniformLocation("viewMat");
-        if (this.location_viewMatrix == -1) {
-            System.err.println("Error in Shader.addUniform(): uniform [" + "viewMat" + "] does not exist");
-            System.exit(1);
-        }
+        this.location_lightPosition = super.getUniformLocation("lightPosition");
+        this.location_lightColor = super.getUniformLocation("lightColor");
+        this.location_shineDamper = super.getUniformLocation("shineDamper");
+        this.location_reflectivity = super.getUniformLocation("reflectivity");
     }
 
     protected void bindAttributes() {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoordinates");
+        super.bindAttribute(2, "normal");
     }
 
+    public void UniformShineDamperAndReflectivity(float damper, float reflectivity) {
+        super.Uniform1f(location_shineDamper, damper);
+        super.Uniform1f(location_reflectivity, reflectivity);
+    }
 
     public void UniformViewMatrix(Camera camera) {
         Matrix4f new_viewMatrix = Maths.createViewMatrix(camera);
         super.Uniform1m(this.location_viewMatrix, new_viewMatrix);
+    }
+
+    public void UniformLight(Light light) {
+        super.Uniform1v(this.location_lightPosition, light.getPosition());
+        super.Uniform1v(this.location_lightColor, light.getColor());
     }
 
     public void UniformProjcMatrix(Matrix4f projection) {
@@ -68,5 +75,4 @@ public class StaticShader extends Shader {
     public int getLocation_viewMatrix() {
         return this.location_viewMatrix;
     }
-
 }

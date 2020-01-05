@@ -16,14 +16,14 @@ public class Texture {
     private static int height;
     private static int textureID;
 
-    public Texture(String path) {
-        textureID = load(path);
+    public Texture(String pathToTexture) {
+        textureID = load(pathToTexture);
     }
 
-    public static int load(String path) {
+    public static int load(String pathToTexture) {
         int[] pixels = null;
         try {
-            BufferedImage image = ImageIO.read(new FileInputStream(path));
+            BufferedImage image = ImageIO.read(new FileInputStream(pathToTexture));
             width = image.getWidth();
             height = image.getHeight();
             pixels = new int[width * height];

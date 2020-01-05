@@ -6,45 +6,24 @@ import engine.Models.RawModel;
 import engine.Models.TextureModel;
 import engine.entitete.*;
 import engine.graphics.Material;
-import engine.graphics.StaticShader;
 import engine.graphics.Texture;
 import engine.io.Input;
 import engine.io.Window;
-import engine.render.EntityRenderer;
+import engine.render.MasterRenderer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main implements Runnable {
     public final int WIDTH = 1280, HEIGHT = 760;
     public Thread game;
     public Window window;
 
-    public static StaticShader TerrainShader;
-    public static StaticShader CarShader;
-    public static StaticShader MeteorShader;
-
     private static float lastFrameTime;
     private static float delta;
-    //!TEST CUBE
-    //*=======================
-    //public EntityRenderer renderCube;
-    //public static StaticShader CubeShader;
-    //*=======================
-    //!CAR
-    //*=======================
-    public EntityRenderer carEntityRenderer;
-    //*=======================
-    //!TERRAIN
-    //*=================================================================
-    public EntityRenderer terrainEntityRenderer;
-    //*=================================================================
-    //!Meteor
-    //*=================================================================
-    public EntityRenderer meteorEntityRenderer;
-    //*=================================================================
 
     public static void main(String[] args) {
         new Main().start();
@@ -68,33 +47,13 @@ public class Main implements Runnable {
         window = new Window(WIDTH, HEIGHT, "Game");
         //!Create and initialize window
         window.create();
-        window.setBackgroundColor(1.0f, 1.0f, 1.0f);
+        window.setBackgroundColor(0.0f, 0.0f, 0.0f);
 
         lastFrameTime = getcurrent_time();
         //?Read the shaders from file and Create shader program for cube
         //?Send shader to renderer for further use and create projection matrix
         //?Add different shader files for different types of objects
-        //!TEST CUBE
-        //*=================================================================
-        //CubeShader = new StaticShader("resources\\shaders\\mainVertexCube.glsl", "resources\\shaders\\mainFragmentCube.glsl");
-        //renderCube = new EntityRenderer(CubeShader);    //<- Projection matrix creation inside
-        //*=================================================================
-        //!CAR
-        //*=================================================================
-        CarShader = new StaticShader("resources\\shaders\\mainVertexCar.glsl", "resources\\shaders\\mainFragmentCar.glsl");
-        carEntityRenderer = new EntityRenderer(CarShader);    //<- Projection matrix creation inside
-        //*=================================================================
-        //!TERRAIN
-        //*=================================================================
-        TerrainShader = new StaticShader("resources\\shaders\\mainVertexTerrain.glsl", "resources\\shaders\\mainFragmentTerrain.glsl");
-        terrainEntityRenderer = new EntityRenderer(TerrainShader);    //<- Projection matrix creation inside
-        //*=================================================================
 
-        //*=================================================================
-        //!Meteor
-        //*=================================================================
-        MeteorShader = new StaticShader("resources\\shaders\\mainVertexMeteor.glsl", "resources\\shaders\\mainFragmentMeteor.glsl");
-        meteorEntityRenderer = new EntityRenderer(MeteorShader);
 
     }
 
@@ -109,44 +68,46 @@ public class Main implements Runnable {
             //?Initialize materials and textures
             //?Initialize textured models
             //?Initialize entities, their positions and rotations
-            //!TEST CUBE
-            //*=================================================================
-            //RawModel modelCube = loader.loadToVAO(vertices, textureCoords, indices, normalsArray);
-            //Texture textureCube = new Texture("tnt.png");
-            //Material materialCube = new Material(textureCube);
-            //TextureModel texturedCube = new TextureModel(modelCube, materialCube);
-            //Entity Cube = new Entity(texturedCube, new Vector3f(-3, 0, -8), 7, 0, 0, 1.5f);
-            //*=================================================================
             //*=================================================================
             //!CAR
             //*=================================================================
             RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
-            Texture textureCar = new Texture("objects\\demo4.png");
-            Material materialCar = new Material(textureCar);
+            Material materialCar = new Material(new Texture("objects\\demo4.png"), 10, 10);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, -1, -8), -90, 0, 180, 1);
-            //*=================================================================
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(400, -1, 200), -90, 0, 180, 1);
             //*=================================================================
             //!TERRAIN
             //*=================================================================
-            Texture textureTerrain = new Texture("grass2.png");
-            Material materialTerrain = new Material(textureTerrain);
-            Terrain terrain = new Terrain(5, 5, loader, materialTerrain);
-            RawModel modelTerrain = terrain.getModel();
-            TextureModel texturedTerrain = new TextureModel(modelTerrain, materialTerrain);
-            Entity Terrain = new Entity(texturedTerrain, new Vector3f(-300, -1, -300), 0, 0, 0, 1);
-            //*=================================================================
-            //?^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            //*=================================================================
+            Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
+            Terrain terrain = new Terrain(0, 0, loader, materialTerrain);
+            Terrain terrain2 = new Terrain(1, 0, loader, materialTerrain);
+            Terrain terrain3 = new Terrain(1, 1, loader, materialTerrain);
+            Terrain terrain4 = new Terrain(0, 1, loader, materialTerrain);
             //*=================================================================
             //!METEOR
             //*=================================================================
             RawModel modelMeteor = ObjectLoader.loadObject("objects\\KrizmanAsteroid", loader);
-            Texture textureMeteor = new Texture("objects\\demo5.png");
-            Material materialMeteor = new Material(textureMeteor);
+            Material materialMeteor = new Material(new Texture("objects\\demo5.png"), 10, 1);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
-            Meteor meteor = new Meteor(texturedMeteor, new Vector3f(0, -1, -8), -90, 0, 180, (float) 0.01);
+            Meteor meteor = new Meteor(texturedMeteor, new Vector3f(400, 2, 200), 0, 0, 0, 0.002f);
+            //*=================================================================
+            //?^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+            //!METEOR RANDOMIZER
+            ArrayList<Meteor> meteorcki = new ArrayList<>();
+            int stevilometeorjev = (int) (Math.random() * 1000000 * 45);
+            for (int i = 0; i < 100; i++) {
+                float randx = (float) (Math.random() * 750 + (-200));
+                float randz = (float) (Math.random() * 750 + (-200));
+                float randomsize = (float) (Math.random() * 0.1 + 0.01);
+                meteor = new Meteor(texturedMeteor, new Vector3f(randx, 200, randz), 0, 0, 0, randomsize);
+                meteorcki.add(meteor);
+            }
+
+            //!MAIN RENDERER FOR ALL OBJECTS
+            MasterRenderer masterRenderer = new MasterRenderer();
+            //!Initialize light source - Light Source and Color output
+            Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1, 1, 1));
             //!Initialize camera class for input readings
             Camera camera = new Camera(Car);
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
@@ -156,61 +117,25 @@ public class Main implements Runnable {
                 //!Read keyboard input
                 camera.move();
                 Car.move();
-                //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
-                // Car.increaseRotation(0.0f, 0.0f, 0.1f);
-                //Cube.increaseRotation(1.0f, 0.0f, 1.0f);
 
-                //*=================================================================
-                //!RENDERING CAR ENTITY
-                //*=================================================================
-                //?Init OpenGL specifications for rendering CAR
-                carEntityRenderer.prepare();
-                //?RENDER CAR
-                CarShader.bind();
-                CarShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
-                carEntityRenderer.renderEntity(Car, CarShader);  //<- Transformation matrix creation inside
-                CarShader.UnBind();
-                //?Disable OpenGL specifications for CAR
-                carEntityRenderer.disable();
-                //*=================================================================
 
-                //*=================================================================
-                //!RENDERING TERRAIN
-                //*=================================================================
+                for (Meteor metercek : meteorcki) {
+                    masterRenderer.processEntity(metercek);
+                }
 
-                terrainEntityRenderer.prepare();
-                //?RENDER CAR
-                TerrainShader.bind();
-                TerrainShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
-                terrainEntityRenderer.renderEntity(Terrain, TerrainShader);  //<- Transformation matrix creation inside
-                TerrainShader.UnBind();
-                //?Disable OpenGL specifications for CAR
-                terrainEntityRenderer.disable();
-
-                //*=================================================================
-
-                //*=================================================================
-
-                //*=================================================================
-                //!RENDERING METEOR
-                //*=================================================================
-                meteorEntityRenderer.prepare();
-                //?RENDER CAR
-                MeteorShader.bind();
-                MeteorShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
-                meteorEntityRenderer.renderEntity(meteor, MeteorShader);  //<- Transformation matrix creation inside
-                MeteorShader.UnBind();
-                //?Disable OpenGL specifications for CAR
-                meteorEntityRenderer.disable();
+                masterRenderer.processEntity(Car);
+                masterRenderer.processTerrain(terrain);
+                masterRenderer.processTerrain(terrain2);
+                masterRenderer.processTerrain(terrain3);
+                masterRenderer.processTerrain(terrain4);
+                masterRenderer.render(light, camera);
 
             }
             //DESTROY
             window.destroy();
             loader.destroy();
-            CarShader.destroy();
-            TerrainShader.destroy();
-            MeteorShader.destroy();
-
+            masterRenderer.cleanUp();
+            meteorcki.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }

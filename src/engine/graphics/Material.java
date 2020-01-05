@@ -7,16 +7,33 @@ public class Material {
     private float width, height;
     private int textureID;
 
-    public Material(Texture texture) {
+    //lightning config
+    private float shineDamper = 1;
+    private float reflectivity = 0;
+
+    public Material(Texture texture, float shineDamper, float reflectivity) {
         this.texture = texture;
+        this.shineDamper = shineDamper;
+        this.reflectivity = reflectivity;
         this.textureID = texture.getTextureID();
     }
 
-    /*
-    public Material(int ID) {
-        this.textureID = ID;
+    public float getShineDamper() {
+        return shineDamper;
     }
-    */
+
+    public void setShineDamper(float shineDamper) {
+        this.shineDamper = shineDamper;
+    }
+
+    public float getReflectivity() {
+        return reflectivity;
+    }
+
+    public void setReflectivity(float reflectivity) {
+        this.reflectivity = reflectivity;
+    }
+
     public void Bind() {
         this.texture.bind();
     }

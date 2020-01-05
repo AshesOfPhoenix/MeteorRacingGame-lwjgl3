@@ -31,7 +31,12 @@ public abstract class Shader {
 
     //!Get the uniform location of the variable in the shader program
     protected int getUniformLocation(String uniformName) {
-        return GL30.glGetUniformLocation(programID, uniformName);
+        int location = GL30.glGetUniformLocation(programID, uniformName);
+        if (location == -1) {
+            System.err.println("Error in getUniformLocation: uniform [" + uniformName + "] does not exist");
+            System.exit(1);
+        }
+        return location;
     }
 
     //!Send boolean uniform to the shader program
