@@ -4,6 +4,9 @@ import engine.Models.Loader3Dmodel;
 import engine.Models.ObjectLoader;
 import engine.Models.RawModel;
 import engine.Models.TextureModel;
+import engine.PowerUps.Armour;
+import engine.PowerUps.PowerUp;
+import engine.PowerUps.SpeedBoost;
 import engine.entitete.*;
 import engine.graphics.Material;
 import engine.graphics.Texture;
@@ -16,34 +19,35 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main implements Runnable {
-    public final int WIDTH = 1280, HEIGHT = 760;
-    public Thread game;
-    public Window window;
+    private final int WIDTH = 1280, HEIGHT = 760;
+    private Thread game;
+    private Window window;
 
     private static float lastFrameTime;
     private static float delta;
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         new Main().start();
     }
 
 
-    public void start() {
+    private void start() {
         game = new Thread(this, "game");
         game.start();
     }
 
-    public static long getcurrent_time() {
+    private static long getcurrent_time() {
         return Window.frames;
     }
 
-    public static float getFT() {
+    private static float getFT() {
         return delta;
     }
 
-    public void init() throws IOException {
+    private void init() {
         window = new Window(WIDTH, HEIGHT, "Game");
         //!Create and initialize window
         window.create();
@@ -71,12 +75,12 @@ public class Main implements Runnable {
             RawModel protection = ObjectLoader.loadObject("objects\\Substance_Painter_Shield_003", loader);
             Material materialProtection = new Material(new Texture("objects\\viking.png"), 30, 15);
             TextureModel texturedProtection = new TextureModel(protection, materialProtection);
-            Entity protectionM = new Entity(texturedProtection, new Vector3f(100, 3, 100), 0, 0, 0, 0.01f);
+            Armour armour = new Armour(texturedProtection, new Vector3f(100, 2.4f, 100), 0, 0, 0, 0.01f);
 
             RawModel speed = ObjectLoader.loadObject("objects\\10475_Rocket_Ship_v1_L3", loader);
             Material materialSpeed = new Material(new Texture("objects\\10475_Rocket_Ship_v1_Diffuse.png"), 30, 15);
             TextureModel texturedSpeed = new TextureModel(speed, materialSpeed);
-            Entity speedM = new Entity(texturedSpeed, new Vector3f(100, 1, 110), -90, 0, 0, 0.01f);
+            SpeedBoost speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(100, 0.3f, 110), -90, 0, 0, 0.01f);
             //*=================================================================
             //!CAR
             //*=================================================================
@@ -88,7 +92,7 @@ public class Main implements Runnable {
             //*=================================================================
             //!TERRAIN
             //*=================================================================
-            Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 0.2f);
+            Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
             Terrain terrain = new Terrain(0, 0, loader, materialTerrain);
             //*=================================================================
             //!METEOR
@@ -96,7 +100,7 @@ public class Main implements Runnable {
             RawModel modelMeteor = ObjectLoader.loadObject("objects\\KrizmanAsteroid", loader);
             Material materialMeteor = new Material(new Texture("objects\\demo5.png"), 10, 1);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
-            Meteor meteor = new Meteor(texturedMeteor, new Vector3f(0, -1, -8), -90, 0, 180, (float) 0.01);
+            Meteor meteor;
 
             //!METEOR RANDOMIZER
             ArrayList<Meteor> meteorcki = new ArrayList<>();
@@ -111,6 +115,13 @@ public class Main implements Runnable {
 
             //!MAIN RENDERER FOR ALL OBJECTS
             MasterRenderer masterRenderer = new MasterRenderer();
+
+            //!PowerUps - HAS TO BE IN ORDER -> SpeedBoost -> Armour -> ...
+            List<Entity> powerups = new ArrayList<>();
+            powerups.add(speedBoost);
+            powerups.add(armour);
+            PowerUp UltimatePower = new PowerUp(powerups);
+
             //!Initialize light source - Light Source and Color output
             Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1.0f, 0.74f, 0.74f));
             //!Initialize camera class for input readings
@@ -130,10 +141,8 @@ public class Main implements Runnable {
                 for (int i = 0; i < gibanje.size(); i++) {
                     meteor = gibanje.get(i);
                     meteor.move();
-
                     //*Render meteor
                     masterRenderer.processEntity(meteor);
-
                     if (gibanje.get(indeks).getPosition().y <= 0 && meteorcki.size() - 1 > indeks) {
                         indeks++;
                         gibanje.add(meteorcki.get(indeks));
@@ -141,12 +150,30 @@ public class Main implements Runnable {
                     Car.colisiondetection(gibanje.get(indeks));
                 }
 
-                protectionM.increaseRotation(0, 2.0f, 0);
-                speedM.increaseRotation(0, 0.0f, 2.0f);
+                //!Process PowerUPs - don't render if already active
+                UltimatePower.bouncy_bouncy(); //*This plays up and down animation
+                //*This checks if the car collected any of powerups
+                UltimatePower.collectSpeedBoost(Car.getPosition());
+                UltimatePower.collectArmour(Car.getPosition());
+                //!Check if the speed boost effect is active - if yes activate speed boost and don't render speed entity
+                if (!UltimatePower.checkIfPickedUpSpeed()) {
+                    Car.disableSpeedBoost();
+                    masterRenderer.processEntity(speedBoost);
+                } else {
+                    Car.activateSpeedBoost();
+                }
+                //!Check if the armour effect is active - if yes activate armour and don't render armour entity
+                if (!UltimatePower.checkIfPickedUpArmour()) {
+                    Car.disableArmour();
+                    masterRenderer.processEntity(armour);
+                } else {
+                    Car.activateArmour();
+                }
+                System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
+                System.out.println("Armour -> Active:" + armour.isActive());
+
 
                 masterRenderer.processEntity(Car);
-                masterRenderer.processEntity(protectionM);
-                masterRenderer.processEntity(speedM);
                 masterRenderer.processTerrain(terrain);
                 masterRenderer.render(light, camera);
             }
@@ -155,6 +182,7 @@ public class Main implements Runnable {
             loader.destroy();
             masterRenderer.cleanUp();
             meteorcki.clear();
+            powerups.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -9,8 +9,8 @@ public class Terrain {
     private static final float SIZE = 10000;
     private static final int VERTEX_COUNT = 2048;
 
-    public static float x;
-    public static float z;
+    private static float x;
+    private static float z;
     private RawModel model;
     private Material material;
 
@@ -24,6 +24,7 @@ public class Terrain {
 
     private void prepare() {
         GL30.glEnable(GL30.GL_FOG);
+        GL30.glEnable(GL30.GL_BLEND);
         GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_NEAREST_MIPMAP_NEAREST);
         GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
         GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_WRAP_S, GL30.GL_MIRRORED_REPEAT);
