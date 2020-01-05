@@ -3,10 +3,11 @@ package engine.entitete;
 import engine.Models.Loader3Dmodel;
 import engine.Models.RawModel;
 import engine.graphics.Material;
+import org.lwjgl.opengl.GL30;
 
 public class Terrain {
-    private static final float SIZE = 800;
-    private static final int VERTEX_COUNT = 128;
+    private static final float SIZE = 10000;
+    private static final int VERTEX_COUNT = 2048;
 
     public static float x;
     public static float z;
@@ -15,9 +16,17 @@ public class Terrain {
 
     public Terrain(int gridX, int gridZ, Loader3Dmodel loader, Material material) {
         this.material = material;
+        prepare();
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
         this.model = generateTerrain(loader);
+    }
+
+    private void prepare() {
+        GL30.glEnable(GL30.GL_FOG);
+        GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_NEAREST_MIPMAP_NEAREST);
+        GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+        GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_WRAP_S, GL30.GL_MIRRORED_REPEAT);
     }
 
     public RawModel getModel() {
@@ -46,7 +55,7 @@ public class Terrain {
         for (int i = 0; i < VERTEX_COUNT; i++) {
             for (int j = 0; j < VERTEX_COUNT; j++) {
                 vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
-                vertices[vertexPointer * 3 + 1] = -1;
+                vertices[vertexPointer * 3 + 1] = 0;
                 vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
                 normals[vertexPointer * 3] = 0;
                 normals[vertexPointer * 3 + 1] = 1;

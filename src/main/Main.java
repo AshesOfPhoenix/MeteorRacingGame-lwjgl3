@@ -47,7 +47,7 @@ public class Main implements Runnable {
         window = new Window(WIDTH, HEIGHT, "Game");
         //!Create and initialize window
         window.create();
-        window.setBackgroundColor(0.0f, 0.0f, 0.0f);
+        window.setBackgroundColor(1.0f, 1.0f, 1.0f);
 
         lastFrameTime = getcurrent_time();
         //?Read the shaders from file and Create shader program for cube
@@ -68,18 +68,27 @@ public class Main implements Runnable {
             //?Initialize materials and textures
             //?Initialize textured models
             //?Initialize entities, their positions and rotations
+            RawModel protection = ObjectLoader.loadObject("objects\\Substance_Painter_Shield_003", loader);
+            Material materialProtection = new Material(new Texture("objects\\viking.png"), 30, 15);
+            TextureModel texturedProtection = new TextureModel(protection, materialProtection);
+            Entity protectionM = new Entity(texturedProtection, new Vector3f(100, 3, 100), 0, 0, 0, 0.01f);
+
+            RawModel speed = ObjectLoader.loadObject("objects\\10475_Rocket_Ship_v1_L3", loader);
+            Material materialSpeed = new Material(new Texture("objects\\10475_Rocket_Ship_v1_Diffuse.png"), 30, 15);
+            TextureModel texturedSpeed = new TextureModel(speed, materialSpeed);
+            Entity speedM = new Entity(texturedSpeed, new Vector3f(100, 1, 110), -90, 0, 0, 0.01f);
             //*=================================================================
             //!CAR
             //*=================================================================
             RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
             Material materialCar = new Material(new Texture("objects\\demo4.png"), 10, 10);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, -1, 0), -90, 0, 180, 1);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, 0, 0), -90, 0, 180, 1);
             //*=================================================================
             //*=================================================================
             //!TERRAIN
             //*=================================================================
-            Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
+            Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 0.2f);
             Terrain terrain = new Terrain(0, 0, loader, materialTerrain);
             //*=================================================================
             //!METEOR
@@ -103,7 +112,7 @@ public class Main implements Runnable {
             //!MAIN RENDERER FOR ALL OBJECTS
             MasterRenderer masterRenderer = new MasterRenderer();
             //!Initialize light source - Light Source and Color output
-            Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1, 1, 1));
+            Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1.0f, 0.74f, 0.74f));
             //!Initialize camera class for input readings
             Camera camera = new Camera(Car);
             int indeks = 0;
@@ -132,7 +141,12 @@ public class Main implements Runnable {
                     Car.colisiondetection(gibanje.get(indeks));
                 }
 
+                protectionM.increaseRotation(0, 2.0f, 0);
+                speedM.increaseRotation(0, 0.0f, 2.0f);
+
                 masterRenderer.processEntity(Car);
+                masterRenderer.processEntity(protectionM);
+                masterRenderer.processEntity(speedM);
                 masterRenderer.processTerrain(terrain);
                 masterRenderer.render(light, camera);
             }
@@ -149,7 +163,7 @@ public class Main implements Runnable {
     private void clearFrameBuffer() {
         window.swapBuffers();
         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-        GL30.glClearColor(0, 0.0f, 0.0f, 1);
+        GL30.glClearColor(0.0f, 0.0f, 0.0f, 1);
     }
 
     private void update() {

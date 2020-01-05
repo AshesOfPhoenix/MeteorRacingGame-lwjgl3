@@ -64,6 +64,7 @@ public class ObjectLoader {
                     continue;
                 }
                 String[] currentLine = line.split(" ");
+
                 if (currentLine.length == 4) {
                     String[] vertex1 = currentLine[1].split("/");
                     String[] vertex2 = currentLine[2].split("/");

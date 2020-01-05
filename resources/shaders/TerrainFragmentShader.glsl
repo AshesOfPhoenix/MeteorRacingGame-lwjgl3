@@ -16,14 +16,19 @@ void main() {
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitLightVector = normalize(toLightVector);
 
+    //AMBIENT LIGHTNING
+    float ambientStrength = 0.3;
+    vec3 ambient = ambientStrength * lightColor;
+
+    //DIFFUSE LIGHTNING
     float nDotProduct = dot(unitNormal, unitLightVector);
     float brightness = max(nDotProduct, 0.2);
     vec3 finalDiffuse = brightness * lightColor;
 
+    //SPECULAR LIGHTNING
     vec3 unitVectorToCamera = normalize(toCameraVector);
     vec3 lightDirection = -unitLightVector;
     vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-
     //Calculate how much light is going into the camera, how bright the pixel should be
     float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
     specularFactor = max(specularFactor, 0.0);
@@ -35,7 +40,7 @@ void main() {
 
     //!Takes in the texture and coordinates we want to sample
     //!Returns the color of the pixel at those coordinates
-    outColor = (vec4(finalSpecular, 1.0) + vec4(finalDiffuse, 1.0)) * texture(textureSampler, pass_textureCoordinates);
+    outColor = (vec4(finalSpecular, 1.0) + vec4(finalDiffuse, 1.0) + vec4(ambient, 1.0)) * texture(textureSampler, pass_textureCoordinates);
     //outColor = texture(textureSampler, pass_textureCoordinates);   //<-- ONLY TEXTURE WITHOUT LIGHTNING
     //outColor = vec4(finalDiffuse, 1.0) + texture(textureSampler, pass_textureCoordinates); //<-- DIFFUSE LIGHTNING
     //outColor = texture(textureSampler, pass_textureCoordinates) + vec4(finalSpecular, 1.0); //<-- SPECULAR LIGHTNING
