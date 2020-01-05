@@ -8,11 +8,11 @@ public class Camera {
 
     private float dolzina_cam_obj = 50;
     private float kot_med_cam_in_obj = 0;
-    private float oldMouseX = 0, oldMouseY = 0, newMousex = 0, newMouseY = 0;
+    private float oldMouseX = 550, oldMouseY = 400, newMousex = 0, newMouseY = 0;
     private Vector3f position = new Vector3f(0, 0, 0);
     ;
     private float pitch = 20; //!Camera rotation up and down
-    private float yaw = 100; //!Camera rotation right and left
+    private float yaw = 50; //!Camera rotation right and left
     private float roll; //*We dont need this, yet at least
     private Avtomobil avto;
 
@@ -107,15 +107,18 @@ public class Camera {
         newMousex = (float) Input.getMouseX();
         newMouseY = (float) Input.getMouseY();
 
+
         float dx = newMousex - oldMouseX;
         float dy = newMouseY - oldMouseY;
-        if (Input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {
-            float pitchch = dy * 0.1f;
-            pitch -= pitchch;
+       /* if (Input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {
+
         } else if ((Input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT))) {
-            float kot = dx * 0.3f;
-            kot_med_cam_in_obj -= kot;
-        }
+
+        }*/
+        float pitchch = dy * 0.1f;
+        pitch -= pitchch;
+        float kot = dx * 0.3f;
+        kot_med_cam_in_obj -= kot;
         oldMouseX = newMousex;
         oldMouseY = newMouseY;
     }

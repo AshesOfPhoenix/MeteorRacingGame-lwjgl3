@@ -91,8 +91,8 @@ public class Main implements Runnable {
 
             //!METEOR RANDOMIZER
             ArrayList<Meteor> meteorcki = new ArrayList<>();
-            int stevilometeorjev = (int) (Math.random() * 1000000 * 45);
-            for (int i = 0; i < 100; i++) {
+            int stevilometeorjev = (int) (Math.random() * 10 * 45);
+            for (int i = 0; i < stevilometeorjev; i++) {
                 float randx = (float) (Math.random() * 750 + (-200));
                 float randz = (float) (Math.random() * 750 + (-200));
                 float randomsize = (float) (Math.random() * 0.1 + 0.01);
