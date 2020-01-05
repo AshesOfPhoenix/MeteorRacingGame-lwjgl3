@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main implements Runnable {
     public final int WIDTH = 1280, HEIGHT = 760;
@@ -124,7 +125,7 @@ public class Main implements Runnable {
             Texture textureCar = new Texture("objects\\demo4.png");
             Material materialCar = new Material(textureCar);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, -1, -8), -90, 0, 180, 1);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, -1, -8), -90, 0, 180, 2);
             //*=================================================================
             //*=================================================================
             //!TERRAIN
@@ -145,10 +146,22 @@ public class Main implements Runnable {
             Texture textureMeteor = new Texture("objects\\demo5.png");
             Material materialMeteor = new Material(textureMeteor);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
-            Meteor meteor = new Meteor(texturedMeteor, new Vector3f(0, -1, -8), -90, 0, 180, (float) 0.01);
+            ArrayList<Meteor> meteorcki = new ArrayList<>();
+            int stevilometeorjev = (int) (Math.random() * 1000000 * 45);
+            Meteor meteor;
+            for (int i = 0; i < 100; i++) {
+                float randx = (float) (Math.random() * 750 + (-200));
+                float randz = (float) (Math.random() * 750 + (-200));
+                float randomsize = (float) (Math.random() * 0.1 + 0.01);
+                meteor = new Meteor(texturedMeteor, new Vector3f(randx, 200, randz), 0, 0, 0, randomsize);
+                meteorcki.add(meteor);
+            }
 
             //!Initialize camera class for input readings
             Camera camera = new Camera(Car);
+            int indeks = 0;
+            ArrayList<Meteor> gibanje = new ArrayList<>();
+            gibanje.add(meteorcki.get(indeks));
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
@@ -156,6 +169,28 @@ public class Main implements Runnable {
                 //!Read keyboard input
                 camera.move();
                 Car.move();
+                for (int i = 0; i < gibanje.size(); i++) {
+                    meteor = gibanje.get(i);
+                    meteor.move();
+
+                    meteorEntityRenderer.prepare();
+                    //?RENDER CAR
+                    MeteorShader.bind();
+                    MeteorShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
+                    meteorEntityRenderer.renderEntity(meteor, MeteorShader);  //<- Transformation matrix creation inside
+                    MeteorShader.UnBind();
+                    //?Disable OpenGL specifications for CAR
+                    meteorEntityRenderer.disable();
+
+                    if (gibanje.get(indeks).getPosition().y <= 0 && meteorcki.size() - 1 > indeks) {
+                        indeks++;
+                        gibanje.add(meteorcki.get(indeks));
+                    }
+                    Car.colisiondetection(gibanje.get(indeks));
+                }
+
+
+
                 //!MOVE OBJECTS - TRANSFORMATION - MODEL MATRIX
                 // Car.increaseRotation(0.0f, 0.0f, 0.1f);
                 //Cube.increaseRotation(1.0f, 0.0f, 1.0f);
@@ -194,15 +229,6 @@ public class Main implements Runnable {
                 //*=================================================================
                 //!RENDERING METEOR
                 //*=================================================================
-                meteorEntityRenderer.prepare();
-                //?RENDER CAR
-                MeteorShader.bind();
-                MeteorShader.UniformViewMatrix(camera);      //<- Send view matrix to the shader
-                meteorEntityRenderer.renderEntity(meteor, MeteorShader);  //<- Transformation matrix creation inside
-                MeteorShader.UnBind();
-                //?Disable OpenGL specifications for CAR
-                meteorEntityRenderer.disable();
-
             }
             //DESTROY
             window.destroy();
@@ -232,75 +258,4 @@ public class Main implements Runnable {
         delta = (currnetFT - lastFrameTime) / 100f;
     }
 
-    float[] vertices = {
-            -0.5f, 0.5f, 0,
-            -0.5f, -0.5f, 0,
-            0.5f, -0.5f, 0,
-            0.5f, 0.5f, 0,
-
-            -0.5f, 0.5f, 1,
-            -0.5f, -0.5f, 1,
-            0.5f, -0.5f, 1,
-            0.5f, 0.5f, 1,
-
-            0.5f, 0.5f, 0,
-            0.5f, -0.5f, 0,
-            0.5f, -0.5f, 1,
-            0.5f, 0.5f, 1,
-
-            -0.5f, 0.5f, 0,
-            -0.5f, -0.5f, 0,
-            -0.5f, -0.5f, 1,
-            -0.5f, 0.5f, 1,
-
-            -0.5f, 0.5f, 1,
-            -0.5f, 0.5f, 0,
-            0.5f, 0.5f, 0,
-            0.5f, 0.5f, 1,
-
-            -0.5f, -0.5f, 1,
-            -0.5f, -0.5f, 0,
-            0.5f, -0.5f, 0,
-            0.5f, -0.5f, 1
-    };
-    float[] textureCoords = {
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0
-    };
-    int[] indices = {
-            0, 1, 3,
-            3, 1, 2,
-            4, 5, 7,
-            7, 5, 6,
-            8, 9, 11,
-            11, 9, 10,
-            12, 13, 15,
-            15, 13, 14,
-            16, 17, 19,
-            19, 17, 18,
-            20, 21, 23,
-            23, 21, 22
-    };
 }
