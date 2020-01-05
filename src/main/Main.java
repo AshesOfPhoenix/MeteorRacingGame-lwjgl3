@@ -76,6 +76,7 @@ public class Main implements Runnable {
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
             Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(400, -1, 200), -90, 0, 180, 1);
             //*=================================================================
+            //*=================================================================
             //!TERRAIN
             //*=================================================================
             Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
@@ -89,9 +90,7 @@ public class Main implements Runnable {
             RawModel modelMeteor = ObjectLoader.loadObject("objects\\KrizmanAsteroid", loader);
             Material materialMeteor = new Material(new Texture("objects\\demo5.png"), 10, 1);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
-            Meteor meteor = new Meteor(texturedMeteor, new Vector3f(400, 2, 200), 0, 0, 0, 0.002f);
-            //*=================================================================
-            //?^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            Meteor meteor = new Meteor(texturedMeteor, new Vector3f(0, -1, -8), -90, 0, 180, (float) 0.01);
 
             //!METEOR RANDOMIZER
             ArrayList<Meteor> meteorcki = new ArrayList<>();
@@ -110,6 +109,9 @@ public class Main implements Runnable {
             Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1, 1, 1));
             //!Initialize camera class for input readings
             Camera camera = new Camera(Car);
+            int indeks = 0;
+            ArrayList<Meteor> gibanje = new ArrayList<>();
+            gibanje.add(meteorcki.get(indeks));
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
