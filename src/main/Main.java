@@ -74,16 +74,13 @@ public class Main implements Runnable {
             RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
             Material materialCar = new Material(new Texture("objects\\demo4.png"), 10, 10);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(400, -1, 200), -90, 0, 180, 1);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, -1, 0), -90, 0, 180, 1);
             //*=================================================================
             //*=================================================================
             //!TERRAIN
             //*=================================================================
             Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
             Terrain terrain = new Terrain(0, 0, loader, materialTerrain);
-            Terrain terrain2 = new Terrain(1, 0, loader, materialTerrain);
-            Terrain terrain3 = new Terrain(1, 1, loader, materialTerrain);
-            Terrain terrain4 = new Terrain(0, 1, loader, materialTerrain);
             //*=================================================================
             //!METEOR
             //*=================================================================
@@ -127,9 +124,6 @@ public class Main implements Runnable {
 
                 masterRenderer.processEntity(Car);
                 masterRenderer.processTerrain(terrain);
-                masterRenderer.processTerrain(terrain2);
-                masterRenderer.processTerrain(terrain3);
-                masterRenderer.processTerrain(terrain4);
                 masterRenderer.render(light, camera);
 
             }
@@ -159,75 +153,4 @@ public class Main implements Runnable {
         delta = (currnetFT - lastFrameTime) / 100f;
     }
 
-    float[] vertices = {
-            -0.5f, 0.5f, 0,
-            -0.5f, -0.5f, 0,
-            0.5f, -0.5f, 0,
-            0.5f, 0.5f, 0,
-
-            -0.5f, 0.5f, 1,
-            -0.5f, -0.5f, 1,
-            0.5f, -0.5f, 1,
-            0.5f, 0.5f, 1,
-
-            0.5f, 0.5f, 0,
-            0.5f, -0.5f, 0,
-            0.5f, -0.5f, 1,
-            0.5f, 0.5f, 1,
-
-            -0.5f, 0.5f, 0,
-            -0.5f, -0.5f, 0,
-            -0.5f, -0.5f, 1,
-            -0.5f, 0.5f, 1,
-
-            -0.5f, 0.5f, 1,
-            -0.5f, 0.5f, 0,
-            0.5f, 0.5f, 0,
-            0.5f, 0.5f, 1,
-
-            -0.5f, -0.5f, 1,
-            -0.5f, -0.5f, 0,
-            0.5f, -0.5f, 0,
-            0.5f, -0.5f, 1
-    };
-    float[] textureCoords = {
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0
-    };
-    int[] indices = {
-            0, 1, 3,
-            3, 1, 2,
-            4, 5, 7,
-            7, 5, 6,
-            8, 9, 11,
-            11, 9, 10,
-            12, 13, 15,
-            15, 13, 14,
-            16, 17, 19,
-            19, 17, 18,
-            20, 21, 23,
-            23, 21, 22
-    };
 }
