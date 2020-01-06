@@ -14,7 +14,6 @@ import engine.io.Input;
 import engine.io.Window;
 import engine.render.MasterRenderer;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
@@ -29,10 +28,9 @@ public class Main implements Runnable {
     private static float lastFrameTime;
     private static float delta;
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         new Main().start();
     }
-
 
     private void start() {
         game = new Thread(this, "game");
@@ -57,8 +55,6 @@ public class Main implements Runnable {
         //?Read the shaders from file and Create shader program for cube
         //?Send shader to renderer for further use and create projection matrix
         //?Add different shader files for different types of objects
-
-
     }
 
     public void run() {
@@ -123,7 +119,7 @@ public class Main implements Runnable {
             PowerUp UltimatePower = new PowerUp(powerups);
 
             //!Initialize light source - Light Source and Color output
-            Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1.0f, 0.74f, 0.74f));
+            Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1.0f, 0.70f, 0.70f));
             //!Initialize camera class for input readings
             Camera camera = new Camera(Car);
             int indeks = 0;
@@ -133,6 +129,7 @@ public class Main implements Runnable {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
                 update();
+                masterRenderer.prepareFog();
                 //!Read keyboard input
                 camera.move();
                 Car.move();
@@ -190,8 +187,7 @@ public class Main implements Runnable {
 
     private void clearFrameBuffer() {
         window.swapBuffers();
-        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-        GL30.glClearColor(0.0f, 0.0f, 0.0f, 1);
+
     }
 
     private void update() {

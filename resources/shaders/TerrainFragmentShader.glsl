@@ -4,6 +4,7 @@ in vec2 pass_textureCoordinates;
 in vec3 surfaceNormal;
 in vec3 toLightVector;
 in vec3 toCameraVector;
+in float visibility;
 
 out vec4 outColor;
 
@@ -11,6 +12,7 @@ uniform sampler2D textureSampler;
 uniform vec3 lightColor;
 uniform float shineDamper;
 uniform float reflectivity;
+uniform vec3 skyColor;
 
 void main() {
     vec3 unitNormal = normalize(surfaceNormal);
@@ -44,4 +46,6 @@ void main() {
     //outColor = texture(textureSampler, pass_textureCoordinates);   //<-- ONLY TEXTURE WITHOUT LIGHTNING
     //outColor = vec4(finalDiffuse, 1.0) + texture(textureSampler, pass_textureCoordinates); //<-- DIFFUSE LIGHTNING
     //outColor = texture(textureSampler, pass_textureCoordinates) + vec4(finalSpecular, 1.0); //<-- SPECULAR LIGHTNING
+
+    outColor = mix(vec4(skyColor, 1.0), outColor, visibility);//!Mix the sky color with the fragment color for the fog effect
 }

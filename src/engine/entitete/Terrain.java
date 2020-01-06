@@ -16,19 +16,18 @@ public class Terrain {
 
     public Terrain(int gridX, int gridZ, Loader3Dmodel loader, Material material) {
         this.material = material;
-        prepare();
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
         this.model = generateTerrain(loader);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, material.getTextureID());
+        GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+        GL30.glTexParameterf(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_LOD_BIAS, -1.5f); //!Level of detail - lower means more detail
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_S, GL30.GL_NEAREST);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
     }
 
-    private void prepare() {
-        GL30.glEnable(GL30.GL_FOG);
-        GL30.glEnable(GL30.GL_BLEND);
-        GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_NEAREST_MIPMAP_NEAREST);
-        GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
-        GL30.glTexParameteri(this.material.getTextureID(), GL30.GL_TEXTURE_WRAP_S, GL30.GL_MIRRORED_REPEAT);
-    }
 
     public RawModel getModel() {
         return model;

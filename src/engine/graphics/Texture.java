@@ -47,6 +47,7 @@ public class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+
         IntBuffer buffer = ByteBuffer.allocateDirect(data.length << 2)
                 .order(ByteOrder.nativeOrder()).asIntBuffer();
         buffer.put(data).flip();

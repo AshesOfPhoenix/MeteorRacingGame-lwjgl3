@@ -23,7 +23,7 @@ public class PowerUp {
     public void bouncy_bouncy() {
         interpolate();
         checkActiveTimers();
-        this.speedBoost.increaseRotation(0, 0.0f, 2.00f);
+        this.speedBoost.increaseRotation(0, 0.0f, 2.1f);
         this.speedBoost.increasePosition(0, this.interpolation, 0);
         this.armour.increaseRotation(0, -2.0f, 0);
         this.armour.increasePosition(0, this.interpolation, 0);
