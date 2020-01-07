@@ -4,6 +4,7 @@ import engine.entitete.Camera;
 import engine.entitete.Light;
 import engine.maths.Maths;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class StaticShader extends Shader {
     private int location_lightColor;
     private int location_shineDamper;
     private int location_reflectivity;
+    private int location_skyColor;
 
     public StaticShader(String VertexShaderPath, String FragmentShaderPath) throws IOException {
         super(VertexShaderPath, FragmentShaderPath);
@@ -32,6 +34,11 @@ public class StaticShader extends Shader {
         this.location_lightColor = super.getUniformLocation("lightColor");
         this.location_shineDamper = super.getUniformLocation("shineDamper");
         this.location_reflectivity = super.getUniformLocation("reflectivity");
+        this.location_skyColor = super.getUniformLocation("skyColor");
+    }
+
+    public void loadSkyColor(float r, float g, float b) {
+        super.Uniform1v(location_skyColor, new Vector3f(r, g, b));
     }
 
     protected void bindAttributes() {

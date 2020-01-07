@@ -1,7 +1,7 @@
 package engine.Models;
 
-import engine.graphics.Material;
-import engine.graphics.Texture;
+import engine.textures.Material;
+import engine.textures.Texture;
 
 public class TextureModel {
     private RawModel rawModel;

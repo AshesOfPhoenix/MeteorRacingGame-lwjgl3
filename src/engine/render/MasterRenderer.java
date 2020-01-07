@@ -21,6 +21,9 @@ public class MasterRenderer {
     private static final float FOV = 90;
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PlANE = 1000;
+    private static final float RED = 0.7f;
+    private static final float GREEN = 0.5f;
+    private static final float BLUE = 0.5f;
     private Matrix4f projectionMatrix;
 
     private StaticShader shader = new StaticShader("resources\\shaders\\MainEntityVertex.glsl", "resources\\shaders\\MainEntityFragment.glsl");
@@ -42,12 +45,14 @@ public class MasterRenderer {
     public void render(Light sun, Camera camera) {
         //!Render entities
         shader.bind();
+        shader.loadSkyColor(RED, GREEN, BLUE);
         shader.UniformLight(sun);
         shader.UniformViewMatrix(camera);
         entityRenderer.render(entities);
         shader.UnBind();
         //!Render terrains
         terrainShader.bind();
+        terrainShader.loadSkyColor(RED, GREEN, BLUE);
         terrainShader.UniformLight(sun);
         terrainShader.UniformViewMatrix(camera);
         terrainRenderer.render(terrains);
@@ -94,12 +99,18 @@ public class MasterRenderer {
         terrainShader.destroy();
     }
 
+    public void prepareFog() {
+        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+        GL30.glClearColor(RED, GREEN, BLUE, 1);
+    }
+
     private void prepare() {
         GL30.glEnable(GL30.GL_DEPTH_TEST);
         GL30.glEnable(GL30.GL_BLEND);
         GL30.glEnable(GL30.GL_CULL_FACE);
         GL30.glCullFace(GL30.GL_BACK);
     }
+
 
     public void disable() {
         GL30.glEnable(0);

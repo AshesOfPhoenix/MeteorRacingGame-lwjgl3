@@ -1,5 +1,7 @@
-package engine.graphics;
+package engine.Models;
 
+import engine.graphics.Vertex;
+import engine.textures.Material;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;

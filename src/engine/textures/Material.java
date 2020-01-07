@@ -1,4 +1,4 @@
-package engine.graphics;
+package engine.textures;
 
 
 public class Material {
