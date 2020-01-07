@@ -56,6 +56,8 @@ public class Main implements Runnable {
         //?Read the shaders from file and Create shader program for cube
         //?Send shader to renderer for further use and create projection matrix
         //?Add different shader files for different types of objects
+
+
     }
 
     public void run() {
