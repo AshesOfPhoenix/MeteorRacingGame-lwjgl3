@@ -64,6 +64,8 @@ public class Window {
         GLFW.glfwSwapInterval(1);
 
         time = System.currentTimeMillis();
+
+
     }
 
     private void createCallbacks() {

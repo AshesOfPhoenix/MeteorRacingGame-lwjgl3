@@ -17,6 +17,8 @@ import org.lwjgl.util.vector.Vector3f;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 public class Main implements Runnable {
     public final int WIDTH = 1280, HEIGHT = 760;
     public Thread game;
@@ -48,13 +50,12 @@ public class Main implements Runnable {
         //!Create and initialize window
         window.create();
         window.setBackgroundColor(1.0f, 1.0f, 1.0f);
-
         lastFrameTime = getcurrent_time();
+        //!Lock mouse in screen
+        glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         //?Read the shaders from file and Create shader program for cube
         //?Send shader to renderer for further use and create projection matrix
         //?Add different shader files for different types of objects
-
-
     }
 
     public void run() {
@@ -68,6 +69,8 @@ public class Main implements Runnable {
             //?Initialize materials and textures
             //?Initialize textured models
             //?Initialize entities, their positions and rotations
+
+
             RawModel protection = ObjectLoader.loadObject("objects\\Substance_Painter_Shield_003", loader);
             Material materialProtection = new Material(new Texture("objects\\viking.png"), 30, 15);
             TextureModel texturedProtection = new TextureModel(protection, materialProtection);
@@ -155,6 +158,7 @@ public class Main implements Runnable {
             loader.destroy();
             masterRenderer.cleanUp();
             meteorcki.clear();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
