@@ -22,7 +22,7 @@ void main() {
     vec4 worldPosition = transMatrix * vec4(position, 1.0);
     vec4 positionRelativeToCamera = viewMat * worldPosition;//Get the distance between vertex and the camera
     gl_Position = projeMat * positionRelativeToCamera;
-    pass_textureCoordinates=textureCoordinates * 500;//Enable tile-ing, increses texture cooridnates so it doesnt look stretched
+    pass_textureCoordinates=textureCoordinates;//Enable tile-ing, increses texture cooridnates so it doesnt look stretched
 
     surfaceNormal = (transMatrix * vec4(normal, 0.0)).xyz;//Swizzel vec4
     toLightVector = lightPosition - worldPosition.xyz;

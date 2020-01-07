@@ -3,7 +3,7 @@ package engine.render;
 import engine.Models.RawModel;
 import engine.Models.TextureModel;
 import engine.entitete.Entity;
-import engine.graphics.Material;
+import engine.textures.Material;
 import engine.graphics.StaticShader;
 import engine.maths.Maths;
 import org.lwjgl.opengl.GL30;

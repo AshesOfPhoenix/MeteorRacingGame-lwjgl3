@@ -4,6 +4,7 @@ import engine.entitete.Camera;
 import engine.entitete.Light;
 import engine.maths.Maths;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
 
@@ -17,6 +18,12 @@ public class TerrainShader extends Shader {
     private int location_lightColor;
     private int location_shineDamper;
     private int location_reflectivity;
+    private int location_backgroundTexture;
+    private int location_rTexture;
+    private int location_gTexture;
+    private int location_bTexture;
+    private int location_blendMap;
+    private int location_skyColor;
 
     public TerrainShader(String VertexShaderPath, String FragmentShaderPath) throws IOException {
         super(VertexShaderPath, FragmentShaderPath);
@@ -32,6 +39,25 @@ public class TerrainShader extends Shader {
         this.location_lightColor = super.getUniformLocation("lightColor");
         this.location_shineDamper = super.getUniformLocation("shineDamper");
         this.location_reflectivity = super.getUniformLocation("reflectivity");
+        this.location_skyColor = super.getUniformLocation("skyColor");
+
+        this.location_backgroundTexture = super.getUniformLocation("backgroundTexture");
+        this.location_rTexture = super.getUniformLocation("rTexture");
+        this.location_rTexture = super.getUniformLocation("gTexture");
+        this.location_bTexture = super.getUniformLocation("bTexture");
+        this.location_blendMap = super.getUniformLocation("blendMap");
+    }
+
+    public void loadSkyColor(float r, float g, float b) {
+        super.Uniform1v(location_skyColor, new Vector3f(r, g, b));
+    }
+
+    public void connectTextureUnits() {
+        super.Uniform1i(location_backgroundTexture, 0);
+        super.Uniform1i(location_rTexture, 1);
+        super.Uniform1i(location_gTexture, 2);
+        super.Uniform1i(location_bTexture, 3);
+        super.Uniform1i(location_blendMap, 4);
     }
 
     protected void bindAttributes() {

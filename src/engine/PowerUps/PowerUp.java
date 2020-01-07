@@ -63,7 +63,7 @@ public class PowerUp {
     public void collectSpeedBoost(Vector3f carPosition) {
         Vector3f speedPowerUp = this.speedBoost.getPosition();
         float relativeDistance = (float) Math.sqrt(Math.pow(carPosition.getX() - speedPowerUp.getX(), 2) + Math.pow(carPosition.getY() - speedPowerUp.getY(), 2) + Math.pow(carPosition.getZ() - speedPowerUp.getZ(), 2));
-        if (relativeDistance <= 5) {
+        if (relativeDistance <= 6) {
             this.speedBoost.setActive(true);
             this.speedBoostTimerStart = true;
             startSpeed = System.currentTimeMillis();
@@ -73,7 +73,7 @@ public class PowerUp {
     public void collectArmour(Vector3f carPosition) {
         Vector3f armourPowerUp = this.armour.getPosition();
         float relativeDistance = (float) Math.sqrt(Math.pow(carPosition.getX() - armourPowerUp.getX(), 2) + Math.pow(carPosition.getY() - armourPowerUp.getY(), 2) + Math.pow(carPosition.getZ() - armourPowerUp.getZ(), 2));
-        if (relativeDistance <= 5) {
+        if (relativeDistance <= 6) {
             this.armour.setActive(true);
             this.armourTimerStart = true;
             startArmour = System.currentTimeMillis();

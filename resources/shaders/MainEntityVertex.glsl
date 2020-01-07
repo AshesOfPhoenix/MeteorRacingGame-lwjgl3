@@ -15,7 +15,7 @@ uniform mat4 viewMat;// camera's perspective
 uniform mat4 transMatrix;// the entity's position relative to the everything
 uniform vec3 lightPosition;
 
-const float density = 0.003;
+const float density = 0.001;
 const float gradient = 0.6;
 
 void main() {

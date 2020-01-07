@@ -52,7 +52,7 @@ public class MasterRenderer {
         shader.UnBind();
         //!Render terrains
         terrainShader.bind();
-        shader.loadSkyColor(RED, GREEN, BLUE);
+        terrainShader.loadSkyColor(RED, GREEN, BLUE);
         terrainShader.UniformLight(sun);
         terrainShader.UniformViewMatrix(camera);
         terrainRenderer.render(terrains);

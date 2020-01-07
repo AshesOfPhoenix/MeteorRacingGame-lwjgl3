@@ -2,7 +2,8 @@ package engine.entitete;
 
 import engine.Models.Loader3Dmodel;
 import engine.Models.RawModel;
-import engine.graphics.Material;
+import engine.textures.TerrainTexture;
+import engine.textures.TerrainTexturePack;
 import org.lwjgl.opengl.GL30;
 
 public class Terrain {
@@ -12,29 +13,70 @@ public class Terrain {
     private static float x;
     private static float z;
     private RawModel model;
-    private Material material;
+    private TerrainTexturePack texturePack;
+    private TerrainTexture blendMap;
 
-    public Terrain(int gridX, int gridZ, Loader3Dmodel loader, Material material) {
-        this.material = material;
+    public Terrain(int gridX, int gridZ, Loader3Dmodel loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
+        this.texturePack = texturePack;
+        this.blendMap = blendMap;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
         this.model = generateTerrain(loader);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, material.getTextureID());
+        prepareMipmaping();
+
+    }
+
+    private void prepareMipmaping() {
+        GL30.glEnable(GL30.GL_BLEND);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, texturePack.getBackgroundTexture().getTextureID());
         GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
         GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
         GL30.glTexParameterf(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_LOD_BIAS, -1.5f); //!Level of detail - lower means more detail
         GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
         GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_S, GL30.GL_NEAREST);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, texturePack.getrTexture().getTextureID());
+        GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+        GL30.glTexParameterf(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_LOD_BIAS, -1.5f); //!Level of detail - lower means more detail
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_S, GL30.GL_NEAREST);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, texturePack.getgTexture().getTextureID());
+        GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+        GL30.glTexParameterf(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_LOD_BIAS, -1.5f); //!Level of detail - lower means more detail
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_S, GL30.GL_NEAREST);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, texturePack.getbTexture().getTextureID());
+        GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+        GL30.glTexParameterf(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_LOD_BIAS, -1.5f); //!Level of detail - lower means more detail
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_WRAP_S, GL30.GL_NEAREST);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
+
     }
 
+    public TerrainTexturePack getTexturePack() {
+        return texturePack;
+    }
+
+    public void setTexturePack(TerrainTexturePack texturePack) {
+        this.texturePack = texturePack;
+    }
+
+    public TerrainTexture getBlendMap() {
+        return blendMap;
+    }
+
+    public void setBlendMap(TerrainTexture blendMap) {
+        this.blendMap = blendMap;
+    }
 
     public RawModel getModel() {
         return model;
-    }
-
-    public Material getMaterial() {
-        return material;
     }
 
     public float getX() {

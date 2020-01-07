@@ -44,6 +44,11 @@ public abstract class Shader {
         GL30.glUniform1f(location, (value) ? 1 : 0);
     }
 
+    //!Send int uniform to the shader program
+    protected void Uniform1i(int location, int value) {
+        GL30.glUniform1i(location, value);
+    }
+
     //!Send matrix uniform to the shader program
     protected void Uniform1m(int location, Matrix4f matrix) {
         matrix.store(matrixBuffer);

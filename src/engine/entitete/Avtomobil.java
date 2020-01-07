@@ -6,8 +6,8 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Avtomobil extends Entity {
-    private static final float RUN_SPEED = 40;
-    private static final float TURN_SPEED = 20;
+    private static final float RUN_SPEED = 50;
+    private static final float TURN_SPEED = 30;
     boolean speedBoost = false;
     boolean armour = false;
 

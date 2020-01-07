@@ -1,6 +1,6 @@
 package engine.Models;
 
-import engine.graphics.Texture;
+import engine.textures.Texture;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
@@ -29,6 +29,13 @@ public class Loader3Dmodel {
         //*UnBind vertex object
         unbindVAO();
         return new RawModel(this.vaoID, vertices.length, indices.length);
+    }
+
+    public RawModel loadToVAO(float[] positions) {
+        int vaoID = createVAO();
+        this.storeDataInAttributeList(0, 2, positions);
+        unbindVAO();
+        return new RawModel(vaoID, positions.length / 2, 0);
     }
 
     public int loadTexture(String fileName) {

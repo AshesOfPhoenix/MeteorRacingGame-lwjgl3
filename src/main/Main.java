@@ -1,5 +1,6 @@
 package main;
 
+import engine.GUI.GUITexture;
 import engine.Models.Loader3Dmodel;
 import engine.Models.ObjectLoader;
 import engine.Models.RawModel;
@@ -8,12 +9,16 @@ import engine.PowerUps.Armour;
 import engine.PowerUps.PowerUp;
 import engine.PowerUps.SpeedBoost;
 import engine.entitete.*;
-import engine.graphics.Material;
-import engine.graphics.Texture;
 import engine.io.Input;
 import engine.io.Window;
+import engine.render.GUIRenderer;
 import engine.render.MasterRenderer;
+import engine.textures.Material;
+import engine.textures.TerrainTexture;
+import engine.textures.TerrainTexturePack;
+import engine.textures.Texture;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
@@ -71,25 +76,36 @@ public class Main implements Runnable {
             RawModel protection = ObjectLoader.loadObject("objects\\Substance_Painter_Shield_003", loader);
             Material materialProtection = new Material(new Texture("objects\\viking.png"), 30, 15);
             TextureModel texturedProtection = new TextureModel(protection, materialProtection);
-            Armour armour = new Armour(texturedProtection, new Vector3f(100, 2.4f, 100), 0, 0, 0, 0.01f);
+            Armour armour = new Armour(texturedProtection, new Vector3f(100, 4.35f, 100), 0, 0, 0, 0.02f);
 
             RawModel speed = ObjectLoader.loadObject("objects\\10475_Rocket_Ship_v1_L3", loader);
             Material materialSpeed = new Material(new Texture("objects\\10475_Rocket_Ship_v1_Diffuse.png"), 30, 15);
             TextureModel texturedSpeed = new TextureModel(speed, materialSpeed);
-            SpeedBoost speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(100, 0.3f, 110), -90, 0, 0, 0.01f);
+            SpeedBoost speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(100, 0.3f, 110), -90, 0, 0, 0.02f);
             //*=================================================================
             //!CAR
             //*=================================================================
             RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
             Material materialCar = new Material(new Texture("objects\\demo4.png"), 10, 10);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, 0, 0), -90, 0, 180, 1);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, 0, 0), -90, 0, 180, 2.5f);
             //*=================================================================
+            //!GUIs
+            GUITexture speedBoostGui = new GUITexture(Texture.load("speedBoostEffect.png"), new Vector2f(-0.89f, 0.8f), new Vector2f(0.06f, 0.10f));
+            GUITexture armourGui = new GUITexture(Texture.load("armourEffect.png"), new Vector2f(-0.89f, 0.6f), new Vector2f(0.06f, 0.10f));
+
             //*=================================================================
             //!TERRAIN
             //*=================================================================
-            Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
-            Terrain terrain = new Terrain(0, 0, loader, materialTerrain);
+            //Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
+            // *********TERRAIN TEXTURE STUFF***********
+            TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("asphalt.png"));
+            TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt.png"));
+            TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("tnt.png"));
+            TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("grass2.png"));
+            TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+            TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blend_map.png"));
+            Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
             //*=================================================================
             //!METEOR
             //*=================================================================
@@ -111,6 +127,8 @@ public class Main implements Runnable {
 
             //!MAIN RENDERER FOR ALL OBJECTS
             MasterRenderer masterRenderer = new MasterRenderer();
+            //!GUI RENDERER
+            GUIRenderer guiRenderer = new GUIRenderer(loader);
 
             //!PowerUps - HAS TO BE IN ORDER -> SpeedBoost -> Armour -> ...
             List<Entity> powerups = new ArrayList<>();
@@ -158,6 +176,7 @@ public class Main implements Runnable {
                     masterRenderer.processEntity(speedBoost);
                 } else {
                     Car.activateSpeedBoost();
+                    guiRenderer.render(speedBoostGui);
                 }
                 //!Check if the armour effect is active - if yes activate armour and don't render armour entity
                 if (!UltimatePower.checkIfPickedUpArmour()) {
@@ -165,6 +184,7 @@ public class Main implements Runnable {
                     masterRenderer.processEntity(armour);
                 } else {
                     Car.activateArmour();
+                    guiRenderer.render(armourGui);
                 }
                 System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
                 System.out.println("Armour -> Active:" + armour.isActive());
@@ -173,11 +193,13 @@ public class Main implements Runnable {
                 masterRenderer.processEntity(Car);
                 masterRenderer.processTerrain(terrain);
                 masterRenderer.render(light, camera);
+
             }
             //DESTROY
             window.destroy();
             loader.destroy();
             masterRenderer.cleanUp();
+            guiRenderer.CleanUp();
             meteorcki.clear();
             powerups.clear();
         } catch (IOException e) {

@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
 
-    private float dolzina_cam_obj = 20;
+    private float dolzina_cam_obj = 35;
     private float kot_med_cam_in_obj = 0;
     private float oldMouseX = 550, oldMouseY = 400, newMousex = 0, newMouseY = 0;
     private Vector3f position = new Vector3f(0, 0, 0);
