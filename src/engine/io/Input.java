@@ -70,7 +70,9 @@ public class Input {
     }
 
     public static double getScrollY() {
-        return scrollY;
+        double vrni = scrollY;
+        scrollY = 0;
+        return vrni;
     }
 
     public GLFWKeyCallback getKeyboardCallback() {

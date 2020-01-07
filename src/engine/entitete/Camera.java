@@ -124,7 +124,7 @@ public class Camera {
     }
 
     private void calculateZoom() {
-        float zoomic = (float) (Input.getScrollY() * 0.1f);
+        float zoomic = (float) (Input.getScrollY() * 0.4f);
         dolzina_cam_obj -= zoomic;
     }
 }
