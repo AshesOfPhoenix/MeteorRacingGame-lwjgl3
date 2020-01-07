@@ -7,13 +7,14 @@ public class Input {
     private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static double mouseX, mouseY;
     private static double scrollX, scrollY;
+    private static float[] mouseScroll2 = {0};
 
     private GLFWKeyCallback keyboard;
     private GLFWCursorPosCallback mouseMove;
     private GLFWMouseButtonCallback mouseButtons;
     private static GLFWScrollCallback mouseScroll;
 
-    public Input() {
+    public Input(long window) {
         keyboard = new GLFWKeyCallback() {
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 keys[key] = (action != GLFW.GLFW_RELEASE);

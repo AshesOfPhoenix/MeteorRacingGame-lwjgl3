@@ -1,26 +1,36 @@
 package main;
 
+import engine.GUI.GUITexture;
 import engine.Models.Loader3Dmodel;
 import engine.Models.ObjectLoader;
 import engine.Models.RawModel;
 import engine.Models.TextureModel;
+import engine.PowerUps.Armour;
+import engine.PowerUps.PowerUp;
+import engine.PowerUps.SpeedBoost;
 import engine.entitete.*;
-import engine.graphics.Material;
-import engine.graphics.Texture;
 import engine.io.Input;
 import engine.io.Window;
+import engine.render.GUIRenderer;
 import engine.render.MasterRenderer;
+import engine.textures.Material;
+import engine.textures.TerrainTexture;
+import engine.textures.TerrainTexturePack;
+import engine.textures.Texture;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Main implements Runnable {
-    public final int WIDTH = 1280, HEIGHT = 760;
-    public Thread game;
-    public Window window;
+    private final int WIDTH = 1280, HEIGHT = 760;
+    private Thread game;
+    private Window window;
 
     private static float lastFrameTime;
     private static float delta;
@@ -29,32 +39,29 @@ public class Main implements Runnable {
         new Main().start();
     }
 
+    private static long getcurrent_time() {
+        return Window.frames;
+    }
 
-    public void start() {
+    private static float getFT() {
+        return delta;
+    }
+
+    private void start() {
         game = new Thread(this, "game");
         game.start();
     }
 
-    public static long getcurrent_time() {
-        return Window.frames;
-    }
-
-    public static float getFT() {
-        return delta;
-    }
-
-    public void init() throws IOException {
+    private void init() {
         window = new Window(WIDTH, HEIGHT, "Game");
         //!Create and initialize window
         window.create();
         window.setBackgroundColor(1.0f, 1.0f, 1.0f);
-
+        glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         lastFrameTime = getcurrent_time();
         //?Read the shaders from file and Create shader program for cube
         //?Send shader to renderer for further use and create projection matrix
         //?Add different shader files for different types of objects
-
-
     }
 
     public void run() {
@@ -71,32 +78,43 @@ public class Main implements Runnable {
             RawModel protection = ObjectLoader.loadObject("objects\\Substance_Painter_Shield_003", loader);
             Material materialProtection = new Material(new Texture("objects\\viking.png"), 30, 15);
             TextureModel texturedProtection = new TextureModel(protection, materialProtection);
-            Entity protectionM = new Entity(texturedProtection, new Vector3f(100, 3, 100), 0, 0, 0, 0.01f);
+            Armour armour = new Armour(texturedProtection, new Vector3f(100, 4.35f, 100), 0, 0, 0, 0.02f);
 
             RawModel speed = ObjectLoader.loadObject("objects\\10475_Rocket_Ship_v1_L3", loader);
             Material materialSpeed = new Material(new Texture("objects\\10475_Rocket_Ship_v1_Diffuse.png"), 30, 15);
             TextureModel texturedSpeed = new TextureModel(speed, materialSpeed);
-            Entity speedM = new Entity(texturedSpeed, new Vector3f(100, 1, 110), -90, 0, 0, 0.01f);
+            SpeedBoost speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(100, 0.3f, 110), -90, 0, 0, 0.02f);
             //*=================================================================
             //!CAR
             //*=================================================================
             RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
             Material materialCar = new Material(new Texture("objects\\demo4.png"), 10, 10);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, 0, 0), -90, 0, 180, 1);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(0, 0, 0), -90, 0, 180, 2.5f);
             //*=================================================================
+            //!GUIs
+            GUITexture speedBoostGui = new GUITexture(Texture.load("speedBoostEffect.png"), new Vector2f(-0.89f, 0.8f), new Vector2f(0.06f, 0.10f));
+            GUITexture armourGui = new GUITexture(Texture.load("armourEffect.png"), new Vector2f(-0.89f, 0.6f), new Vector2f(0.06f, 0.10f));
+
             //*=================================================================
             //!TERRAIN
             //*=================================================================
-            Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 0.2f);
-            Terrain terrain = new Terrain(0, 0, loader, materialTerrain);
+            //Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
+            // *********TERRAIN TEXTURE STUFF***********
+            TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("asphalt.png"));
+            TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt.png"));
+            TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("tnt.png"));
+            TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("grass2.png"));
+            TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+            TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blend_map.png"));
+            Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
             //*=================================================================
             //!METEOR
             //*=================================================================
             RawModel modelMeteor = ObjectLoader.loadObject("objects\\KrizmanAsteroid", loader);
             Material materialMeteor = new Material(new Texture("objects\\demo5.png"), 10, 1);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
-            Meteor meteor = new Meteor(texturedMeteor, new Vector3f(0, -1, -8), -90, 0, 180, (float) 0.01);
+            Meteor meteor;
 
             //!METEOR RANDOMIZER
             ArrayList<Meteor> meteorcki = new ArrayList<>();
@@ -111,8 +129,17 @@ public class Main implements Runnable {
 
             //!MAIN RENDERER FOR ALL OBJECTS
             MasterRenderer masterRenderer = new MasterRenderer();
+            //!GUI RENDERER
+            GUIRenderer guiRenderer = new GUIRenderer(loader);
+
+            //!PowerUps - HAS TO BE IN ORDER -> SpeedBoost -> Armour -> ...
+            List<Entity> powerups = new ArrayList<>();
+            powerups.add(speedBoost);
+            powerups.add(armour);
+            PowerUp UltimatePower = new PowerUp(powerups);
+
             //!Initialize light source - Light Source and Color output
-            Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1.0f, 0.74f, 0.74f));
+            Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1.0f, 0.70f, 0.70f));
             //!Initialize camera class for input readings
             Camera camera = new Camera(Car);
             int indeks = 0;
@@ -122,6 +149,7 @@ public class Main implements Runnable {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
                 update();
+                masterRenderer.prepareFog();
                 //!Read keyboard input
                 camera.move();
                 Car.move();
@@ -130,10 +158,8 @@ public class Main implements Runnable {
                 for (int i = 0; i < gibanje.size(); i++) {
                     meteor = gibanje.get(i);
                     meteor.move();
-
                     //*Render meteor
                     masterRenderer.processEntity(meteor);
-
                     if (gibanje.get(indeks).getPosition().y <= 0 && meteorcki.size() - 1 > indeks) {
                         indeks++;
                         gibanje.add(meteorcki.get(indeks));
@@ -141,20 +167,43 @@ public class Main implements Runnable {
                     Car.colisiondetection(gibanje.get(indeks));
                 }
 
-                protectionM.increaseRotation(0, 2.0f, 0);
-                speedM.increaseRotation(0, 0.0f, 2.0f);
+                //!Process PowerUPs - don't render if already active
+                UltimatePower.bouncy_bouncy(); //*This plays up and down animation
+                //*This checks if the car collected any of powerups
+                UltimatePower.collectSpeedBoost(Car.getPosition());
+                UltimatePower.collectArmour(Car.getPosition());
+                //!Check if the speed boost effect is active - if yes activate speed boost and don't render speed entity
+                if (!UltimatePower.checkIfPickedUpSpeed()) {
+                    Car.disableSpeedBoost();
+                    masterRenderer.processEntity(speedBoost);
+                } else {
+                    Car.activateSpeedBoost();
+                    guiRenderer.render(speedBoostGui);
+                }
+                //!Check if the armour effect is active - if yes activate armour and don't render armour entity
+                if (!UltimatePower.checkIfPickedUpArmour()) {
+                    Car.disableArmour();
+                    masterRenderer.processEntity(armour);
+                } else {
+                    Car.activateArmour();
+                    guiRenderer.render(armourGui);
+                }
+                System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
+                System.out.println("Armour -> Active:" + armour.isActive());
+
 
                 masterRenderer.processEntity(Car);
-                masterRenderer.processEntity(protectionM);
-                masterRenderer.processEntity(speedM);
                 masterRenderer.processTerrain(terrain);
                 masterRenderer.render(light, camera);
+
             }
             //DESTROY
             window.destroy();
             loader.destroy();
             masterRenderer.cleanUp();
+            guiRenderer.CleanUp();
             meteorcki.clear();
+            powerups.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -162,8 +211,7 @@ public class Main implements Runnable {
 
     private void clearFrameBuffer() {
         window.swapBuffers();
-        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-        GL30.glClearColor(0.0f, 0.0f, 0.0f, 1);
+
     }
 
     private void update() {

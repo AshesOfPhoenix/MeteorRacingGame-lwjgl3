@@ -41,9 +41,9 @@ public class Window {
             return;
         }
 
-        input = new Input();
-        window = GLFW.glfwCreateWindow(width, height, title, isFullscreen ? GLFW.glfwGetPrimaryMonitor() : 0, 0);
 
+        window = GLFW.glfwCreateWindow(width, height, title, isFullscreen ? GLFW.glfwGetPrimaryMonitor() : 0, 0);
+        input = new Input(this.getWindow());
         if (window == 0) {
             System.err.println("ERROR: Window wasn't created");
             return;

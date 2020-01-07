@@ -103,6 +103,7 @@ public class Camera {
     }
 
     public void update() {
+        calculateZoom();
         newMousex = (float) Input.getMouseX();
         newMouseY = (float) Input.getMouseY();
 
@@ -120,5 +121,10 @@ public class Camera {
         kot_med_cam_in_obj -= kot;
         oldMouseX = newMousex;
         oldMouseY = newMouseY;
+    }
+
+    private void calculateZoom() {
+        float zoomic = (float) (Input.getScrollY() * 0.1f);
+        dolzina_cam_obj -= zoomic;
     }
 }
