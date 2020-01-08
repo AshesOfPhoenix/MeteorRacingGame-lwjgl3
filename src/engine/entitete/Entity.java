@@ -35,6 +35,11 @@ public class Entity {
         this.rotZ += dz;
     }
 
+    public float euclideanDistance(Vector3f carPosition) {
+        float distance = (float) Math.sqrt(Math.pow(carPosition.x - this.position.x, 2) + Math.pow(carPosition.y - this.position.y, 2) + Math.pow(carPosition.z - this.position.z, 2));
+        return distance;
+    }
+
     public TextureModel getModel() {
         return this.model;
     }

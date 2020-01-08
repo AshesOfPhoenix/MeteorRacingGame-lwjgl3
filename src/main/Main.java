@@ -76,6 +76,34 @@ public class Main implements Runnable {
             //?Initialize materials and textures
             //?Initialize textured models
             //?Initialize entities, their positions and rotations
+            //*=================================================================
+            //!ROCKS
+            RawModel rockModel = ObjectLoader.loadObject("objects\\rocks", loader);
+            Material materialRock = new Material(new Texture("objects\\rocks.png"), 10, 1);
+            TextureModel textureRock = new TextureModel(rockModel, materialRock);
+            Entity rock;// = new Entity(textureRock, new Vector3f(200, -1f, 100), 0, 0, 0, 0.05f);
+            ArrayList<Entity> rocks = new ArrayList<>();
+            for (int i = 0; i <= 300; i++) {
+                float randx = (float) (Math.random() * 10000 + (-0));
+                float randz = (float) (Math.random() * 5000 + (-0));
+                rock = new Entity(textureRock, new Vector3f(randx, -1f, randz), 0, 0, 0, 0.05f);
+                rocks.add(rock);
+            }
+            //*=================================================================
+            //!HOUSE
+            RawModel houseModel = ObjectLoader.loadObject("objects\\house", loader);
+            Material materialHouse = new Material(new Texture("objects\\house.png"), 10, 1);
+            TextureModel textureHouse = new TextureModel(houseModel, materialHouse);
+            Entity house;
+            ArrayList<Entity> houses = new ArrayList<>();
+            for (int i = 0; i <= 30; i++) {
+                float randx = (float) (Math.random() * 10000 + (-0));
+                float randz = (float) (Math.random() * 5000 + (-0));
+                house = new Entity(textureHouse, new Vector3f(randx, -1f, randz), 0, 0, 0, 1f);
+                houses.add(house);
+            }
+            //*=================================================================
+            //!POWER UPs
             RawModel protection = ObjectLoader.loadObject("objects\\Substance_Painter_Shield_003", loader);
             Material materialProtection = new Material(new Texture("objects\\viking.png"), 30, 15);
             TextureModel texturedProtection = new TextureModel(protection, materialProtection);
@@ -91,12 +119,11 @@ public class Main implements Runnable {
             RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
             Material materialCar = new Material(new Texture("objects\\demo4.png"), 10, 10);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(4, 0, 4), -90, 0, 180, 2.5f);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(5000, 0, 2500), -90, 0, 180, 2.5f);
             //*=================================================================
             //!GUIs
             GUITexture speedBoostGui = new GUITexture(Texture.load("speedBoostEffect.png"), new Vector2f(-0.89f, 0.8f), new Vector2f(0.06f, 0.10f));
             GUITexture armourGui = new GUITexture(Texture.load("armourEffect.png"), new Vector2f(-0.89f, 0.6f), new Vector2f(0.06f, 0.10f));
-
             //*=================================================================
             //!TERRAIN
             //*=================================================================
@@ -116,7 +143,7 @@ public class Main implements Runnable {
             Material materialMeteor = new Material(new Texture("objects\\demo5.png"), 10, 1);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
             Meteor meteor;
-            Meteor meteor2 = new Meteor(texturedMeteor, new Vector3f(100, 0, 100), 0, 0, 0, 0.02f);
+            //Meteor meteor2 = new Meteor(texturedMeteor, new Vector3f(100, 0, 100), 0, 0, 0, 0.02f);
 
             //!METEOR RANDOMIZER
             ArrayList<Meteor> meteorcki = new ArrayList<>();
@@ -194,8 +221,19 @@ public class Main implements Runnable {
 
                 //System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
                 //System.out.println("Armour -> Active:" + armour.isActive());
-                System.out.println(collision.CheckCollisionSphere(meteor2));
-                masterRenderer.processEntity(meteor2);
+
+                //!Rock spawner
+                for (Entity rockSPawn : rocks) {
+                    if (rockSPawn.euclideanDistance(Car.getCenter()) < 700) {
+                        masterRenderer.processEntity(rockSPawn);
+                    }
+                }
+                //!House spawner
+                for (Entity houseSpawn : houses) {
+                    if (houseSpawn.euclideanDistance(Car.getCenter()) < 700) {
+                        masterRenderer.processEntity(houseSpawn);
+                    }
+                }
 
                 masterRenderer.processEntity(Car);
                 masterRenderer.processTerrain(terrain);
@@ -216,7 +254,6 @@ public class Main implements Runnable {
 
     private void clearFrameBuffer() {
         window.swapBuffers();
-
     }
 
     private void update() {
