@@ -192,10 +192,6 @@ public class Main implements Runnable {
                     guiRenderer.render(armourGui);
                 }
 
-                //    System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
-                //  System.out.println("Armour -> Active:" + armour.isActive());
-
-
                 //System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
                 //System.out.println("Armour -> Active:" + armour.isActive());
                 System.out.println(collision.CheckCollisionSphere(meteor2));

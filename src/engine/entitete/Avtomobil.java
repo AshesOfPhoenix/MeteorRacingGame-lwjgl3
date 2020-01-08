@@ -6,8 +6,10 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Avtomobil extends Entity {
-    private static final float RUN_SPEED = 50;
-    private static final float TURN_SPEED = 30;
+    private static final float noPOWER = 3;
+    private static final float TURN_SPEED = 20;
+    static float accnumber = 2;
+    private static float RUN_SPEED = 50;
     boolean speedBoost = false;
     boolean armour = false;
 
@@ -53,6 +55,13 @@ public class Avtomobil extends Entity {
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotZ())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotZ())));
         super.increasePosition(dx, 0, dz);
+
+        if (center.x >= 10000 || center.x < 0 || center.z >= 5000 || center.z < 0) {
+            for (int i = 0; i < 1000000; i++) {
+                super.increasePosition(0, (float) 0.001, 0);
+            }
+        }
+
         Vector3f a = super.getPosition();
         this.center = new Vector3f(a.x, a.y + ySize, a.z);
     }
@@ -60,13 +69,33 @@ public class Avtomobil extends Entity {
     //check the keyboard input and set car moving speed
     private void checkInputs() {
         if (Input.isKeyDown(GLFW.GLFW_KEY_W)) {
-            this.currentSpeed = -RUN_SPEED;
+            if (this.currentSpeed > -RUN_SPEED) {
+                this.currentSpeed += -accnumber;
+                System.out.print(currentSpeed);
+            }
         } else if (Input.isKeyDown(GLFW.GLFW_KEY_S)) {
-            this.currentSpeed = RUN_SPEED;
-        } else {
+            if (this.currentSpeed < RUN_SPEED) {
+                this.currentSpeed += accnumber;
+            } else {
+                this.currentSpeed = RUN_SPEED;
+            }
+        } /*else if (Input.isKeyDown(GLFW.GLFW_KEY_SPACE)) {
+            this.currentSpeed = 0;
+        }*/ else if (this.currentSpeed > 0) {
+            this.currentSpeed += -noPOWER;
+            if (this.currentSpeed < 1) {
+                this.currentSpeed = 0;
+            }
+            System.out.println(currentSpeed);
+        } else if (this.currentSpeed < 0) {
+            this.currentSpeed += noPOWER;
+            if (this.currentSpeed > -1) {
+                this.currentSpeed = 0;
+            }
+            System.out.println(currentSpeed);
+        } else if (this.currentSpeed < 0.9 && this.currentSpeed > 0.1) {
             this.currentSpeed = 0;
         }
-
         if (Input.isKeyDown(GLFW.GLFW_KEY_D)) {
             this.currentTS = -TURN_SPEED;
         } else if (Input.isKeyDown(GLFW.GLFW_KEY_A)) {
@@ -93,9 +122,13 @@ public class Avtomobil extends Entity {
 
     public void activateSpeedBoost() {
         this.speedBoost = true;
+        this.accnumber = 5;
+        this.RUN_SPEED = 70;
     }
 
     public void disableSpeedBoost() {
         this.speedBoost = false;
+        this.accnumber = 2;
+        this.RUN_SPEED = 50;
     }
 }
