@@ -119,7 +119,7 @@ public class Main implements Runnable {
             RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
             Material materialCar = new Material(new Texture("objects\\demo4.png"), 10, 10);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(5000, 0, 2500), -90, 0, 180, 2.5f);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(4, 0, 4), -90, 0, 180, 2.5f);
             //*=================================================================
             //!GUIs
             GUITexture speedBoostGui = new GUITexture(Texture.load("speedBoostEffect.png"), new Vector2f(-0.89f, 0.8f), new Vector2f(0.06f, 0.10f));
@@ -147,10 +147,10 @@ public class Main implements Runnable {
 
             //!METEOR RANDOMIZER
             ArrayList<Meteor> meteorcki = new ArrayList<>();
-            int stevilometeorjev = (int) (Math.random() * 10 * 45);
+            int stevilometeorjev = 1000;
             for (int i = 0; i < stevilometeorjev; i++) {
-                float randx = (float) (Math.random() * 750 + (-200));
-                float randz = (float) (Math.random() * 750 + (-200));
+                float randx = (float) (Math.random() * 10000 + (-0));
+                float randz = (float) (Math.random() * 5000 + (-0));
                 float randomsize = (float) (Math.random() * 0.1 + 0.01);
                 meteor = new Meteor(texturedMeteor, new Vector3f(randx, 200, randz), 0, 0, 0, randomsize);
                 meteorcki.add(meteor);
@@ -175,6 +175,7 @@ public class Main implements Runnable {
             int indeks = 0;
             ArrayList<Meteor> gibanje = new ArrayList<>();
             gibanje.add(meteorcki.get(indeks));
+            meteorcki.removeAll(gibanje);
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
@@ -190,12 +191,15 @@ public class Main implements Runnable {
                     meteor.move();
                     //*Render meteor
                     masterRenderer.processEntity(meteor);
-                    if (gibanje.get(indeks).getPosition().y <= 0 && meteorcki.size() - 1 > indeks) {
+                    if (gibanje.get(i).euclideanDistance(Car.getPosition()) <= 6500 && meteorcki.size() - 1 > indeks && gibanje.size() < 1000) {
                         indeks++;
                         gibanje.add(meteorcki.get(indeks));
                     }
-                    Car.colisiondetection(gibanje.get(indeks));
+
+                    Car.colisiondetection(gibanje.get(i));
+
                 }
+                meteorcki.removeAll(gibanje);
 
                 //!Process PowerUPs - don't render if already active
                 UltimatePower.bouncy_bouncy(); //*This plays up and down animation
