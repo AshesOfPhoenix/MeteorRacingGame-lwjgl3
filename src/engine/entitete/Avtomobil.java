@@ -17,10 +17,10 @@ public class Avtomobil extends Entity {
 
     private float currentSpeed = 0;
     private float currentTS = 0;
-    private Vector3f pozicija;
+    private Vector3f center;
 
-    public Vector3f getPozicija() {
-        return pozicija;
+    public Vector3f getCenter() {
+        return center;
     }
 
     public float getxSize() {
@@ -40,7 +40,7 @@ public class Avtomobil extends Entity {
         this.xSize = model.getRawModel().getxSize() * scale;
         this.zSize = model.getRawModel().getySize() * scale;
         this.ySize = model.getRawModel().getzSize() * scale;
-        this.pozicija = new Vector3f(position.x, position.y + ySize / 2, position.z);
+        this.center = new Vector3f(position.x, position.y + ySize / 2, position.z);
     }
 
     public void move() {
@@ -53,7 +53,8 @@ public class Avtomobil extends Entity {
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotZ())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotZ())));
         super.increasePosition(dx, 0, dz);
-        this.pozicija = super.getPosition();
+        Vector3f a = super.getPosition();
+        this.center = new Vector3f(a.x, a.y + ySize, a.z);
     }
 
     //check the keyboard input and set car moving speed
@@ -77,7 +78,7 @@ public class Avtomobil extends Entity {
 
     public void colisiondetection(Meteor meteor) {
         Vector3f pozicija = meteor.getPosition();
-        if (pozicija.x - this.pozicija.x <= 50 && pozicija.y - this.pozicija.y <= 50 && pozicija.z - this.pozicija.z <= 50) {
+        if (pozicija.x - this.center.x <= 50 && pozicija.y - this.center.y <= 50 && pozicija.z - this.center.z <= 50) {
             System.out.println("Ijeeeeeeeeeeeej smo se zaleteli");
         }
     }

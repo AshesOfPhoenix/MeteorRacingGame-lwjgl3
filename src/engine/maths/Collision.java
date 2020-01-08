@@ -22,8 +22,8 @@ public class Collision {
         //?GET METEOR RADIUS
         float radius = collidedEntity.getRadius();
         //?GET OBJECTS POSITIONS
-        Vector3f centerSphere = collidedEntity.getPositionA();
-        Vector3f centerCar = car.getPozicija();
+        Vector3f centerSphere = collidedEntity.getCenter();
+        Vector3f centerCar = car.getCenter();
         //?GET HALF-WIDTH AND HALF-HEIGHT OF A AABB (CAR)
         Vector3f aabb_half_extents = new Vector3f(this.car.getxSize() / 2, this.car.getySize() / 2, this.car.getzSize() / 2);
         //?DIFFERENCE VECTOR BETWEEN BOTH CENTERS

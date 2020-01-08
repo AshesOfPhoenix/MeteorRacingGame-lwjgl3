@@ -122,6 +122,7 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        return loader.loadToVAO(vertices, textureCoords, indices, normals);
+        float[] empty = {};
+        return loader.loadToVAO(vertices, textureCoords, indices, normals, empty);
     }
 }

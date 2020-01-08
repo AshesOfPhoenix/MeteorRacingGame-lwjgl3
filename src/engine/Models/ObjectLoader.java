@@ -31,6 +31,14 @@ public class ObjectLoader {
         float[] texturesArray = null;
         int[] indicesArray = null;
         int stevec = 0;
+
+        float minY = 0.0f;
+        float maxY = 0.0f;
+        float minX = 0.0f;
+        float maxX = 0.0f;
+        float minZ = 0.0f;
+        float maxZ = 0.0f;
+
         try {
             while (true) {
 
@@ -40,6 +48,21 @@ public class ObjectLoader {
                     Vector3f vertex = new Vector3f(Float.parseFloat(currnetLine[2]),
                             Float.parseFloat(currnetLine[3]), Float.parseFloat(currnetLine[4]));
                     vertices.add(vertex);
+                    if (vertices.size() > 1) {
+                        if (Float.parseFloat(currnetLine[2]) > maxX) maxX = Float.parseFloat(currnetLine[2]);
+                        if (Float.parseFloat(currnetLine[3]) > maxY) maxY = Float.parseFloat(currnetLine[3]);
+                        if (Float.parseFloat(currnetLine[4]) > maxZ) maxZ = Float.parseFloat(currnetLine[4]);
+                        if (Float.parseFloat(currnetLine[2]) < minX) minX = Float.parseFloat(currnetLine[2]);
+                        if (Float.parseFloat(currnetLine[3]) < minY) minY = Float.parseFloat(currnetLine[3]);
+                        if (Float.parseFloat(currnetLine[4]) < minZ) minZ = Float.parseFloat(currnetLine[4]);
+                    } else {
+                        minY = Float.parseFloat(currnetLine[3]);
+                        maxY = Float.parseFloat(currnetLine[3]);
+                        minX = Float.parseFloat(currnetLine[2]);
+                        maxX = Float.parseFloat(currnetLine[2]);
+                        minZ = Float.parseFloat(currnetLine[4]);
+                        maxZ = Float.parseFloat(currnetLine[4]);
+                    }
                 } else if (line.startsWith("vt ")) {
                     Vector2f texture = new Vector2f(Float.parseFloat(currnetLine[1]),
                             Float.parseFloat(currnetLine[2]));
@@ -95,6 +118,13 @@ public class ObjectLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("Object: " + pathToObject);
+        System.out.println(maxX + " - " + minX + " - " + (Math.abs(maxX) + Math.abs(minX)));
+        System.out.println(maxY + " - " + minY + " - " + (Math.abs(maxY) + Math.abs(minY)));
+        System.out.println(maxZ + " - " + minZ + " - " + (Math.abs(maxZ) + Math.abs(minZ)));
+        System.out.println("");
+        float[] model_size = {maxX, minX, maxY, minY, maxZ, minZ};
+
         vertecesArray = new float[vertices.size() * 3];
         indicesArray = new int[indices.size()];
 
@@ -108,7 +138,7 @@ public class ObjectLoader {
         for (int i = 0; i < indices.size(); i++) {
             indicesArray[i] = indices.get(i);
         }
-        return loader.loadToVAO(vertecesArray, texturesArray, indicesArray, normalsArray);
+        return loader.loadToVAO(vertecesArray, texturesArray, indicesArray, normalsArray, model_size);
     }
 
     private static void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures, List<Vector3f> normals, float[] textureArray, float[] normalsArray) {

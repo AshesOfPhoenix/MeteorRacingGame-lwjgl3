@@ -11,6 +11,7 @@ import engine.PowerUps.SpeedBoost;
 import engine.entitete.*;
 import engine.io.Input;
 import engine.io.Window;
+import engine.maths.Collision;
 import engine.render.GUIRenderer;
 import engine.render.MasterRenderer;
 import engine.textures.Material;
@@ -90,7 +91,7 @@ public class Main implements Runnable {
             RawModel modelCar = ObjectLoader.loadObject("objects\\KiKicar", loader);
             Material materialCar = new Material(new Texture("objects\\demo4.png"), 10, 10);
             TextureModel texturedCar = new TextureModel(modelCar, materialCar);
-            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(500, 0, 500), -90, 0, 180, 2.5f);
+            Avtomobil Car = new Avtomobil(texturedCar, new Vector3f(4, 0, 4), -90, 0, 180, 2.5f);
             //*=================================================================
             //!GUIs
             GUITexture speedBoostGui = new GUITexture(Texture.load("speedBoostEffect.png"), new Vector2f(-0.89f, 0.8f), new Vector2f(0.06f, 0.10f));
@@ -115,6 +116,7 @@ public class Main implements Runnable {
             Material materialMeteor = new Material(new Texture("objects\\demo5.png"), 10, 1);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
             Meteor meteor;
+            Meteor meteor2 = new Meteor(texturedMeteor, new Vector3f(100, 0, 100), 0, 0, 0, 0.02f);
 
             //!METEOR RANDOMIZER
             ArrayList<Meteor> meteorcki = new ArrayList<>();
@@ -138,6 +140,7 @@ public class Main implements Runnable {
             powerups.add(armour);
             PowerUp UltimatePower = new PowerUp(powerups);
 
+            Collision collision = new Collision(Car);
             //!Initialize light source - Light Source and Color output
             Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(1.0f, 0.70f, 0.70f));
             //!Initialize camera class for input readings
@@ -188,9 +191,15 @@ public class Main implements Runnable {
                     Car.activateArmour();
                     guiRenderer.render(armourGui);
                 }
+
                 //    System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
                 //  System.out.println("Armour -> Active:" + armour.isActive());
 
+
+                //System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
+                //System.out.println("Armour -> Active:" + armour.isActive());
+                System.out.println(collision.CheckCollisionSphere(meteor2));
+                masterRenderer.processEntity(meteor2);
 
                 masterRenderer.processEntity(Car);
                 masterRenderer.processTerrain(terrain);
