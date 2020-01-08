@@ -124,7 +124,15 @@ public class Camera {
     }
 
     private void calculateZoom() {
-        float zoomic = (float) (Input.getScrollY() * 0.4f);
-        dolzina_cam_obj -= zoomic;
+        if (dolzina_cam_obj > 12) {
+            float zoomic = (float) (Input.getScrollY() * 0.4f);
+            dolzina_cam_obj -= zoomic;
+        } else {
+            double value = Input.getScrollY();
+            if (value < 0) {
+                float zoomic = (float) (value * 0.4f);
+                dolzina_cam_obj -= zoomic;
+            }
+        }
     }
 }
