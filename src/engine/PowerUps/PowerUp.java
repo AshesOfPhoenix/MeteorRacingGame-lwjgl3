@@ -29,6 +29,10 @@ public class PowerUp {
         }
     }
 
+    public void resetInterpolation() {
+        this.interpolation = 0;
+    }
+
     public void update(List<Entity> powerups) {
         for (int i = 0; i < powerups.size(); i += 2) {
             this.speedBoosts.add((SpeedBoost) powerups.get(i));
@@ -38,29 +42,26 @@ public class PowerUp {
         }
     }
 
-    private Vector3f resetSpeedLocation() {
+    public Vector3f resetSpeedLocation() {
         float randx = (float) (Math.random() * 10000 + (0));
         float randz = (float) (Math.random() * 5000 + (0));
         return new Vector3f(randx, 0.3f, randz);
     }
 
-    private Vector3f resetArmourLocation() {
+    public Vector3f resetArmourLocation() {
         float randx = (float) (Math.random() * 10000 + (0));
         float randz = (float) (Math.random() * 5000 + (0));
-        return new Vector3f(randx, 4.35f, randz);
+        return new Vector3f(randx, 4.4f, randz);
     }
 
 
     public void bouncy_bouncy() {
-        interpolate();
         checkActiveTimers();
         for (SpeedBoost boost : speedBoosts) {
-            boost.increaseRotation(0, 0.0f, 2.1f);
-            boost.increasePosition(0, this.interpolation, 0);
+            boost.interpolate();
         }
         for (Armour protection : armours) {
-            protection.increaseRotation(0, -2.0f, 0);
-            protection.increasePosition(0, this.interpolation, 0);
+            protection.interpolate();
         }
     }
 
@@ -102,8 +103,11 @@ public class PowerUp {
             float relativeDistance = (float) Math.sqrt(Math.pow(carPosition.getX() - boost.getPosition().getX(), 2) + Math.pow(carPosition.getY() - boost.getPosition().getY(), 2) + Math.pow(carPosition.getZ() - boost.getPosition().getZ(), 2));
             if (relativeDistance <= 7) {
                 isBoostActive = true;
-                boost.setActive(isBoostActive);
                 this.speedBoostTimerStart = isBoostActive;
+                resetInterpolation();
+                boost.setInterpolation(0);
+                boost.setUpOrdown(true);
+                this.upOrdown = true;
                 boost.setPosition(resetSpeedLocation());
                 startSpeed = System.currentTimeMillis();
             }
@@ -115,8 +119,11 @@ public class PowerUp {
             float relativeDistance = (float) Math.sqrt(Math.pow(carPosition.getX() - protection.getPosition().getX(), 2) + Math.pow(carPosition.getY() - protection.getPosition().getY(), 2) + Math.pow(carPosition.getZ() - protection.getPosition().getZ(), 2));
             if (relativeDistance <= 7) {
                 isArmourActive = true;
-                protection.setActive(isArmourActive);
                 this.armourTimerStart = isArmourActive;
+                protection.setInterpolation(0);
+                protection.setUpOrdown(true);
+                resetInterpolation();
+                this.upOrdown = true;
                 protection.setPosition(resetArmourLocation());
                 startArmour = System.currentTimeMillis();
             }
@@ -126,6 +133,14 @@ public class PowerUp {
     public void cleanUp() {
         speedBoosts.clear();
         armours.clear();
+        upOrdown = true;
+        speedBoostTimerStart = false;
+        armourTimerStart = false;
+        isBoostActive = false;
+        isArmourActive = false;
+        startSpeed = 0;
+        startArmour = 0;
+
     }
 
     public boolean checkIfPickedUpSpeed() {

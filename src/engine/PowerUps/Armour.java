@@ -15,6 +15,24 @@ public class Armour extends Entity {
 
     private boolean active = false;
     private String type = "armour";
+    private float interpolation = 0;
+    private boolean upOrdown = true;
+
+    public float getInterpolation() {
+        return interpolation;
+    }
+
+    public void setInterpolation(float interpolation) {
+        this.interpolation = interpolation;
+    }
+
+    public boolean isUpOrdown() {
+        return upOrdown;
+    }
+
+    public void setUpOrdown(boolean upOrdown) {
+        this.upOrdown = upOrdown;
+    }
 
     public String getType() {
         return type;
@@ -24,4 +42,19 @@ public class Armour extends Entity {
         super(model, position, rotX, rotY, rotZ, scale);
     }
 
+    public void interpolate() {
+        if (this.upOrdown) {
+            this.interpolation += 0.001f;
+            if (this.interpolation >= 0.04f) {
+                this.upOrdown = false;
+            }
+        } else {
+            this.interpolation -= 0.001f;
+            if (this.interpolation <= -0.04f) {
+                this.upOrdown = true;
+            }
+        }
+        increaseRotation(0, -2.0f, 0);
+        increasePosition(0, this.interpolation, 0);
+    }
 }

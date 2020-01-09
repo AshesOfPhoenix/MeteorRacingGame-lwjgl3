@@ -12,6 +12,7 @@ import engine.entitete.*;
 import engine.io.Input;
 import engine.io.Window;
 import engine.maths.Collision;
+import engine.maths.Timmer;
 import engine.render.GUIRenderer;
 import engine.render.MasterRenderer;
 import engine.textures.Material;
@@ -121,7 +122,7 @@ public class Main implements Runnable {
                 float randz = (float) (Math.random() * 5000 + (-0));
                 float randX = (float) (Math.random() * 10000 + (-0));
                 float randZ = (float) (Math.random() * 5000 + (-0));
-                armour = new Armour(texturedProtection, new Vector3f(randx, 4.35f, randz), 0, 0, 0, 0.02f);
+                armour = new Armour(texturedProtection, new Vector3f(randx, 4.4f, randz), 0, 0, 0, 0.02f);
                 speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(randX, 0.3f, randZ), -90, 0, 0, 0.02f);
                 powerups.add(speedBoost);
                 powerups.add(armour);
@@ -165,10 +166,11 @@ public class Main implements Runnable {
             ArrayList<Meteor> meteorcki = new ArrayList<>();
             int stevilometeorjev = 3000;
             for (int i = 0; i < stevilometeorjev; i++) {
-                float randx = (float) (Math.random() * 10000 + (-0));
-                float randz = (float) (Math.random() * 5000 + (-0));
+                float randx = (float) (Math.random() * 10000);
+                float randz = (float) (Math.random() * 5000);
+                float randy = (float) ((Math.random() * 500) + 350);
                 float randomsize = (float) (Math.random() * 0.05 + 0.01);
-                meteor = new Meteor(texturedMeteor, new Vector3f(randx, 200, randz), 0, 0, 0, randomsize);
+                meteor = new Meteor(texturedMeteor, new Vector3f(randx, randy, randz), 0, 0, 0, randomsize);
                 meteorcki.add(meteor);
             }
 
@@ -187,14 +189,17 @@ public class Main implements Runnable {
             Camera camera = new Camera(Car);
             //!Process Meteors
 
-
+            Timmer.start();
+            boolean levelUP = false;
+            int timeBetweenLevels = 0;
+            float meteorSpeed = 0.0f;
+            VelikoMeteorjev UltimateDestruction = new VelikoMeteorjev(meteorcki, texturedMeteor);
 
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
                 update();
-                System.out.println(state);
-                System.out.println(getcurrent_time());
+
                 switch (state) {
                     case GAME:
                         //?GAME STATE ==============================================================================================
@@ -234,20 +239,26 @@ public class Main implements Runnable {
                             Car.activateArmour();
                             guiRenderer.render(armourGui);
                         }
-
+                        if (Timmer.getTime() == 30 + timeBetweenLevels) {
+                            timeBetweenLevels += 26;
+                            stevilometeorjev += 1000;
+                            meteorSpeed += 0.8;
+                            UltimateDestruction.updateCount(stevilometeorjev, meteorSpeed);
+                        } else {
+                            UltimateDestruction.setLevelUp(false);
+                        }
                         //!METEOR SPAWNER AND MOVEMENT
-                        for (Meteor petarda : meteorcki) {
-                            if (petarda.euclideanDistance(Car.getCenter()) < 800) {
-                                petarda.move();
+                        for (Meteor petarda : UltimateDestruction.meteorji) {
+                            if (petarda.euclideanDistance(Car.getCenter()) < 700) {
+                                petarda.move(Car.getPosition());
                                 masterRenderer.processEntity(petarda);
                                 if (collision.CheckCollisionSphere(petarda)) {
                                     System.out.println("GAME OVER");
                                     setDelta(getcurrent_time());
-                                    state = GameStates.GAME_OVER;
+                                    //state = GameStates.GAME_OVER;
                                 }
                             }
                         }
-
                         //!Rock spawner
                         for (Rocks rockSPawn : rocks) {
                             if (rockSPawn.euclideanDistance(Car.getCenter()) < 700) {
@@ -271,7 +282,7 @@ public class Main implements Runnable {
                     case MENU:
                         GL30.glClearColor(0.2f, 0.5f, 0.4f, 0.9f);
                         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-                        if ((getcurrent_time() - delta) > 500) {
+                        if ((getcurrent_time() - delta) > 1000) {
                             if (Input.isKeyDown(GLFW_KEY_SPACE)) {
                                 state = GameStates.GAME;
                             }
@@ -282,33 +293,28 @@ public class Main implements Runnable {
                         GL30.glClearColor(1.0f, 0.0f, 0.0f, 0.9f);
                         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
                         //!RESET
+                        timeBetweenLevels = 0;
+                        meteorSpeed = 0.0f;
+                        stevilometeorjev = 3000;
                         UltimatePower.cleanUp();
+                        UltimateDestruction.cleanUp();
                         powerups.clear();
                         meteorcki.clear();
                         Car.disableSpeedBoost();
                         Car.disableArmour();
+                        UltimateDestruction.setLevelUp(false);
                         for (int i = 0; i <= 80; i++) {
-                            float randx = (float) (Math.random() * 10000 + (-0));
-                            float randz = (float) (Math.random() * 5000 + (-0));
-                            float randX = (float) (Math.random() * 10000 + (-0));
-                            float randZ = (float) (Math.random() * 5000 + (-0));
-                            armour = new Armour(texturedProtection, new Vector3f(randx, 4.35f, randz), 0, 0, 0, 0.02f);
-                            speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(randX, 0.3f, randZ), -90, 0, 0, 0.02f);
+                            armour = new Armour(texturedProtection, UltimatePower.resetArmourLocation(), 0, 0, 0, 0.02f);
+                            speedBoost = new SpeedBoost(texturedSpeed, UltimatePower.resetSpeedLocation(), -90, 0, 0, 0.02f);
                             powerups.add(speedBoost);
                             powerups.add(armour);
                         }
-                        for (int i = 0; i < stevilometeorjev; i++) {
-                            float randx = (float) (Math.random() * 10000 + (-0));
-                            float randz = (float) (Math.random() * 5000 + (-0));
-                            float randomsize = (float) (Math.random() * 0.05 + 0.01);
-                            meteor = new Meteor(texturedMeteor, new Vector3f(randx, 200, randz), 0, 0, 0, randomsize);
-                            meteorcki.add(meteor);
-                        }
                         Car.setPosition(new Vector3f(5000f, 0f, 2500f));
-
+                        UltimatePower.resetInterpolation();
                         UltimatePower.update(powerups);
+                        UltimateDestruction.update(stevilometeorjev);
 
-                        if ((getcurrent_time() - delta) > 500) {
+                        if ((getcurrent_time() - delta) > 1000) {
                             if (Input.isKeyDown(GLFW_KEY_SPACE)) {
                                 state = GameStates.MENU;
                                 setDelta(getcurrent_time());

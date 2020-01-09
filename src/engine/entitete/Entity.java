@@ -95,6 +95,7 @@ public class Entity {
 
     public void setPosition(Vector3f position) {
         this.position = position;
+
     }
 
     public float getRotX() {

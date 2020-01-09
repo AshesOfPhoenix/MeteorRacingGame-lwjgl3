@@ -115,8 +115,13 @@ public class Camera {
         } else if ((Input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT))) {
 
         }*/
+
         float pitchch = dy * 0.1f;
         pitch -= pitchch;
+        if (pitch < 5) {
+            pitch = 5;
+        }
+
         float kot = dx * 0.3f;
         kot_med_cam_in_obj -= kot;
         oldMouseX = newMousex;
