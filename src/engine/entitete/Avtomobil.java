@@ -71,7 +71,6 @@ public class Avtomobil extends Entity {
         if (Input.isKeyDown(GLFW.GLFW_KEY_W)) {
             if (this.currentSpeed > -RUN_SPEED) {
                 this.currentSpeed += -accnumber;
-                System.out.print(currentSpeed);
             }
         } else if (Input.isKeyDown(GLFW.GLFW_KEY_S)) {
             if (this.currentSpeed < RUN_SPEED) {
@@ -86,13 +85,12 @@ public class Avtomobil extends Entity {
             if (this.currentSpeed < 1) {
                 this.currentSpeed = 0;
             }
-            System.out.println(currentSpeed);
+
         } else if (this.currentSpeed < 0) {
             this.currentSpeed += noPOWER;
             if (this.currentSpeed > -1) {
                 this.currentSpeed = 0;
             }
-            System.out.println(currentSpeed);
         } else if (this.currentSpeed < 0.9 && this.currentSpeed > 0.1) {
             this.currentSpeed = 0;
         }
