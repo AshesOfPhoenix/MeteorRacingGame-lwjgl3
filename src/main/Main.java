@@ -35,19 +35,22 @@ public class Main implements Runnable {
     private Window window;
 
     private static float lastFrameTime;
-    private static float delta;
+    private static long delta;
 
+    public static void setDelta(long delta) {
+        Main.delta = delta;
+    }
 
     public static void main(String[] args) {
         new Main().start();
     }
 
     private static long getcurrent_time() {
-        return Window.frames;
+        return System.currentTimeMillis();
     }
 
     private static float getFT() {
-        return delta;
+        return Main.delta;
     }
 
     private void start() {
@@ -191,6 +194,7 @@ public class Main implements Runnable {
                 clearFrameBuffer();
                 update();
                 System.out.println(state);
+                System.out.println(getcurrent_time());
                 switch (state) {
                     case GAME:
                         //?GAME STATE ==============================================================================================
@@ -238,7 +242,7 @@ public class Main implements Runnable {
                                 masterRenderer.processEntity(petarda);
                                 if (collision.CheckCollisionSphere(petarda)) {
                                     System.out.println("GAME OVER");
-
+                                    setDelta(getcurrent_time());
                                     state = GameStates.GAME_OVER;
                                 }
                             }
@@ -250,7 +254,7 @@ public class Main implements Runnable {
                                 masterRenderer.processEntity(rockSPawn);
                                 if (collision.CheckCollisionSphere(rockSPawn)) {
                                     System.out.println("GAME OVER");
-
+                                    setDelta(getcurrent_time());
                                     state = GameStates.GAME_OVER;
                                 }
                             }
@@ -261,20 +265,28 @@ public class Main implements Runnable {
                         masterRenderer.processTerrain(terrain);
                         masterRenderer.render(light, camera);
                         //?GAME STATE ==============================================================================================
+                        setDelta(getcurrent_time());
                         break;
 
                     case MENU:
                         GL30.glClearColor(0.2f, 0.5f, 0.4f, 0.9f);
                         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-
+                        if ((getcurrent_time() - delta) > 500) {
+                            if (Input.isKeyDown(GLFW_KEY_SPACE)) {
+                                state = GameStates.GAME;
+                            }
+                        }
                         break;
 
                     case GAME_OVER:
                         GL30.glClearColor(1.0f, 0.0f, 0.0f, 0.9f);
                         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
                         //!RESET
+                        UltimatePower.cleanUp();
                         powerups.clear();
                         meteorcki.clear();
+                        Car.disableSpeedBoost();
+                        Car.disableArmour();
                         for (int i = 0; i <= 80; i++) {
                             float randx = (float) (Math.random() * 10000 + (-0));
                             float randz = (float) (Math.random() * 5000 + (-0));
@@ -293,6 +305,15 @@ public class Main implements Runnable {
                             meteorcki.add(meteor);
                         }
                         Car.setPosition(new Vector3f(5000f, 0f, 2500f));
+
+                        UltimatePower.update(powerups);
+
+                        if ((getcurrent_time() - delta) > 500) {
+                            if (Input.isKeyDown(GLFW_KEY_SPACE)) {
+                                state = GameStates.MENU;
+                                setDelta(getcurrent_time());
+                            }
+                        }
                         break;
                 }
             }
@@ -318,14 +339,5 @@ public class Main implements Runnable {
             System.out.println("X: " + Input.getMouseX() + ", Y: " + Input.getMouseY());
         //primer ko pritisnemo gumb f11 se nam poveca screen na fullscreen
         if (Input.isKeyDown(GLFW.GLFW_KEY_F11)) window.setFullscreen(!window.isFullscreen());
-        if (Input.isKeyDown(GLFW_KEY_SPACE)) {
-            if (state == GameStates.MENU) {
-                state = GameStates.GAME;
-            } else if (state == GameStates.GAME_OVER) {
-                state = GameStates.MENU;
-            }
-        }
-        long currnetFT = getcurrent_time();
-        delta = (currnetFT - lastFrameTime) / 100f;
     }
 }

@@ -29,6 +29,15 @@ public class PowerUp {
         }
     }
 
+    public void update(List<Entity> powerups) {
+        for (int i = 0; i < powerups.size(); i += 2) {
+            this.speedBoosts.add((SpeedBoost) powerups.get(i));
+        }
+        for (int i = 1; i < powerups.size(); i += 2) {
+            this.armours.add((Armour) powerups.get(i));
+        }
+    }
+
     private Vector3f resetSpeedLocation() {
         float randx = (float) (Math.random() * 10000 + (0));
         float randz = (float) (Math.random() * 5000 + (0));
@@ -112,6 +121,11 @@ public class PowerUp {
                 startArmour = System.currentTimeMillis();
             }
         }
+    }
+
+    public void cleanUp() {
+        speedBoosts.clear();
+        armours.clear();
     }
 
     public boolean checkIfPickedUpSpeed() {
