@@ -13,6 +13,42 @@ public class Entity {
     private Vector3f position;
     private float rotX, rotY, rotZ;
     private float scale;
+    private float xSize;
+    private float ySize;
+    private float zSize;
+    private Vector3f center;
+
+    public float getxSize() {
+        return xSize;
+    }
+
+    public float getySize() {
+        return ySize;
+    }
+
+    public float getzSize() {
+        return zSize;
+    }
+
+    public Vector3f getCenter() {
+        return center;
+    }
+
+    public void setxSize(float xSize) {
+        this.xSize = xSize;
+    }
+
+    public void setySize(float ySize) {
+        this.ySize = ySize;
+    }
+
+    public void setzSize(float zSize) {
+        this.zSize = zSize;
+    }
+
+    public void setCenter(Vector3f center) {
+        this.center = center;
+    }
 
     public Entity(TextureModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         this.model = model;
@@ -21,12 +57,17 @@ public class Entity {
         this.rotY = rotY;
         this.rotZ = rotZ;
         this.scale = scale;
+        this.xSize = model.getRawModel().getxSize() * scale;
+        this.ySize = model.getRawModel().getySize() * scale;
+        this.zSize = model.getRawModel().getzSize() * scale;
+        this.center = new Vector3f(position.x, position.y, position.z);
     }
 
     public void increasePosition(float dx, float dy, float dz) {
         this.position.x += dx;
         this.position.y += dy;
         this.position.z += dz;
+        this.center = new Vector3f(position.x, position.y, position.z);
     }
 
     public void increaseRotation(float dx, float dy, float dz) {

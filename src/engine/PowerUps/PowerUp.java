@@ -3,6 +3,7 @@ package engine.PowerUps;
 import engine.entitete.Entity;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PowerUp {
@@ -12,21 +13,46 @@ public class PowerUp {
     private SpeedBoost speedBoost;
     private boolean speedBoostTimerStart = false;
     private boolean armourTimerStart = false;
+    private boolean isBoostActive = false;
+    private boolean isArmourActive = false;
     private long startSpeed;
     private long startArmour;
+    List<SpeedBoost> speedBoosts = new ArrayList<>();
+    List<Armour> armours = new ArrayList<>();
 
     public PowerUp(List<Entity> powerups) {
-        this.speedBoost = (SpeedBoost) powerups.get(0);
-        this.armour = (Armour) powerups.get(1);
+        for (int i = 0; i < powerups.size(); i += 2) {
+            this.speedBoosts.add((SpeedBoost) powerups.get(i));
+        }
+        for (int i = 1; i < powerups.size(); i += 2) {
+            this.armours.add((Armour) powerups.get(i));
+        }
     }
+
+    private Vector3f resetSpeedLocation() {
+        float randx = (float) (Math.random() * 10000 + (0));
+        float randz = (float) (Math.random() * 5000 + (0));
+        return new Vector3f(randx, 0.3f, randz);
+    }
+
+    private Vector3f resetArmourLocation() {
+        float randx = (float) (Math.random() * 10000 + (0));
+        float randz = (float) (Math.random() * 5000 + (0));
+        return new Vector3f(randx, 4.35f, randz);
+    }
+
 
     public void bouncy_bouncy() {
         interpolate();
         checkActiveTimers();
-        this.speedBoost.increaseRotation(0, 0.0f, 2.1f);
-        this.speedBoost.increasePosition(0, this.interpolation, 0);
-        this.armour.increaseRotation(0, -2.0f, 0);
-        this.armour.increasePosition(0, this.interpolation, 0);
+        for (SpeedBoost boost : speedBoosts) {
+            boost.increaseRotation(0, 0.0f, 2.1f);
+            boost.increasePosition(0, this.interpolation, 0);
+        }
+        for (Armour protection : armours) {
+            protection.increaseRotation(0, -2.0f, 0);
+            protection.increasePosition(0, this.interpolation, 0);
+        }
     }
 
     public void checkActiveTimers() {
@@ -34,14 +60,16 @@ public class PowerUp {
             long finish = System.currentTimeMillis();
             long timeElapsed = finish - startSpeed;
             if (timeElapsed > 10000) {
-                this.speedBoost.setActive(false);
+                isBoostActive = false;
+                this.speedBoostTimerStart = false;
             }
         }
         if (this.armourTimerStart) {
             long finish = System.currentTimeMillis();
             long timeElapsed = finish - startArmour;
             if (timeElapsed > 10000) {
-                this.armour.setActive(false);
+                isArmourActive = false;
+                this.armourTimerStart = false;
             }
         }
     }
@@ -61,30 +89,36 @@ public class PowerUp {
     }
 
     public void collectSpeedBoost(Vector3f carPosition) {
-        Vector3f speedPowerUp = this.speedBoost.getPosition();
-        float relativeDistance = (float) Math.sqrt(Math.pow(carPosition.getX() - speedPowerUp.getX(), 2) + Math.pow(carPosition.getY() - speedPowerUp.getY(), 2) + Math.pow(carPosition.getZ() - speedPowerUp.getZ(), 2));
-        if (relativeDistance <= 6) {
-            this.speedBoost.setActive(true);
-            this.speedBoostTimerStart = true;
-            startSpeed = System.currentTimeMillis();
+        for (SpeedBoost boost : speedBoosts) {
+            float relativeDistance = (float) Math.sqrt(Math.pow(carPosition.getX() - boost.getPosition().getX(), 2) + Math.pow(carPosition.getY() - boost.getPosition().getY(), 2) + Math.pow(carPosition.getZ() - boost.getPosition().getZ(), 2));
+            if (relativeDistance <= 7) {
+                isBoostActive = true;
+                boost.setActive(isBoostActive);
+                this.speedBoostTimerStart = isBoostActive;
+                boost.setPosition(resetSpeedLocation());
+                startSpeed = System.currentTimeMillis();
+            }
         }
     }
 
     public void collectArmour(Vector3f carPosition) {
-        Vector3f armourPowerUp = this.armour.getPosition();
-        float relativeDistance = (float) Math.sqrt(Math.pow(carPosition.getX() - armourPowerUp.getX(), 2) + Math.pow(carPosition.getY() - armourPowerUp.getY(), 2) + Math.pow(carPosition.getZ() - armourPowerUp.getZ(), 2));
-        if (relativeDistance <= 6) {
-            this.armour.setActive(true);
-            this.armourTimerStart = true;
-            startArmour = System.currentTimeMillis();
+        for (Armour protection : armours) {
+            float relativeDistance = (float) Math.sqrt(Math.pow(carPosition.getX() - protection.getPosition().getX(), 2) + Math.pow(carPosition.getY() - protection.getPosition().getY(), 2) + Math.pow(carPosition.getZ() - protection.getPosition().getZ(), 2));
+            if (relativeDistance <= 7) {
+                isArmourActive = true;
+                protection.setActive(isArmourActive);
+                this.armourTimerStart = isArmourActive;
+                protection.setPosition(resetArmourLocation());
+                startArmour = System.currentTimeMillis();
+            }
         }
     }
 
     public boolean checkIfPickedUpSpeed() {
-        return this.speedBoost.isActive();
+        return isBoostActive;
     }
 
     public boolean checkIfPickedUpArmour() {
-        return this.armour.isActive();
+        return isArmourActive;
     }
 }

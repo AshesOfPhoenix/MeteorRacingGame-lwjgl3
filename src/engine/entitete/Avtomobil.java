@@ -63,7 +63,7 @@ public class Avtomobil extends Entity {
         }
 
         Vector3f a = super.getPosition();
-        this.center = new Vector3f(a.x, a.y + ySize, a.z);
+        this.center = new Vector3f(a.x, a.y + this.ySize / 2, a.z);
     }
 
     //check the keyboard input and set car moving speed

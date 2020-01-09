@@ -27,15 +27,12 @@ public class GUIRenderer {
         //Render
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, gui.getTextureID());
-        GL30.glEnable(GL30.GL_BLEND);
-        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
         //GL30.glDisable(GL30.GL_DEPTH_TEST);
         Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
         this.shader.loadTransformation(matrix);
         GL30.glDrawArrays(GL30.GL_TRIANGLE_STRIP, 0, this.quad.getVertexCount());
         //GL30.glEnable(GL30.GL_DEPTH_TEST);
         GL30.glActiveTexture(0);
-        GL30.glDisable(GL30.GL_BLEND);
         GL30.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);
         this.shader.UnBind();

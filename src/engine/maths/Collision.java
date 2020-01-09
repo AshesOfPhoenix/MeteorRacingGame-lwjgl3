@@ -3,6 +3,7 @@ package engine.maths;
 import engine.entitete.Avtomobil;
 import engine.entitete.Entity;
 import engine.entitete.Meteor;
+import engine.entitete.Rocks;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Collision {
@@ -12,11 +13,6 @@ public class Collision {
         this.car = car;
     }
 
-    public boolean CheckCollisionBox(Entity collidedEntity) {
-
-
-        return false;
-    }
 
     public boolean CheckCollisionSphere(Meteor collidedEntity) {
         //?GET METEOR RADIUS
@@ -35,6 +31,32 @@ public class Collision {
         //?Retrieve vector between center circle and closest point AABB and check if length <= radius
         difference = new Vector3f(closest.x - centerSphere.x, closest.y - centerSphere.y, closest.z - centerSphere.z);
         return lenghtVec(difference) < radius;
+    }
+
+    public boolean CheckCollisionSphere(Rocks collidedEntity) {
+        //?GET METEOR RADIUS
+        float radius = collidedEntity.getSphereRadius();
+        //?GET OBJECTS POSITIONS
+        Vector3f centerSphere = collidedEntity.getCenter();
+        Vector3f centerCar = car.getCenter();
+        //?GET HALF-WIDTH AND HALF-HEIGHT OF A AABB (CAR)
+        Vector3f aabb_half_extents = new Vector3f(this.car.getxSize() / 2, this.car.getySize() / 2, this.car.getzSize() / 2);
+        //?DIFFERENCE VECTOR BETWEEN BOTH CENTERS
+        Vector3f difference = new Vector3f(centerSphere.x - centerCar.x, centerSphere.y - centerCar.y, centerSphere.z - centerCar.z);
+        //?Add clamped value to AABB_center and we get the value of box closest to circle
+        Vector3f clamped = clamp(difference, new Vector3f(-1 * aabb_half_extents.x, -1 * aabb_half_extents.y, -1 * aabb_half_extents.z), aabb_half_extents);
+        Vector3f closest = new Vector3f(centerCar.x + clamped.x, centerCar.y + clamped.y, centerCar.z + clamped.z);
+
+        //?Retrieve vector between center circle and closest point AABB and check if length <= radius
+        difference = new Vector3f(closest.x - centerSphere.x, closest.y - centerSphere.y, closest.z - centerSphere.z);
+        return lenghtVec(difference) < radius;
+    }
+
+    public boolean CheckCollisionSquare(Entity entity) {
+        boolean collisionX = this.car.getCenter().x + this.car.getxSize() >= entity.getCenter().x && entity.getCenter().x + entity.getxSize() >= this.car.getCenter().x;
+        boolean collisionY = this.car.getCenter().y + this.car.getySize() >= entity.getCenter().y && entity.getCenter().y + entity.getySize() >= this.car.getCenter().y;
+        boolean collisionZ = this.car.getCenter().z + this.car.getzSize() >= entity.getCenter().z && entity.getCenter().z + entity.getzSize() >= this.car.getCenter().z;
+        return collisionX && collisionY && collisionZ;
     }
 
     public Vector3f clamp(Vector3f value, Vector3f vec1, Vector3f vec2) {

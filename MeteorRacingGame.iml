@@ -11,5 +11,6 @@
     <orderEntry type="library" exported="" name="bin" level="project" />
     <orderEntry type="library" name="slick-util" level="project" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="commons-lang3-3.9-bin" level="project" />
   </component>
 </module>
