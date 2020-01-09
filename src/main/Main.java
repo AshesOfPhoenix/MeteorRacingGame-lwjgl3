@@ -113,8 +113,6 @@ public class Main implements Runnable {
 
             //!PowerUps - HAS TO BE IN ORDER -> SpeedBoost -> Armour -> ...
             List<Entity> powerups = new ArrayList<>();
-            ArrayList<SpeedBoost> speedBoosts = new ArrayList<>();
-            ArrayList<Armour> armours = new ArrayList<>();
             for (int i = 0; i <= 80; i++) {
                 float randx = (float) (Math.random() * 10000 + (-0));
                 float randz = (float) (Math.random() * 5000 + (-0));
@@ -192,6 +190,7 @@ public class Main implements Runnable {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
                 update();
+                System.out.println(state);
                 switch (state) {
                     case GAME:
                         //?GAME STATE ==============================================================================================
@@ -199,18 +198,6 @@ public class Main implements Runnable {
                         //!Read keyboard input
                         camera.move();
                         Car.move();
-
-                        //?METEOR SPAWNER AND MOVEMENT
-                        for (Meteor petarda : meteorcki) {
-                            if (petarda.euclideanDistance(Car.getCenter()) < 800) {
-                                petarda.move();
-                                masterRenderer.processEntity(petarda);
-                                if (collision.CheckCollisionSphere(petarda)) {
-                                    System.out.println("GAME OVER");
-                                    state = GameStates.GAME_OVER;
-                                }
-                            }
-                        }
 
                         //!Process PowerUPs - don't render if already active
                         UltimatePower.bouncy_bouncy(); //*This plays up and down animation
@@ -244,8 +231,18 @@ public class Main implements Runnable {
                             guiRenderer.render(armourGui);
                         }
 
-                        //System.out.println("SpeedBoost -> Active:" + speedBoost.isActive());
-                        //System.out.println("Armour -> Active:" + armour.isActive());
+                        //!METEOR SPAWNER AND MOVEMENT
+                        for (Meteor petarda : meteorcki) {
+                            if (petarda.euclideanDistance(Car.getCenter()) < 800) {
+                                petarda.move();
+                                masterRenderer.processEntity(petarda);
+                                if (collision.CheckCollisionSphere(petarda)) {
+                                    System.out.println("GAME OVER");
+
+                                    state = GameStates.GAME_OVER;
+                                }
+                            }
+                        }
 
                         //!Rock spawner
                         for (Rocks rockSPawn : rocks) {
@@ -253,6 +250,7 @@ public class Main implements Runnable {
                                 masterRenderer.processEntity(rockSPawn);
                                 if (collision.CheckCollisionSphere(rockSPawn)) {
                                     System.out.println("GAME OVER");
+
                                     state = GameStates.GAME_OVER;
                                 }
                             }
@@ -268,11 +266,33 @@ public class Main implements Runnable {
                     case MENU:
                         GL30.glClearColor(0.2f, 0.5f, 0.4f, 0.9f);
                         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+
                         break;
 
                     case GAME_OVER:
                         GL30.glClearColor(1.0f, 0.0f, 0.0f, 0.9f);
                         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+                        //!RESET
+                        powerups.clear();
+                        meteorcki.clear();
+                        for (int i = 0; i <= 80; i++) {
+                            float randx = (float) (Math.random() * 10000 + (-0));
+                            float randz = (float) (Math.random() * 5000 + (-0));
+                            float randX = (float) (Math.random() * 10000 + (-0));
+                            float randZ = (float) (Math.random() * 5000 + (-0));
+                            armour = new Armour(texturedProtection, new Vector3f(randx, 4.35f, randz), 0, 0, 0, 0.02f);
+                            speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(randX, 0.3f, randZ), -90, 0, 0, 0.02f);
+                            powerups.add(speedBoost);
+                            powerups.add(armour);
+                        }
+                        for (int i = 0; i < stevilometeorjev; i++) {
+                            float randx = (float) (Math.random() * 10000 + (-0));
+                            float randz = (float) (Math.random() * 5000 + (-0));
+                            float randomsize = (float) (Math.random() * 0.05 + 0.01);
+                            meteor = new Meteor(texturedMeteor, new Vector3f(randx, 200, randz), 0, 0, 0, randomsize);
+                            meteorcki.add(meteor);
+                        }
+                        Car.setPosition(new Vector3f(5000f, 0f, 2500f));
                         break;
                 }
             }
@@ -298,7 +318,13 @@ public class Main implements Runnable {
             System.out.println("X: " + Input.getMouseX() + ", Y: " + Input.getMouseY());
         //primer ko pritisnemo gumb f11 se nam poveca screen na fullscreen
         if (Input.isKeyDown(GLFW.GLFW_KEY_F11)) window.setFullscreen(!window.isFullscreen());
-        if (Input.isKeyDown(GLFW_KEY_SPACE)) state = GameStates.GAME;
+        if (Input.isKeyDown(GLFW_KEY_SPACE)) {
+            if (state == GameStates.MENU) {
+                state = GameStates.GAME;
+            } else if (state == GameStates.GAME_OVER) {
+                state = GameStates.MENU;
+            }
+        }
         long currnetFT = getcurrent_time();
         delta = (currnetFT - lastFrameTime) / 100f;
     }
