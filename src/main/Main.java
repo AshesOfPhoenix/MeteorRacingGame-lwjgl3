@@ -37,7 +37,6 @@ public class Main implements Runnable {
     private Thread game;
     private Window window;
 
-    private static float lastFrameTime;
     private static long delta;
 
     public static void setDelta(long delta) {
@@ -52,10 +51,6 @@ public class Main implements Runnable {
         return System.currentTimeMillis();
     }
 
-    private static float getFT() {
-        return Main.delta;
-    }
-
     private void start() {
         game = new Thread(this, "game");
         game.start();
@@ -67,7 +62,7 @@ public class Main implements Runnable {
         window.create();
         window.setBackgroundColor(1.0f, 1.0f, 1.0f);
         glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        lastFrameTime = getcurrent_time();
+
         //?Read the shaders from file and Create shader program for cube
         //?Send shader to renderer for further use and create projection matrix
         //?Add different shader files for different types of objects
@@ -78,6 +73,20 @@ public class Main implements Runnable {
     }
 
     private GameStates state = GameStates.MENU;
+
+    private boolean chechNear(boolean[][] grid, int X, int Z) {
+        boolean check = false;
+        if (X < 9995 && X > 5 && Z < 4995 && Z > 5) {
+            for (int i = X - 4; i < X + 4; i++) {
+                for (int j = Z - 4; j < Z + 4; j++) {
+                    if (grid[i][j]) {
+                        check = true;
+                    }
+                }
+            }
+        }
+        return check;
+    }
 
     public void run() {
         try {
@@ -90,6 +99,7 @@ public class Main implements Runnable {
             //?Initialize materials and textures
             //?Initialize textured models
             //?Initialize entities, their positions and rotations
+            boolean[][] grid = new boolean[10000][5000]; // X Z
             //*=================================================================
             //!ROCKS
             RawModel rockModel = ObjectLoader.loadObject("files\\objects\\rocks", loader);
@@ -100,8 +110,11 @@ public class Main implements Runnable {
             for (int i = 0; i <= 500; i++) {
                 float randx = (float) (Math.random() * 10000);
                 float randz = (float) (Math.random() * 5000);
-                rock = new Rocks(textureRock, new Vector3f(randx, -1f, randz), 0, 0, 0, 0.05f);
-                rocks.add(rock);
+                if (!chechNear(grid, (int) randx, (int) randz)) {
+                    grid[(int) randx][(int) randz] = true;
+                    rock = new Rocks(textureRock, new Vector3f(randx, -1f, randz), 0, 0, 0, 0.05f);
+                    rocks.add(rock);
+                }
             }
             //*=================================================================
             //!TREES
@@ -113,8 +126,11 @@ public class Main implements Runnable {
             for (int i = 0; i <= 500; i++) {
                 float randx = (float) (Math.random() * 10000);
                 float randz = (float) (Math.random() * 5000);
-                tree = new Trees(textureTree, new Vector3f(randx, -1f, randz), -90, 0, 0, 0.020f);
-                trees.add(tree);
+                if (!chechNear(grid, (int) randx, (int) randz)) {
+                    grid[(int) randx][(int) randz] = true;
+                    tree = new Trees(textureTree, new Vector3f(randx, -1f, randz), -90, 0, 0, 0.020f);
+                    trees.add(tree);
+                }
             }
             //*=================================================================
             //!POWER UPs
@@ -135,12 +151,15 @@ public class Main implements Runnable {
                 float randz = (float) (Math.random() * 5000 + (-0));
                 float randX = (float) (Math.random() * 10000 + (-0));
                 float randZ = (float) (Math.random() * 5000 + (-0));
-                armour = new Armour(texturedProtection, new Vector3f(randx, 4.4f, randz), 0, 0, 0, 0.02f);
-                speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(randX, 0.3f, randZ), -90, 0, 0, 0.02f);
-                powerups.add(speedBoost);
-                powerups.add(armour);
+                if (!chechNear(grid, (int) randx, (int) randz) && !chechNear(grid, (int) randX, (int) randZ)) {
+                    grid[(int) randX][(int) randZ] = true;
+                    speedBoost = new SpeedBoost(texturedSpeed, new Vector3f(randX, 0.3f, randZ), -90, 0, 0, 0.02f);
+                    powerups.add(speedBoost);
+                    grid[(int) randx][(int) randz] = true;
+                    armour = new Armour(texturedProtection, new Vector3f(randx, 4.4f, randz), 0, 0, 0, 0.02f);
+                    powerups.add(armour);
+                }
             }
-
             //*=================================================================
             //!CAR
             RawModel modelCar = ObjectLoader.loadObject("files\\objects\\car", loader);
@@ -158,12 +177,10 @@ public class Main implements Runnable {
             GUITexture over = new GUITexture(Texture.load("files\\textures\\over.png"), new Vector2f(0f, 0.0f), new Vector2f(1f, 1f));
             //*=================================================================
             //!TERRAIN
-            //*=================================================================
-            //Material materialTerrain = new Material(new Texture("asphalt-with-coarse-aggregate-texture.png"), 10, 1);
             // *********TERRAIN TEXTURE STUFF***********
             TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("files\\textures\\asphalt.png"));
             TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("files\\textures\\dirt.png"));
-            TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("files\\textures\\tnt.png"));
+            TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("files\\textures\\sand.png"));
             TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("files\\textures\\grass.png"));
             TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
             TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("files\\textures\\blend_map.png"));
@@ -175,11 +192,10 @@ public class Main implements Runnable {
             Material materialMeteor = new Material(new Texture("files\\textures\\asteroid.png"), 10, 1);
             TextureModel texturedMeteor = new TextureModel(modelMeteor, materialMeteor);
             Meteor meteor;
-            //Meteor meteor2 = new Meteor(texturedMeteor, new Vector3f(100, 0, 100), 0, 0, 0, 0.02f);
 
             //!METEOR RANDOMIZER
             ArrayList<Meteor> meteorcki = new ArrayList<>();
-            int stevilometeorjev = 3000;
+            int stevilometeorjev = 3100;
             for (int i = 0; i < stevilometeorjev; i++) {
                 float randx = (float) (Math.random() * 10000);
                 float randz = (float) (Math.random() * 5000);
@@ -197,24 +213,21 @@ public class Main implements Runnable {
             Collision collision = new Collision(Car);
             //!POWER-UPs
             PowerUp UltimatePower = new PowerUp(powerups);
-
             //!Initialize light source - Light Source and Color output
             Light light = new Light(new Vector3f(0, 500, 0), new Vector3f(0.7f, 0.50f, 0.50f));
             //!Initialize camera class for input readings
             Camera camera = new Camera(Car);
             //!Process Meteors
-
             Timmer.start();
             boolean levelUP = false;
             int timeBetweenLevels = 0;
-            float meteorSpeed = 0.5f;
+            float meteorSpeed = 0.8f;
             VelikoMeteorjev UltimateDestruction = new VelikoMeteorjev(meteorcki, texturedMeteor);
 
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();
                 update();
-
                 switch (state) {
                     case GAME:
                         //?GAME STATE ==============================================================================================
@@ -226,8 +239,6 @@ public class Main implements Runnable {
                             state = GameStates.GAME_OVER;
                             Car.setGAME_OVER(false);
                         }
-
-
                         //!Process PowerUPs - don't render if already active
                         UltimatePower.bouncy_bouncy(); //*This plays up and down animation
                         //*This checks if the car collected any of powerups
@@ -279,7 +290,6 @@ public class Main implements Runnable {
                                             setDelta(getcurrent_time());
                                             state = GameStates.GAME_OVER;
                                         }
-
                                     }
                                 }
                             }
@@ -294,7 +304,6 @@ public class Main implements Runnable {
                                         setDelta(getcurrent_time());
                                         state = GameStates.GAME_OVER;
                                     }
-
                                 }
                             }
                         }
@@ -304,13 +313,9 @@ public class Main implements Runnable {
                                 masterRenderer.processEntity(treeSpawn);
                                 if (collision.CheckCollision(treeSpawn)) {
                                     treeSpawn.setRotX(-180);
-                                    System.out.println("GAME OVER");
-                                    //setDelta(getcurrewnt_time());
-                                    //state = GameStates.GAME_OVER;
                                 }
                             }
                         }
-
                         guiRenderer.render(backgroundGui);
                         guiRenderer.render(backgroundGui2);
                         masterRenderer.processEntity(Car);
@@ -319,7 +324,6 @@ public class Main implements Runnable {
                         //?GAME STATE ==============================================================================================
                         setDelta(getcurrent_time());
                         break;
-
                     case MENU:
                         GL30.glClearColor(0.2f, 0.5f, 0.4f, 0.9f);
                         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
@@ -337,10 +341,9 @@ public class Main implements Runnable {
                         guiRenderer.render(over);
                         //!RESET
                         timeBetweenLevels = 0;
-                        meteorSpeed = 0.0f;
-                        stevilometeorjev = 3000;
+                        meteorSpeed = 0.8f;
+                        stevilometeorjev = 3200;
                         UltimatePower.cleanUp();
-                        UltimateDestruction.cleanUp();
                         powerups.clear();
                         meteorcki.clear();
                         Car.resetCarSpeed();
@@ -355,7 +358,6 @@ public class Main implements Runnable {
                         UltimatePower.resetInterpolation();
                         UltimatePower.update(powerups);
                         UltimateDestruction.update(stevilometeorjev);
-
                         if ((getcurrent_time() - delta) > 1000) {
                             if (Input.isKeyDown(GLFW_KEY_SPACE)) {
                                 state = GameStates.MENU;

@@ -39,8 +39,7 @@ public class VelikoMeteorjev {
     public void updateCount(int stevilometeorjev, float nov_SPEEED) {
         cleanUp();
         Meteor meteor;
-        int nov = stevilometeorjev - meteorji.size();
-        for (int i = meteorji.size(); i < stevilometeorjev; i++) {
+        for (int i = 0; i < stevilometeorjev; i++) {
             float randomsize = (float) (Math.random() * 0.05 + 0.01);
             meteor = new Meteor(textureModel, resetLocation(), 0, 0, 0, randomsize);
             meteor.incrementSpeed(-nov_SPEEED);

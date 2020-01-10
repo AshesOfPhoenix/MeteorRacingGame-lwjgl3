@@ -47,7 +47,7 @@ public class Meteor extends Entity {
         this.reset = position;
         this.razdalja = 0;
         this.moving = Moving.NOT_MOVING;
-        this.currentSpeed = -(float) (Math.random() * 1.0 + 0.12);
+        this.currentSpeed = -(float) (Math.random() * 1.0 + 0.5);
         //super.setPosition(this.center);
     }
 
