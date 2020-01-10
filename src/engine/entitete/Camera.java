@@ -107,7 +107,6 @@ public class Camera {
         newMousex = (float) Input.getMouseX();
         newMouseY = (float) Input.getMouseY();
 
-
         float dx = newMousex - oldMouseX;
         float dy = newMouseY - oldMouseY;
        /* if (Input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {

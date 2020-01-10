@@ -64,7 +64,7 @@ public class Main implements Runnable {
         //!Create and initialize window
         window.create();
         window.setBackgroundColor(1.0f, 1.0f, 1.0f);
-        glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         lastFrameTime = getcurrent_time();
         //?Read the shaders from file and Create shader program for cube
         //?Send shader to renderer for further use and create projection matrix
@@ -207,6 +207,10 @@ public class Main implements Runnable {
                         //!Read keyboard input
                         camera.move();
                         Car.move();
+                        if (Car.isGAME_OVER()) {
+                            state = GameStates.GAME_OVER;
+                            Car.setGAME_OVER(false);
+                        }
 
                         //!Process PowerUPs - don't render if already active
                         UltimatePower.bouncy_bouncy(); //*This plays up and down animation
@@ -249,13 +253,15 @@ public class Main implements Runnable {
                         }
                         //!METEOR SPAWNER AND MOVEMENT
                         for (Meteor petarda : UltimateDestruction.meteorji) {
-                            if (petarda.euclideanDistance(Car.getCenter()) < 700) {
+                            if (petarda.euclideanDistance(Car.getCenter()) < 1100) {
                                 petarda.move(Car.getPosition());
-                                masterRenderer.processEntity(petarda);
-                                if (collision.CheckCollisionSphere(petarda)) {
-                                    System.out.println("GAME OVER");
-                                    setDelta(getcurrent_time());
-                                    //state = GameStates.GAME_OVER;
+                                if (petarda.euclideanDistance(Car.getCenter()) < 800) {
+                                    masterRenderer.processEntity(petarda);
+                                    if (collision.CheckCollisionSphere(petarda)) {
+                                        System.out.println("GAME OVER");
+                                        setDelta(getcurrent_time());
+                                        state = GameStates.GAME_OVER;
+                                    }
                                 }
                             }
                         }
@@ -293,6 +299,7 @@ public class Main implements Runnable {
                         GL30.glClearColor(1.0f, 0.0f, 0.0f, 0.9f);
                         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
                         //!RESET
+
                         timeBetweenLevels = 0;
                         meteorSpeed = 0.0f;
                         stevilometeorjev = 3000;

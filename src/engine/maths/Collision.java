@@ -13,7 +13,6 @@ public class Collision {
         this.car = car;
     }
 
-
     public boolean CheckCollisionSphere(Meteor collidedEntity) {
         //?GET METEOR RADIUS
         float radius = collidedEntity.getRadius();

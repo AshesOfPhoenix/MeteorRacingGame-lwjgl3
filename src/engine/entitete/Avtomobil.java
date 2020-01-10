@@ -12,6 +12,15 @@ public class Avtomobil extends Entity {
     private static float RUN_SPEED = 50;
     boolean speedBoost = false;
     boolean armour = false;
+    boolean GAME_OVER = false;
+
+    public boolean isGAME_OVER() {
+        return GAME_OVER;
+    }
+
+    public void setGAME_OVER(boolean GAME_OVER) {
+        this.GAME_OVER = GAME_OVER;
+    }
 
     private float xSize;
     private float ySize;
@@ -59,6 +68,7 @@ public class Avtomobil extends Entity {
         if (center.x >= 10000 || center.x < 0 || center.z >= 5000 || center.z < 0) {
             for (int i = 0; i < 1000000; i++) {
                 super.increasePosition(0, (float) 0.001, 0);
+                GAME_OVER = true;
             }
         }
 
