@@ -295,12 +295,9 @@ public class Main implements Runnable {
                             if (treeSpawn.euclideanDistance(Car.getCenter()) < 700) {
                                 masterRenderer.processEntity(treeSpawn);
                                 if (collision.CheckCollision(treeSpawn)) {
-                                    float kotX = Car.getRotX();
-                                    float kotY = Car.getRotY();
-                                    float kotZ = Car.getRotZ();
-                                    treeSpawn.setRotX(180);
+                                    treeSpawn.setRotX(-180);
                                     System.out.println("GAME OVER");
-                                    //setDelta(getcurrent_time());
+                                    //setDelta(getcurrewnt_time());
                                     //state = GameStates.GAME_OVER;
                                 }
                             }
