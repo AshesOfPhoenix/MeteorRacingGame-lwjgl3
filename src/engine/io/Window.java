@@ -89,7 +89,7 @@ public class Window {
             GL30.glViewport(0, 0, width, height);
             isResized = false;
         }
-        GL30.glClearColor(background.getX(), background.getY(), background.getZ(), 1.0f);
+        //GL30.glClearColor(background.getX(), background.getY(), background.getZ(), 1.0f);
         GLFW.glfwPollEvents();
         frames++;
         if (System.currentTimeMillis() > time + 1000) {

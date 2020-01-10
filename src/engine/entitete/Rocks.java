@@ -41,7 +41,6 @@ public class Rocks extends Entity {
         this.center = new Vector3f(position.x, position.y + this.ySize / 2.3f, position.z + this.zSize);
         this.sphereRadius = this.zSize / 2;
         super.setCenter(this.center);
-
         super.setxSize(this.xSize);
         super.setySize(this.ySize);
         super.setzSize(this.zSize);

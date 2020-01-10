@@ -46,6 +46,13 @@ public class Avtomobil extends Entity {
         return zSize;
     }
 
+    public void resetCarSpeed() {
+        this.currentSpeed = 0;
+        this.currentTS = 0;
+        disableSpeedBoost();
+        disableArmour();
+    }
+
     public Avtomobil(TextureModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         super(model, position, rotX, rotY, rotZ, scale);
         this.xSize = model.getRawModel().getxSize() * scale;
@@ -63,13 +70,26 @@ public class Avtomobil extends Entity {
 
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotZ())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotZ())));
-        super.increasePosition(dx, 0, dz);
 
+        /*
         if (center.x >= 10000 || center.x < 0 || center.z >= 5000 || center.z < 0) {
             for (int i = 0; i < 1000000; i++) {
                 super.increasePosition(0, (float) 0.001, 0);
                 GAME_OVER = true;
             }
+        }
+
+         */
+        if (center.x >= 10000 - this.xSize / 2) {
+            super.increasePosition(-dx - 0.01f, 0, 0);
+        } else if (center.x < 0 + this.xSize / 2) {
+            super.increasePosition(dx + 0.01f, 0, 0);
+        } else if (center.z >= 5000 - this.xSize / 2) {
+            super.increasePosition(0, 0, -dz - 0.01f);
+        } else if (center.z < 0 + this.xSize / 2) {
+            super.increasePosition(0, 0, dz + 0.01f);
+        } else {
+            super.increasePosition(dx, 0, dz);
         }
 
         Vector3f a = super.getPosition();

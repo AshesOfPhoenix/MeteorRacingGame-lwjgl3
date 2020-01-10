@@ -119,6 +119,8 @@ public class Camera {
         pitch -= pitchch;
         if (pitch < 5) {
             pitch = 5;
+        } else if (pitch > 40) {
+            pitch = 40;
         }
 
         float kot = dx * 0.3f;

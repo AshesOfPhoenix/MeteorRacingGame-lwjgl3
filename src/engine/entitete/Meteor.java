@@ -47,7 +47,7 @@ public class Meteor extends Entity {
         this.reset = position;
         this.razdalja = 0;
         this.moving = Moving.NOT_MOVING;
-        this.currentSpeed = -(float) (Math.random() * 0.8 + 0.1);
+        this.currentSpeed = -(float) (Math.random() * 1.0 + 0.12);
         //super.setPosition(this.center);
     }
 
@@ -57,7 +57,7 @@ public class Meteor extends Entity {
 
     public void move(Vector3f positionCar) {
         Vector3f a = super.getPosition();
-        if (a.y < -100) {
+        if (a.y < -80) {
             this.moving = Moving.NOT_MOVING;
         }
         if (this.moving == Moving.MOVING) {

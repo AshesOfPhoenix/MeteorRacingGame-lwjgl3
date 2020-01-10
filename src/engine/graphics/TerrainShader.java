@@ -45,6 +45,7 @@ public class TerrainShader extends Shader {
         this.location_rTexture = super.getUniformLocation("rTexture");
         this.location_rTexture = super.getUniformLocation("gTexture");
         this.location_bTexture = super.getUniformLocation("bTexture");
+        this.location_gTexture = super.getUniformLocation("gTexture");
         this.location_blendMap = super.getUniformLocation("blendMap");
     }
 
