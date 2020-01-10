@@ -5,6 +5,10 @@ import engine.io.Input;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
+
 public class Avtomobil extends Entity {
     private static final float noPOWER = 3;
     private static final float TURN_SPEED = 20;
@@ -61,7 +65,7 @@ public class Avtomobil extends Entity {
         this.center = new Vector3f(position.x, position.y + ySize / 2, position.z);
     }
 
-    public void move() {
+    public void move() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         checkInputs();
         //increase player roatiton in y cordinate in trunspead mnozimo z FTS-jem ker je moramo meriti obrat z casom
         super.increaseRotation(0, 0, currentTS / 15);
@@ -80,18 +84,22 @@ public class Avtomobil extends Entity {
         }
 
          */
-        if (center.x >= 10000 - this.xSize / 2) {
-            super.increasePosition(-dx - 0.01f, 0, 0);
-        } else if (center.x < 0 + this.xSize / 2) {
-            super.increasePosition(dx + 0.01f, 0, 0);
-        } else if (center.z >= 5000 - this.xSize / 2) {
-            super.increasePosition(0, 0, -dz - 0.01f);
-        } else if (center.z < 0 + this.xSize / 2) {
-            super.increasePosition(0, 0, dz + 0.01f);
-        } else {
-            super.increasePosition(dx, 0, dz);
+        if (center.x >= 10000) {
+            super.increasePosition(-5, 0, 0);
         }
-
+        if (center.x < 0) {
+            super.increasePosition(5, 0, 0);
+        }
+        if (center.z >= 5000) {
+            super.increasePosition(0, 0, -5);
+        }
+        if (center.z < 0) {
+            super.increasePosition(0, 0, 5);
+        }
+        if (Input.isKeyDown(GLFW.GLFW_KEY_G)) {
+            play();
+        }
+        super.increasePosition(dx, 0, dz);
         Vector3f a = super.getPosition();
         this.center = new Vector3f(a.x, a.y + this.ySize / 2, a.z);
     }
@@ -133,15 +141,12 @@ public class Avtomobil extends Entity {
         }
     }
 
-    public void colisiondetection(Meteor meteor) {
-        Vector3f pozicija = meteor.getPosition();
-        if (pozicija.x - this.center.x <= 50 && pozicija.y - this.center.y <= 50 && pozicija.z - this.center.z <= 50) {
-            System.out.println("Ijeeeeeeeeeeeej smo se zaleteli");
-        }
-    }
-
     public void activateArmour() {
         this.armour = true;
+    }
+
+    public boolean isArmour() {
+        return this.armour;
     }
 
     public void disableArmour() {
@@ -158,5 +163,13 @@ public class Avtomobil extends Entity {
         this.speedBoost = false;
         this.accnumber = 2;
         this.RUN_SPEED = 50;
+    }
+
+    private void play() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+        File f = new File("C:\\Users\\Emera\\Desktop\\MeteorRacingGame\\audio\\Carn Horn 1.wav");
+        AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioIn);
+        clip.start();
     }
 }

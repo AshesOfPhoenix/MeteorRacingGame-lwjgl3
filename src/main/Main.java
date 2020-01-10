@@ -24,6 +24,8 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -272,9 +274,12 @@ public class Main implements Runnable {
                                 if (petarda.euclideanDistance(Car.getCenter()) < 800) {
                                     masterRenderer.processEntity(petarda);
                                     if (collision.CheckCollisionSphere(petarda)) {
-                                        System.out.println("GAME OVER");
-                                        setDelta(getcurrent_time());
-                                        state = GameStates.GAME_OVER;
+                                        if (!Car.isArmour()) {
+                                            System.out.println("GAME OVER");
+                                            setDelta(getcurrent_time());
+                                            state = GameStates.GAME_OVER;
+                                        }
+
                                     }
                                 }
                             }
@@ -284,9 +289,12 @@ public class Main implements Runnable {
                             if (rockSPawn.euclideanDistance(Car.getCenter()) < 600) {
                                 masterRenderer.processEntity(rockSPawn);
                                 if (collision.CheckCollisionSphere(rockSPawn)) {
-                                    System.out.println("GAME OVER");
-                                    setDelta(getcurrent_time());
-                                    state = GameStates.GAME_OVER;
+                                    if (!Car.isArmour()) {
+                                        System.out.println("GAME OVER");
+                                        setDelta(getcurrent_time());
+                                        state = GameStates.GAME_OVER;
+                                    }
+
                                 }
                             }
                         }
@@ -365,6 +373,10 @@ public class Main implements Runnable {
             meteorcki.clear();
             powerups.clear();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
     }
