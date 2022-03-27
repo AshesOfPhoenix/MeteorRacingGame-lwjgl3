@@ -32,7 +32,7 @@ import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Main implements Runnable {
+public class StartGame implements Runnable {
     private final int WIDTH = 1280, HEIGHT = 760;
     private Thread game;
     private Window window;
@@ -40,11 +40,11 @@ public class Main implements Runnable {
     private static long delta;
 
     public static void setDelta(long delta) {
-        Main.delta = delta;
+        StartGame.delta = delta;
     }
 
     public static void main(String[] args) {
-        new Main().start();
+        new StartGame().start();
     }
 
     private static long getcurrent_time() {
@@ -224,6 +224,7 @@ public class Main implements Runnable {
             float meteorSpeed = 0.8f;
             VelikoMeteorjev UltimateDestruction = new VelikoMeteorjev(meteorcki, texturedMeteor);
 
+            //!MAIN GAME LOOP
             while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 //!Swap buffer and Clear frame buffer from previous drawCall
                 clearFrameBuffer();

@@ -2,8 +2,6 @@
   <library name="bin">
     <CLASSES />
     <JAVADOC />
-    <SOURCES>
-      <root url="file://$PROJECT_DIR$/bin" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

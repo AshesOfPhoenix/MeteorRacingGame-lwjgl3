@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="MeteorRacingGame:jar2" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f539297c-5fa4-4c42-975a-fd0a85ec0db1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/bin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/bin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_lang3_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/slick_util.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MeteorRacingGame.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MeteorRacingGame.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid25220.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/slick-util-src.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/disruptor.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/ibxm.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/jogg-0.0.7.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/jorbis-0.0.15.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/lwjgl.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/linux/x64/liblwjgl.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/linux/x64/libopenal.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/linux/x86/liblwjgl.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/linux/x86/libopenal.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/macosx/x64/liblwjgl.dylib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/macosx/x64/libopenal.dylib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/windows/x64/OpenAL32.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/windows/x64/lwjgl.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/windows/x86/OpenAL32.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/native/windows/x86/lwjgl.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/slick-util-src.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util/slick-util.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/slick-util3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="2" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/StartGame.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectId" id="1lD0ZKDxJ80QL1FRe9crbEh8fMM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/slick-util3.jar" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.15168898" />
+    <property name="project.structure.side.proportion" value="0.13803451" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.excludes" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Repos\MeteorRacingRG" />
+      <recent name="D:\Repos\MeteorRacingRG\lib" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.StartGame">
+    <configuration name="StartGame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.StartGame" />
+      <module name="MeteorRacingGame" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="MakeProject" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MeteorRacing" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/MeteorRacingGame_jar2/MeteorRacingGame.jar" />
+      <option name="WORKING_DIRECTORY" value="D:\Repos\MeteorRacingRG" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="14" />
+      <method v="2">
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="MeteorRacingGame:jar2" />
+        </option>
+      </method>
+    </configuration>
+    <configuration name="MeteorRacingGame.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/MeteorRacingGame_jar/MeteorRacingGame.jar" />
+      <option name="PROGRAM_PARAMETERS" value="D:\Repos\MeteorRacingRG\src\main\StartGame.java" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="14" />
+      <module name="MeteorRacingGame" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.StartGame" />
+      <item itemvalue="JAR Application.MeteorRacing" />
+      <item itemvalue="JAR Application.MeteorRacingGame.jar" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.StartGame" />
+        <item itemvalue="JAR Application.MeteorRacingGame.jar" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f539297c-5fa4-4c42-975a-fd0a85ec0db1" name="Default Changelist" comment="" />
+      <created>1607116409267</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1607116409267</updated>
+      <workItem from="1607116410540" duration="1833000" />
+      <workItem from="1607358668326" duration="2948000" />
+      <workItem from="1614151019960" duration="1288000" />
+      <workItem from="1614156357878" duration="2316000" />
+      <workItem from="1618495633454" duration="624000" />
+      <workItem from="1618499107390" duration="162000" />
+      <workItem from="1619356367556" duration="349000" />
+      <workItem from="1619356752459" duration="89000" />
+      <workItem from="1619618162276" duration="42000" />
+      <workItem from="1620239934826" duration="45000" />
+      <workItem from="1620466927137" duration="70000" />
+      <workItem from="1621083818902" duration="18000" />
+      <workItem from="1621083860239" duration="377000" />
+      <workItem from="1622883264647" duration="5494000" />
+      <workItem from="1623144008947" duration="1264000" />
+      <workItem from="1648417759971" duration="1217000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

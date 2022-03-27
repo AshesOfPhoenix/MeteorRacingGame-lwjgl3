@@ -1,6 +1,6 @@
 # MeteorRacing 
 
-This is a simple racing game written with _OpenGL_ in JAVA. 
+This is a simple racing game written with _OpenGL_ API in JAVA. 
 This game was made as the final project for the Computer Graphics course at the Faculty of Computer and Information Science, University of Ljubljana.
 
 Made by me and [Boštjan Perkan](https://github.com/Bostjan32)

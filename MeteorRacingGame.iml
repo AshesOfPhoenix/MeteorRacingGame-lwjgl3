@@ -9,8 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="libs" level="project" />
     <orderEntry type="library" exported="" name="bin" level="project" />
-    <orderEntry type="library" name="slick-util" level="project" />
     <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="commons-lang3-3" level="project" />
+    <orderEntry type="library" name="src" level="project" />
   </component>
 </module>

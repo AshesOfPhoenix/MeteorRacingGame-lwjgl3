@@ -2,12 +2,20 @@
   <library name="lib">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$/lib/commons-lang3-3.9" />
+      <root url="file://$PROJECT_DIR$/lib/slick-util" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$/lib/commons-lang3-3.9" />
+      <root url="file://$PROJECT_DIR$/lib/slick-util" />
     </SOURCES>
     <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/commons-lang3-3.9" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/slick-util" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/commons-lang3-3.9" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/slick-util" recursive="false" type="SOURCES" />
   </library>
 </component>
